@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import CountUp from 'react-countup';
 import './App.css';
 
 
@@ -10,7 +11,8 @@ const Hand = ({ name, hand, total }) => {
       <div class="horizontal-divider"></div>
       <ul>		
         <li class="name">{name}</li>
-        <li class="total">{total}</li>
+        {(total === 0) && <li class="total"></li>}
+        {(total > 0) && <li class="total">{total}</li>}
         <li><div class="card-value">{hand[0]}</div></li>
         <li><div class="card-value">{hand[1]}</div></li>
         <li><div class="card-value">{hand[2]}</div></li>
@@ -36,14 +38,13 @@ const Controls = ({ gameover, deal, stand }) => {
         <button onClick = { stand } class="pushable">
           <span class="front">Double</span>
         </button>
+        <button onClick = { stand } class="pushable">
+          <span class="front">Split</span>
+        </button>
       </div>
     )
   else 
-    return (
-      <div>
-        <h1>Game Over</h1>	
-      </div>
-    )
+    return (null)
 }
 
 const Score = ( {score} ) => {
@@ -56,17 +57,31 @@ const Score = ( {score} ) => {
   )
 }
 
-const Board = ( {turn, playerHand, playerTotal, dealerHand, dealerTotal}) => {
+const Board = ( {score, gameover, turn, playerHand, playerTotal, dealerHand, dealerTotal}) => {
 
-  if(turn === true) {
-    return (
-      <Hand name="Player" hand={playerHand} total={playerTotal} />
-    )
+  if(!gameover) {
+    if(turn === true) {
+      return (
+        <Hand name="Player" hand={playerHand} total={playerTotal} />
+      )
+    }
+    else 
+      return (
+        <Hand name="Dealer" hand={dealerHand} total={dealerTotal} />
+      )
   }
   else 
     return (
-      <Hand name="Dealer" hand={dealerHand} total={dealerTotal} />
-    )
+      <div id="game-over-message">
+        <h2 id="win">
+          <span>LOSE</span>
+        </h2>
+        <h3 id="score-count"><CountUp start={score+20} end={score} duration={2} /></h3>
+        <h2 id="gameover">
+          <span>GAME OVER</span>
+        </h2>
+      </div>
+  )
 }
 
 const App = ({cards}) => {
@@ -163,7 +178,15 @@ const App = ({cards}) => {
 return(
  		<div>	
       <Score score={score} />
-      <Board turn={playersTurn} playerHand={playerHand} playerTotal={playerTotal} dealerHand={dealerHand} dealerTotal={dealerTotal}/>		
+      <Board 
+        score={score}
+        gameover={gameOver}
+        turn= {playersTurn} 
+        playerHand={playerHand} 
+        playerTotal={playerTotal} 
+        dealerHand={dealerHand} 
+        dealerTotal={dealerTotal} 
+      />		
       <Controls gameover = {gameOver} deal = {deal} stand = { stand } />
 		</div>	
     )

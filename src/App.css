@@ -15,10 +15,26 @@ body {
   justify-content: center;
   color: #3B3B3B;
   font-weight: 500;
+  height: 100%;
+  overflow: auto;
 }
 
 .hand {
   margin: 0 0 5rem 0;
+}
+
+#gameover, 
+#win {
+  font-size: 45px;
+  font-weight: 600;
+  text-align: center;
+}
+
+#score-count {
+  font-weight: 900;
+  display: block;
+  text-align: center;
+  font-size: 65px;
 }
 
 .front {
@@ -104,7 +120,7 @@ ul {
 
 li {
   color: #3B3B3B;
-  font-size: 50px;
+  font-size: 55px;
   border-radius: 15px;
   text-align: center;
   min-height: 96px;
@@ -138,7 +154,7 @@ ul li:nth-of-type(4):after {
   z-index: 1;
   content: "";
   left: calc(50% - 17px);
-  height: 115px;
+  height: 110%;
 }
 
 ul li:nth-of-type(3):before,
@@ -148,8 +164,8 @@ ul li:nth-of-type(4):before {
   height: 34px;
   z-index: 1;
   content: "";
-  right: -15px;
-  width: 120px;
+  right: -5px;
+  width: 110%;
 }
 
 ul li:nth-of-type(4) {
@@ -171,11 +187,11 @@ ul li:nth-of-type(7):before,
 ul li:nth-of-type(8):before  {
   position: absolute;
   background-color: #DBDBDB;
-  height: 115px;
   z-index: 1;
   content: "";
   left: calc(50% - 17px);
   width: 34px;
+  height: 110%;
 }
 
 /* vertical divider  */
@@ -188,9 +204,8 @@ ul li:nth-of-type(8):after  {
   height: 34px;
   z-index: 1;
   content: "";
-  width: 115px;
-  right: -15px;
-  width: 125px;
+  right: -5px;
+  width: 110%;
 }
 
 ul li:nth-of-type(4) {
