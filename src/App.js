@@ -4,23 +4,6 @@ import './App.css';
 
 const Hand = ({ name, hand, total }) => {
 
-  // return (
-  //   <div class="hand">			
-  //     <ul>
-  //       <li>{hand[0]}</li>
-  //       <li>{name}</li>
-  //       <li></li>
-  //       <li></li>
-  //       <li>{ total }</li>
-  //       <li>{hand[1]}</li>
-  //       <li>{hand[2]}</li>
-  //       <li>{hand[3]}</li>
-  //       <li>{hand[4]}</li>
-  //       <li>{hand[5]}</li>
-  //     </ul>	
-	// 	</div>
-  // )
-
   return (
     <div class="hand">
       <div class="vertical-divider"></div>
@@ -43,12 +26,15 @@ const Controls = ({ gameover, deal, stand }) => {
 
   if(!gameover)
     return (
-      <div>
+      <div class="buttons">
         <button onClick = { deal() } class="pushable">
           <span class="front">Deal</span>
         </button>
         <button onClick = { stand } class="pushable">
           <span class="front">Stand</span>
+        </button>
+        <button onClick = { stand } class="pushable">
+          <span class="front">Double</span>
         </button>
       </div>
     )
@@ -56,14 +42,17 @@ const Controls = ({ gameover, deal, stand }) => {
     return (
       <div>
         <h1>Game Over</h1>	
-        {/* <button onClick = { deal() } >Deal</button> */}
       </div>
     )
 }
 
 const Score = ( {score} ) => {
   return (
-    <h2>Score: {score} </h2>
+    <div id="score">
+      <h2>Score</h2>
+      <h3>{score}</h3>
+    </div>
+    
   )
 }
 

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@200;300;400;500;600;700;800&display=swap');
 
 
 html, 
@@ -14,10 +14,11 @@ body {
   align-items: center;
   justify-content: center;
   color: #3B3B3B;
+  font-weight: 500;
 }
 
 .hand {
-  margin: 4rem 0;
+  margin: 0 0 5rem 0;
 }
 
 .front {
@@ -36,7 +37,7 @@ body {
 .pushable {
   background: #3B3B3B;
   border: none;
-  border-radius: 12px;
+  border-radius: 15px;
   padding: 0;
   cursor: pointer;
 }
@@ -44,17 +45,23 @@ body {
 .front {
   font-family: 'Orbitron', sans-serif;
   display: block;
-  padding: 12px 42px;
-  border-radius: 12px;
-  font-size: 1.25rem;
+  padding: 15px 40px;
+  border-radius: 15px;
+  font-size: 1.5rem;
   color: #3B3B3B;
   transform: translateY(-4px);
   background: #DBDBDB;
   border: 3px solid #3B3B3B;
+  font-weight: 700;
 }
 
 button {
   margin: 0 10px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
 }
 
 .pushable:focus:not(:focus-visible) {
@@ -63,6 +70,24 @@ button {
 
 .total {
   font-size: 60px;
+}
+
+#score {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 2rem;
+}
+
+#score h3 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 2rem;
+}
+
+#score h2 {
+  margin: 0 0 .15rem 0;
+  font-weight: 200;
 }
 
 .name {
@@ -165,7 +190,7 @@ ul li:nth-of-type(8):after  {
   content: "";
   width: 115px;
   right: -15px;
-  width: 115px;
+  width: 125px;
 }
 
 ul li:nth-of-type(4) {
@@ -205,6 +230,19 @@ ul li:nth-of-type(2) {
     width: 100%;
     margin: 0 auto;
     position: fixed;
+  }
+
+  .buttons {
+    max-width: 50%;
+    display: block;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .pushable {
+    margin: 1rem;
   }
 
   #root {
