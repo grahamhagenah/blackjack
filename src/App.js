@@ -1,33 +1,55 @@
 import React, { useState } from 'react'
+import './App.css';
+
 
 const Hand = ({ name, hand, total }) => {
 
+  // return (
+  //   <div class="hand">			
+  //     <ul>
+  //       <li>{hand[0]}</li>
+  //       <li>{name}</li>
+  //       <li></li>
+  //       <li></li>
+  //       <li>{ total }</li>
+  //       <li>{hand[1]}</li>
+  //       <li>{hand[2]}</li>
+  //       <li>{hand[3]}</li>
+  //       <li>{hand[4]}</li>
+  //       <li>{hand[5]}</li>
+  //     </ul>	
+	// 	</div>
+  // )
+
   return (
-    <div>			
-      <h1>{name}</h1>	
-      <ol>
-        <li>{hand[0]}</li>
-        <li>{hand[1]}</li>
-        <li>{hand[2]}</li>
-        <li>{hand[3]}</li>
-        <li>{hand[4]}</li>
-        <li>{hand[5]}</li>
-      </ol>	
-      <h3>Total: { total }</h3>
-		</div>
+    <div class="hand">
+      <div class="vertical-divider"></div>
+      <div class="horizontal-divider"></div>
+      <ul>		
+        <li class="name">{name}</li>
+        <li class="total">{total}</li>
+        <li><div class="card-value">{hand[0]}</div></li>
+        <li><div class="card-value">{hand[1]}</div></li>
+        <li><div class="card-value">{hand[2]}</div></li>
+        <li><div class="card-value">{hand[3]}</div></li>
+        <li><div class="card-value">{hand[4]}</div></li>
+        <li><div class="card-value">{hand[5]}</div></li>
+      </ul>	
+    </div>
   )
 }
 
-const Controls = ({ turn, gameover, deal, stand }) => {
-
-  console.log(gameover)
+const Controls = ({ gameover, deal, stand }) => {
 
   if(!gameover)
     return (
       <div>
-        <h1>It's the { turn() }'s turn</h1>	
-        <button onClick = { deal() } >Hit</button>
-        <button onClick = { stand } >Stand</button>
+        <button onClick = { deal() } class="pushable">
+          <span class="front">Deal</span>
+        </button>
+        <button onClick = { stand } class="pushable">
+          <span class="front">Stand</span>
+        </button>
       </div>
     )
   else 
@@ -45,13 +67,26 @@ const Score = ( {score} ) => {
   )
 }
 
+const Board = ( {turn, playerHand, playerTotal, dealerHand, dealerTotal}) => {
+
+  if(turn === true) {
+    return (
+      <Hand name="Player" hand={playerHand} total={playerTotal} />
+    )
+  }
+  else 
+    return (
+      <Hand name="Dealer" hand={dealerHand} total={dealerTotal} />
+    )
+}
+
 const App = ({cards}) => {
 
   const [deck, setDeck] = useState(cards)
-  const [playerHand, setPlayerHand] = useState(Array(6).fill(0))
+  const [playerHand, setPlayerHand] = useState(Array(6).fill(''))
   const [playerTotal, setPlayerTotal] = useState(0)
   const [dealerTotal, setDealerTotal] = useState(0)
-  const [dealerHand, setDealerHand] = useState(Array(6).fill(0))
+  const [dealerHand, setDealerHand] = useState(Array(6).fill(''))
   const [nextPlayerPosition, setNextPlayerPosition] = useState(0)
   const [nextDealerPosition, setNextDealerPosition] = useState(0)
   const [playersTurn, togglePlayersTurn] = useState(true)
@@ -85,7 +120,6 @@ const App = ({cards}) => {
 
   const declareWinner = (total) => {
     if(total > 21) {
-      console.log("play total > 21 and game is over")
       toggleGameOver(true)
     }
   }
@@ -138,17 +172,31 @@ const App = ({cards}) => {
 
 
 return(
- 		<div>			
-      <Controls turn = { whoseTurn } gameover = {gameOver} deal = {deal} stand = { stand } />
-      <Hand name="Player" hand={playerHand} total={playerTotal} />
+ 		<div>	
       <Score score={score} />
-      <Hand name="Dealer" hand={dealerHand} total={dealerTotal} />
+      <Board turn={playersTurn} playerHand={playerHand} playerTotal={playerTotal} dealerHand={dealerHand} dealerTotal={dealerTotal}/>		
+      <Controls gameover = {gameOver} deal = {deal} stand = { stand } />
 		</div>	
     )
 }
 
 export default App
 
+
+//TODO:
+//what if total equals 21
+//figure out automatic dealing for dealer and logic to stand at 17, use timeout for slight delay to see numbers loading
+//figure out scoring system, look up how it's done 
+//figure out what double means and how to implement
+//implement resset to intitial state
+//add animations using spring or framer motion to show numbers blinking into place
+//add cool buttons inspired by josh comeau's 3D buttons
+//disable buttons while dealer is dealing
+//add CSS and HTML to make it look good
+//on win or lose, show full width score board counting up or down to the new total of points
+//add sound effects
+//deploy to netflify
+//don't refactor unless you have to! just promise to do better next time
 
 //need to put h1 and two buttons into own compenent to change that when game is over and winner is declared
 
