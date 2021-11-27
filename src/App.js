@@ -95,6 +95,7 @@ const App = ({cards}) => {
   const [nextDealerPosition, setNextDealerPosition] = useState(0)
   const [playersTurn, togglePlayersTurn] = useState(true)
   const [gameOver, toggleGameOver] = useState(false)
+  const [playerWins, setplayerWins] = useState(false)
   const [score, setScore] = useState(200)
 
   const total = (hand) => { 
