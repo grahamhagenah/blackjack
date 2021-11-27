@@ -3,7 +3,7 @@ import CountUp from 'react-countup';
 import './App.css';
 
 
-const Hand = ({ name, hand, total }) => {
+const Hand = ({ name, hand, total, gameover }) => {
 
   return (
     <div class="hand">
@@ -24,64 +24,70 @@ const Hand = ({ name, hand, total }) => {
   )
 }
 
-const Controls = ({ gameover, deal, stand }) => {
+const Controls = ({ gameover, deal, stand, playerWins }) => {
 
   if(!gameover)
     return (
-      <div class="buttons">
-        <button onClick = { deal() } class="pushable">
-          <span class="front">Deal</span>
-        </button>
-        <button onClick = { stand } class="pushable">
-          <span class="front">Stand</span>
-        </button>
-        <button onClick = { stand } class="pushable">
-          <span class="front">Double</span>
-        </button>
-        <button onClick = { stand } class="pushable">
-          <span class="front">Split</span>
-        </button>
+      <div id="board-bottom">
+        <div class="buttons">
+          <button onClick = { deal() } class="pushable">
+            <span class="front">Deal</span>
+          </button>
+          <button onClick = { stand } class="pushable">
+            <span class="front">Stand</span>
+          </button>
+          <button onClick = { stand } class="pushable">
+            <span class="front">Double</span>
+          </button>
+          <button onClick = { stand } class="pushable">
+            <span class="front">Reset</span>
+          </button>
+        </div>
       </div>
     )
   else 
-    return (null)
+  return (
+    <div id="board-bottom-gameover">
+      {(playerWins) && <h3 id="outcome">Game over; you <span class="blink">won.</span></h3>}
+      {(!playerWins) && <h3 id="outcome">Game over; you <span class="blink">lost.</span></h3>}
+    </div>
+  )
+
 }
 
-const Score = ( {score} ) => {
+const Score = ( {score, change} ) => {
   return (
     <div id="score">
       <h2>Score</h2>
-      <h3>{score}</h3>
+      <h3 id="score-count"><CountUp start={score} end={score+change} duration={2} /></h3>
     </div>
     
   )
 }
 
+// not sure how to handle a state in which numbers are blinking for a set period of time
+
+// const Help = () => {
+//   return (
+//     <div id="help">
+//       <img id="mute" alt="mute" src="mute.png"></img>
+//       <h2>?</h2>
+//     </div>
+    
+//   )
+// }
+
 const Board = ( {score, gameover, turn, playerHand, playerTotal, dealerHand, dealerTotal}) => {
 
-  if(!gameover) {
     if(turn === true) {
       return (
-        <Hand name="Player" hand={playerHand} total={playerTotal} />
+        <Hand name="Player" hand={playerHand} total={playerTotal} gameover={gameover} />
       )
     }
     else 
       return (
-        <Hand name="Dealer" hand={dealerHand} total={dealerTotal} />
+        <Hand name="Dealer" hand={dealerHand} total={dealerTotal} gameover={gameover} />
       )
-  }
-  else 
-    return (
-      <div id="game-over-message">
-        <h2 id="win">
-          <span>LOSE</span>
-        </h2>
-        <h3 id="score-count"><CountUp start={score+20} end={score} duration={2} /></h3>
-        <h2 id="gameover">
-          <span>GAME OVER</span>
-        </h2>
-      </div>
-  )
 }
 
 const App = ({cards}) => {
@@ -97,6 +103,7 @@ const App = ({cards}) => {
   const [gameOver, toggleGameOver] = useState(false)
   const [playerWins, setplayerWins] = useState(false)
   const [score, setScore] = useState(200)
+  const [change, setChange] = useState(0)
 
   const total = (hand) => { 
     let sum = 0
@@ -125,6 +132,17 @@ const App = ({cards}) => {
 
   const declareWinner = (total) => {
     if(total > 21) {
+      if(playersTurn) {
+        setplayerWins(false)
+        setChange(-20)
+        setScore(score+change)
+        //write code here to wait three seconds and then return to intial state with updated score
+      }
+      else {
+        setplayerWins(true)
+        setChange(20)
+        setScore(score+change)
+      }
       toggleGameOver(true)
     }
   }
@@ -178,7 +196,7 @@ const App = ({cards}) => {
 
 return(
  		<div>	
-      <Score score={score} />
+      <Score score={score} change={change} />
       <Board 
         score={score}
         gameover={gameOver}
@@ -188,7 +206,7 @@ return(
         dealerHand={dealerHand} 
         dealerTotal={dealerTotal} 
       />		
-      <Controls gameover = {gameOver} deal = {deal} stand = { stand } />
+      <Controls gameover = {gameOver} deal = {deal} stand = { stand } playerWins={playerWins} />
 		</div>	
     )
 }

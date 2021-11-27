@@ -21,6 +21,7 @@ body {
 
 .hand {
   margin: 0 0 5rem 0;
+  min-width: 750px;
 }
 
 #gameover, 
@@ -31,10 +32,11 @@ body {
 }
 
 #score-count {
-  font-weight: 900;
+  font-weight: 800;
   display: block;
   text-align: center;
-  font-size: 65px;
+  font-size: 85px;
+  margin: 2rem 0;
 }
 
 .front {
@@ -71,6 +73,14 @@ body {
   font-weight: 700;
 }
 
+.off .front {
+  transform: translateY(0px);
+}
+
+.off:hover .front {
+  transform: translateY(0px);
+}
+
 button {
   margin: 0 10px;
 }
@@ -80,12 +90,29 @@ button {
   justify-content: space-around;
 }
 
+#board-bottom,
+#board-bottom-gameover {
+  height: 100px;
+}
+
+#board-bottom-gameover h3{
+  display: inline-block;
+  font-size: 45px;
+  margin: 0;
+}
+
+#board-bottom-gameover {
+  display: flex;
+  justify-content: space-evenly;
+}
+
 .pushable:focus:not(:focus-visible) {
   outline: none;
 }
 
 .total {
   font-size: 60px;
+  font-weight: 700;
 }
 
 #score {
@@ -95,19 +122,38 @@ button {
   margin: 2rem;
 }
 
+#help {
+  position: absolute;
+  display: flex;
+  top: 0;
+  right: 0;
+  margin: 2rem;
+}
+
+#help h2 {
+  margin: 0 0 0.15rem 0;
+  font-weight: 900;
+  font-size: 45px;
+}
+
+#mute {
+  max-width: 50px;
+}
+
 #score h3 {
   margin: 0;
   font-weight: 600;
-  font-size: 2rem;
+  font-size: 2.5rem;
 }
 
 #score h2 {
   margin: 0 0 .15rem 0;
-  font-weight: 200;
+  font-weight: 400;
 }
 
 .name {
   font-size: 45px;
+  font-weight: 700;
 }
 
 ul {
@@ -238,6 +284,29 @@ ul li:nth-of-type(2) {
 .card-value {
   z-index: 100;
   position: relative;
+  font-weight: 800;
+}
+
+.blink {
+  animation: blink-animation 1s steps(2, start) infinite;
+  -webkit-animation: blink-animation 1s steps(2, start) infinite;
+}
+
+.blink-delay {
+  animation: blink-animation .5s steps(2, start) infinite;
+  -webkit-animation: blink-animation 1s steps(2, start) infinite;
+  animation-delay: .5s;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
 }
 
 @media (max-width: 680px) {
@@ -286,11 +355,11 @@ ul li:nth-of-type(2) {
     font-size: 35px;
   }
 
-  /* vertical divider  */
-ul li:nth-of-type(5):after,
-ul li:nth-of-type(6):after,
-ul li:nth-of-type(7):after,
-ul li:nth-of-type(8):after  {
-  width: 80px;
-}
+    /* vertical divider  */
+  ul li:nth-of-type(5):after,
+  ul li:nth-of-type(6):after,
+  ul li:nth-of-type(7):after,
+  ul li:nth-of-type(8):after  {
+    width: 80px;
+  }
 }
