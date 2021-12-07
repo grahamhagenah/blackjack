@@ -4,6 +4,7 @@
 html, 
 body {
   height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -22,6 +23,11 @@ body {
 .hand {
   margin: 0 0 5rem 0;
   min-width: 750px;
+}
+
+.mini-hand {
+  margin: 0 0 1rem 0;
+  transform: scale(.5);
 }
 
 #gameover, 
@@ -52,12 +58,27 @@ body {
   transform: translateY(-2px);
 }
 
+.not-pushable {
+  background: #3B3B3B;
+  border: none;
+  border-radius: 15px;
+  padding: 0;
+  cursor: wait;
+  width: 100%;
+}
+
+.not-pushable .front {
+  transform: translateY(0px);
+}
+
+
 .pushable {
   background: #3B3B3B;
   border: none;
   border-radius: 15px;
   padding: 0;
   cursor: pointer;
+  width: 200px;
 }
 
 .front {
@@ -73,11 +94,7 @@ body {
   font-weight: 700;
 }
 
-.off .front {
-  transform: translateY(0px);
-}
-
-.off:hover .front {
+.not-pushable:hover .front {
   transform: translateY(0px);
 }
 
@@ -111,8 +128,8 @@ button {
 }
 
 .total {
-  font-size: 60px;
-  font-weight: 700;
+  font-size: 65px;
+  font-weight: 800;
 }
 
 #score {
@@ -152,7 +169,7 @@ button {
 }
 
 .name {
-  font-size: 45px;
+  font-size: 55px;
   font-weight: 700;
 }
 
@@ -162,6 +179,7 @@ ul {
   list-style: none;
   padding: 0;
   margin-right: 15px;
+  margin-left: 15px;
 }
 
 li {
@@ -309,24 +327,50 @@ ul li:nth-of-type(2) {
   }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 760px) {
   body, html {
     width: 100%;
     margin: 0 auto;
     position: fixed;
   }
 
-  .buttons {
-    max-width: 50%;
-    display: block;
+  ul {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  button {
-    width: 100%;
+  li:nth-of-type(1) {
+    grid-column: 1 / 2;
+    grid-row: 1;
+  }
+  
+  ul li:nth-of-type(2) {
+    grid-column: 2 / 2;
+    grid-row: 1;
+    margin-left: 15px;
+  }
+
+  li {
+    max-width: 100%;
+  }
+
+  .hand {
+    min-width: 100%;
+  }
+
+  .buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10%;
+    margin: 0 15px;
+    padding: 15px;
   }
 
   .pushable {
-    margin: 1rem;
+    width: 100%;
+  }
+
+  .front {
+    padding: 10px;
   }
 
   #root {
@@ -340,19 +384,63 @@ ul li:nth-of-type(2) {
   ul li:nth-of-type(6),
   ul li:nth-of-type(7),
   ul li:nth-of-type(8) {
-    aspect-ratio: 0;
+    aspect-ratio: 1.25;
+  }
+
+  ul li:nth-of-type(1) {
+    transform: translateX(-2px);
+  }
+
+  ul li:nth-of-type(2) {
+    border-radius: 0;
+    transform: translate(2px, 0);
+  }
+
+  ul li:nth-of-type(3) {
+    border-radius: 15px 0 0 0;
+    transform: translate(1.5px, 0);
+  }
+
+  ul li:nth-of-type(4) {
+    border-radius: 0 15px 0 0;
+    transform: translate(-1.5px, 0);
+  }
+  
+  ul li:nth-of-type(5) {
+    border-radius: 0;
+    transform: translate(1.5px, -3px);
+  }
+  
+  ul li:nth-of-type(6) {
+    border-radius: 0;
+    transform: translate(-1.5px, -3px);
+  }
+
+  ul li:nth-of-type(7) {
+    border-radius: 0 0 0 15px;
+    transform: translate(1.5px, -6px);
+  }
+  
+  ul li:nth-of-type(8) {
+    border-radius: 0 0 15px 0;
+    transform: translate(-1.5px, -6px);
   }
 
   li {
-    font-size: 25px;
+    font-size: 2rem;
   }
 
   .name {
-    font-size: 35px;
+    font-size: 2rem;
+  }
+
+  #score {
+    margin: 34px;
   }
 
   .total {
-    font-size: 35px;
+    font-size: 2rem;
+    margin-left: 0;
   }
 
     /* vertical divider  */
@@ -360,6 +448,6 @@ ul li:nth-of-type(2) {
   ul li:nth-of-type(6):after,
   ul li:nth-of-type(7):after,
   ul li:nth-of-type(8):after  {
-    width: 80px;
+    width: 225px;
   }
 }
