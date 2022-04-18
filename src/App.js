@@ -1,98 +1,80 @@
 import React, { useRef, useState } from "react";
 import CountUp from 'react-countup';
 import './App.css';
+import { AiOutlineSwap } from "react-icons/ai"
+import { useTransition, animated } from 'react-spring'
+
 
 
 const Hand = ({ name, hand, total, gameover }) => {
 
   return (
-    <div class="hand">
-      <div class="vertical-divider"></div>
-      <div class="horizontal-divider"></div>
+    <div className="hand">
+      <div className="vertical-divider"></div>
+      <div className="horizontal-divider"></div>
       <ul>		
-        <li class="name">{name}</li>
-        {(total === 0) && <li class="total"></li>}
-        {(total > 0) && <li class="total">{total}</li>}
-        <li><div class="card-value">{hand[0]}</div></li>
-        <li><div class="card-value">{hand[1]}</div></li>
-        <li><div class="card-value">{hand[2]}</div></li>
-        <li><div class="card-value">{hand[3]}</div></li>
-        <li><div class="card-value">{hand[4]}</div></li>
-        <li><div class="card-value">{hand[5]}</div></li>
+        <li className="name">{name}</li>
+        {(total === 0) && <li className="total"></li>}
+        {(total > 0) && <li className="total">{total}</li>}
+        <li><div className="card-value">{hand[0]}</div></li>
+        <li><div className="card-value">{hand[1]}</div></li>
+        <li><div className="card-value">{hand[2]}</div></li>
+        <li><div className="card-value">{hand[3]}</div></li>
+        <li><div className="card-value">{hand[4]}</div></li>
+        <li><div className="card-value">{hand[5]}</div></li>
       </ul>	
     </div>
   )
 }
 
-// const MiniHand = ({ name, hand, total, gameover }) => {
+const Controls = ({ gameover, deal, stand, playerWins, clear, playersTurn, view, switchView }) => {
 
-//   return (
-//     <div class="mini-hand">
-//       <div class="vertical-divider"></div>
-//       <div class="horizontal-divider"></div>
-//       <ul>		
-//         <li class="name">{name}</li>
-//         {(total === 0) && <li class="total"></li>}
-//         {(total > 0) && <li class="total">{total}</li>}
-//         <li><div class="card-value">{hand[0]}</div></li>
-//         <li><div class="card-value">{hand[1]}</div></li>
-//         <li><div class="card-value">{hand[2]}</div></li>
-//         <li><div class="card-value">{hand[3]}</div></li>
-//         <li><div class="card-value">{hand[4]}</div></li>
-//         <li><div class="card-value">{hand[5]}</div></li>
-//       </ul>	
-//     </div>
-//   )
-// }
-
-const Controls = ({ gameover, deal, stand, playerWins, clear, playersTurn }) => {
-
-  if(!gameover && playersTurn)
+  if(!gameover && playersTurn && (switchView === false))
     return (
       <div id="board-bottom">
-        <div class="buttons">
-          <button onClick = { deal } class="pushable">
-            <span class="front">Deal</span>
+        <div className="buttons">
+          <button onClick = { deal } className="pushable">
+            <span className="front">Deal</span>
           </button>
-          <button onClick = { stand } class="pushable">
-            <span class="front">Stand</span>
+          <button onClick = { stand } className="pushable">
+            <span className="front">Stand</span>
           </button>
-          <button onClick = { stand } class="pushable">
-           <span class="front">Double</span>
+          <button onClick = { stand } className="pushable">
+           <span className="front">Double</span>
          </button>
-          {/* <button onClick = { clear } class="pushable">
-            <span class="front">View</span>
-          </button> */}
+         <Swap view={view} />
         </div>
       </div>
     )
-  else if(!gameover && !playersTurn)
-  return (
-    <div id="board-bottom">
-      <div class="buttons">
-        <button class="not-pushable">
-          <span class="front">Deal</span>
-        </button>
-        <button class="not-pushable">
-          <span class="front">Stand</span>
-        </button>
-        <button class="not-pushable">
-          <span class="front">Double</span>
-        </button>
-        {/* <button class="not-pushable">
-          <span class="front">View</span>
-        </button> */}
+  else if(switchView === true)
+    return (
+      <div id="board-bottom">
+        <Swap view={view} />
       </div>
-    </div>
-  )
+    )
+  else if(!gameover && !playersTurn)
+    return (
+      <div id="board-bottom">
+        <div id="board-bottom-gameover">
+        {<h3 id="outcome">Dealing<span className="blink">...</span></h3>}
+      </div>
+      </div>
+    )
   else 
   return (
     <div id="board-bottom-gameover">
-      {(playerWins) && <h3 id="outcome">Game over; you <span class="blink">won.</span></h3>}
-      {(!playerWins) && <h3 id="outcome">Game over; you <span class="blink">lost.</span></h3>}
+      {(playerWins) && <h3 id="outcome">Game over; you <span className="blink">won.</span></h3>}
+      {(!playerWins) && <h3 id="outcome">Game over; you <span className="blink">lost.</span></h3>}
     </div>
   )
+}
 
+const Swap = ({ view }) => {
+  return (
+    <button id="swap" onClick = { view } >
+      <AiOutlineSwap />
+    </button>
+  )
 }
 
 const Score = ( {score, change} ) => {
@@ -105,8 +87,6 @@ const Score = ( {score, change} ) => {
   )
 }
 
-// not sure how to handle a state in which numbers are blinking for a set period of time
-
 const Help = () => {
   return (
     <div id="help">
@@ -117,11 +97,11 @@ const Help = () => {
   )
 }
 
-const Board = ( {score, gameover, turn, playerHand, playerTotal, dealerHand, dealerTotal}) => {
+const Board = ( {score, gameover, turn, playerHand, playerTotal, dealerHand, dealerTotal, switchView}) => {
 
-    if(turn === true) {
+    if(turn === true && switchView === false) {
       return (
-        <div class="board">
+        <div className="board">
           {/* <MiniHand name="Dealer" hand={playerHand} total={playerTotal} gameover={gameover} /> */}
           <Hand name="Player" hand={playerHand} total={playerTotal} gameover={gameover} />
         </div>
@@ -129,7 +109,7 @@ const Board = ( {score, gameover, turn, playerHand, playerTotal, dealerHand, dea
     }
     else 
       return (
-        <div class="board">
+        <div className="board">
           {/* <MiniHand name="Player" hand={playerHand} total={playerTotal} gameover={gameover} /> */}
           <Hand name="Dealer" hand={dealerHand} total={dealerTotal} gameover={gameover} />
         </div>
@@ -150,6 +130,7 @@ const App = ({cards}) => {
   const [playerWins, setplayerWins] = useState(false)
   const [score, setScore] = useState(200)
   const [change, setChange] = useState(0)
+  const [switchView, setView] = useState(false)
   const ref = useRef(nextDealerPosition);
 
   const clearState = () => {
@@ -191,8 +172,20 @@ const App = ({cards}) => {
     else return card
   }
 
-  const declareWinner = (total) => {
-    if(total > 21 && playersTurn) {
+  function declareWinner(total, dealersTurn) { 
+    let newPlayerTotal
+    let newDealerTotal
+    if(!dealersTurn) {
+      newPlayerTotal = total
+      newDealerTotal = dealerTotal
+    }
+    else {
+      newDealerTotal = total
+      newPlayerTotal = playerTotal
+    }
+    console.log(newDealerTotal + "newDealerTotal" )
+    console.log(newPlayerTotal + "newPlayerTotal" )
+    if(total > 21 && !dealersTurn) {
       setplayerWins(false)
       setChange(-20)
       setScore(score+change)
@@ -202,7 +195,18 @@ const App = ({cards}) => {
         clearInterval(intervalId)
       }, 3000)
     }
-    else if(total > 21 && !playersTurn){
+    else if(total > 21 && dealersTurn){
+      setplayerWins(true)
+      setChange(20)
+      setScore(score+change)
+      toggleGameOver(true)
+      const intervalId = setInterval(function() {
+        clearState()
+        clearInterval(intervalId)
+      }, 3000)
+    }
+    else if((newDealerTotal > 16) && (newPlayerTotal > newDealerTotal) && !dealersTurn){
+      console.log("WIN")
       setplayerWins(true)
       setChange(20)
       setScore(score+change)
@@ -218,8 +222,18 @@ const App = ({cards}) => {
     if(playersTurn) {
       return hitPlayer()
     }
+    // else {
+    //   console.log("player's turn???" + playersTurn)
+    //   return hitDealer()
+    // }
+  }
+
+  const switchHandView = () => { 
+    if(switchView === true) {
+      setView(false)
+    }
     else {
-      return hitDealer()
+      setView(true)
     }
   }
 
@@ -233,13 +247,7 @@ const App = ({cards}) => {
     setDeck(newDeck)
     const newPlayerTotal = total(playerHand)
     setPlayerTotal(newPlayerTotal)
-    declareWinner(newPlayerTotal)
-  }
-
-  function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+    declareWinner(newPlayerTotal, false)
   }
 
   const hitDealer = () => {
@@ -253,26 +261,34 @@ const App = ({cards}) => {
     setDeck(newDeck)
     const newDealerTotal = total(dealerHand)
     setDealerTotal(newDealerTotal)
-    declareWinner(newDealerTotal)
+    declareWinner(newDealerTotal, true)
   }
 
-  //If you want to perform an action on state update, you need to use the useEffect hook, much like using componentDidUpdate in class components since the setter returned by useState doesn't have a callback pattern
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+  }
+
+  //If you want to perform an action on state update, you need to use the useEffect hook, much like using componentDidUpdate in className components since the setter returned by useState doesn't have a callback pattern
 
   const stand = () => { 
-    let newPlayersTurn = !playersTurn
+    // console.log("yeah" + !playersTurn + playersTurn)
+    // let newPlayersTurn = playersTurn
     togglePlayersTurn(!playersTurn) 
-    if(!newPlayersTurn){
-      return autoDeal()
+    if(playersTurn){
+      autoDeal()
     }
   }
 
   const autoDeal = () => { 
     const intervalId = setInterval(function() {
+      console.log("yeah" + playersTurn)
       if (total(dealerHand) < 17)
         hitDealer()
       else {
         // Reset state ready for next time.
-        togglePlayersTurn(true) 
+        togglePlayersTurn(playersTurn) 
         clearInterval(intervalId)
       }
     }, 1000)
@@ -291,14 +307,18 @@ return (
         playerHand={playerHand} 
         playerTotal={playerTotal} 
         dealerHand={dealerHand} 
-        dealerTotal={dealerTotal} />		
+        dealerTotal={dealerTotal}
+        switchView={switchView} />		
       <Controls 
         gameover = {gameOver}
         deal = {deal} 
         stand = {stand} 
         playerWins={playerWins}
         clear={clearState}
-        playersTurn={playersTurn} />
+        playersTurn={playersTurn}
+        view={switchHandView}
+        switchView={ switchView }  />
+        {/* <Swap view={switchHandView} /> */}
 		</div>	
     )
 }

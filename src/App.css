@@ -4,7 +4,6 @@
 html, 
 body {
   height: 100%;
-  overflow: hidden;
 }
 
 body {
@@ -29,6 +28,24 @@ body {
   margin: 0 0 1rem 0;
   transform: scale(.5);
 }
+
+#swap {
+  position: absolute;
+  top: 40%;
+  right: 15%;
+  background-color: transparent;
+  border: none;
+  font-size: 5rem;
+  transform: scale(1);
+  transition: .25s;
+  cursor: pointer;
+  color: #3B3B3B;
+}
+
+/* #swap:hover {
+  width: 75px;
+  transform: scale(1.5);
+} */
 
 #gameover, 
 #win {
@@ -316,6 +333,12 @@ ul li:nth-of-type(2) {
   animation-delay: .5s;
 }
 
+.blink-delay-2 {
+  animation: blink-animation 2s steps(2, start) infinite;
+  -webkit-animation: blink-animation 2s steps(2, start) infinite;
+  animation-delay: 2s;
+}
+
 @keyframes blink-animation {
   to {
     visibility: hidden;
@@ -331,11 +354,28 @@ ul li:nth-of-type(2) {
   body, html {
     width: 100%;
     margin: 0 auto;
-    position: fixed;
+    display: block;
   }
 
   ul {
     grid-template-columns: repeat(2, 1fr);
+    margin: 15px;
+    padding: 0;
+  }
+
+  /* #score h3, h2 {
+    display: inline-block;
+    padding-right: 15px;
+    font-size: 1.5rem;
+  } */
+
+  #score h3 {
+    display: inline-block;
+  }
+
+  #score {
+    position: relative;
+    margin: 0;
   }
 
   li:nth-of-type(1) {
@@ -358,9 +398,7 @@ ul li:nth-of-type(2) {
   }
 
   .buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10%;
+    display: flex;
     margin: 0 15px;
     padding: 15px;
   }
@@ -370,7 +408,8 @@ ul li:nth-of-type(2) {
   }
 
   .front {
-    padding: 10px;
+    padding: 10px 25px;
+    font-size: 1rem;
   }
 
   #root {
@@ -434,8 +473,8 @@ ul li:nth-of-type(2) {
     font-size: 2rem;
   }
 
-  #score {
-    margin: 34px;
+  .card-value {
+    font-size: 45px;
   }
 
   .total {
@@ -448,6 +487,6 @@ ul li:nth-of-type(2) {
   ul li:nth-of-type(6):after,
   ul li:nth-of-type(7):after,
   ul li:nth-of-type(8):after  {
-    width: 225px;
+    width: 200px;
   }
 }
