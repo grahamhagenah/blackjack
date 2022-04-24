@@ -359,23 +359,43 @@ ul li:nth-of-type(2) {
 
   ul {
     grid-template-columns: repeat(2, 1fr);
-    margin: 15px;
+    margin: 2rem;
     padding: 0;
   }
 
-  /* #score h3, h2 {
-    display: inline-block;
-    padding-right: 15px;
-    font-size: 1.5rem;
-  } */
+  .buttons .pushable:nth-of-type(2) {
+    margin-left: 2rem;
+  }
+
+  .buttons .pushable:nth-of-type(3) {
+    margin-left: 3.25rem;
+  }
+
+  #swap {
+    top: 0;
+    right: 0;
+    margin: 15px 2rem;
+    font-size: 3rem;
+  }
+
+  .name {
+    text-align: left;
+  }
 
   #score h3 {
-    display: inline-block;
+    font-size: 2rem;
+    margin: 0 0 0 15px;
+    text-align: left;
+  }
+
+  #score h2 {
+    margin: 0 0 0 15px;
   }
 
   #score {
     position: relative;
-    margin: 0;
+    margin: 15px 2rem;
+    font-size: 12px;
   }
 
   li:nth-of-type(1) {
@@ -395,21 +415,23 @@ ul li:nth-of-type(2) {
 
   .hand {
     min-width: 100%;
+    margin: 0 0 3rem 0;
   }
 
   .buttons {
-    display: flex;
+    display: block;
     margin: 0 15px;
     padding: 15px;
   }
 
   .pushable {
-    width: 100%;
+    max-width: 60%;
+    margin: 0.75rem;
   }
 
   .front {
     padding: 10px 25px;
-    font-size: 1rem;
+    font-size: 1.25rem;
   }
 
   #root {
@@ -423,7 +445,7 @@ ul li:nth-of-type(2) {
   ul li:nth-of-type(6),
   ul li:nth-of-type(7),
   ul li:nth-of-type(8) {
-    aspect-ratio: 1.25;
+    aspect-ratio: 1.5;
   }
 
   ul li:nth-of-type(1) {
@@ -467,19 +489,21 @@ ul li:nth-of-type(2) {
 
   li {
     font-size: 2rem;
+    min-height: 50px;
   }
 
   .name {
-    font-size: 2rem;
+    font-size: 1.75rem;
+    margin: 15px;
   }
 
   .card-value {
-    font-size: 45px;
+    font-size: 1.75rem;
   }
 
   .total {
     font-size: 2rem;
-    margin-left: 0;
+    margin: 15px;
   }
 
     /* vertical divider  */
