@@ -20,7 +20,6 @@ body {
 }
 
 .hand {
-  margin: 0 0 5rem 0;
   min-width: 750px;
 }
 
@@ -95,7 +94,6 @@ body {
   border-radius: 15px;
   padding: 0;
   cursor: pointer;
-  width: 200px;
 }
 
 .front {
@@ -122,6 +120,7 @@ button {
 .buttons {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 #board-bottom,
@@ -359,16 +358,8 @@ ul li:nth-of-type(2) {
 
   ul {
     grid-template-columns: repeat(2, 1fr);
-    margin: 2rem;
+    margin: 1.5rem 2rem;
     padding: 0;
-  }
-
-  .buttons .pushable:nth-of-type(2) {
-    margin-left: 2rem;
-  }
-
-  .buttons .pushable:nth-of-type(3) {
-    margin-left: 3.25rem;
   }
 
   #swap {
@@ -415,22 +406,21 @@ ul li:nth-of-type(2) {
 
   .hand {
     min-width: 100%;
-    margin: 0 0 3rem 0;
+    margin: 0;
   }
 
-  .buttons {
+  /* .buttons {
     display: block;
     margin: 0 15px;
     padding: 15px;
-  }
+  } */
 
   .pushable {
-    max-width: 60%;
     margin: 0.75rem;
   }
 
   .front {
-    padding: 10px 25px;
+    padding: 8px 22px;
     font-size: 1.25rem;
   }
 

@@ -34,13 +34,13 @@ const Controls = ({ gameover, deal, stand, playerWins, clear, playersTurn, view,
       <div id="board-bottom">
         <div className="buttons">
           <button onClick = { deal } className="pushable">
-            <span className="front">Deal</span>
+            <span className="front">Hit</span>
           </button>
           <button onClick = { stand } className="pushable">
             <span className="front">Stand</span>
           </button>
           <button onClick = { stand } className="pushable">
-           <span className="front">Double</span>
+           <span className="front">2X</span>
          </button>
          <Swap view={view} />
         </div>
@@ -295,7 +295,7 @@ const App = ({cards}) => {
   }
 
 return (
- 		<div>	
+ 		<>	
      {/* <Help /> */}
       <Score 
         score={score} 
@@ -319,7 +319,7 @@ return (
         view={switchHandView}
         switchView={ switchView }  />
         {/* <Swap view={switchHandView} /> */}
-		</div>	
+		</>	
     )
 }
 
