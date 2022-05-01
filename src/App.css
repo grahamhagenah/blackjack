@@ -55,7 +55,7 @@ button {
 .front {
   will-change: transform;
   transition: transform 100ms;
-  -webkit-transition: 100ms transform linear; 
+  -webkit-transition: -webkit-transform 100ms ease 0s;
 }
 
 .pushable:hover .front {
