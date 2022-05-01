@@ -377,7 +377,7 @@ ul li:nth-of-type(2) {
   }
 
   .board {
-    height: 50vh;
+    height: 60vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
