@@ -28,29 +28,20 @@ body {
   transform: scale(.5);
 }
 
-#swap {
-  position: absolute;
-  top: 40%;
-  right: 15%;
-  background-color: transparent;
-  border: none;
-  font-size: 5rem;
-  transform: scale(1);
-  transition: .25s;
-  cursor: pointer;
-  color: #3B3B3B;
-}
-
-/* #swap:hover {
-  width: 75px;
-  transform: scale(1.5);
-} */
-
 #gameover, 
 #win {
   font-size: 45px;
   font-weight: 600;
   text-align: center;
+}
+
+#board-bottom-gameover #outcome {
+  font-size: 3.5rem;
+}
+
+button {
+  border: none;
+  background-color: transparent;
 }
 
 #score-count {
@@ -79,14 +70,15 @@ body {
   border: none;
   border-radius: 15px;
   padding: 0;
-  cursor: wait;
-  width: 100%;
+  cursor: default;
+  opacity: .5;
+  transition: 250ms;
+  min-width: 165px;
 }
 
 .not-pushable .front {
   transform: translateY(0px);
 }
-
 
 .pushable {
   background: #3B3B3B;
@@ -94,6 +86,7 @@ body {
   border-radius: 15px;
   padding: 0;
   cursor: pointer;
+  min-width: 165px;
 }
 
 .front {
@@ -117,21 +110,23 @@ button {
   margin: 0 10px;
 }
 
-.buttons {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
+#score {
+  height: 10vh;
 }
 
 #board-bottom,
 #board-bottom-gameover {
-  height: 100px;
+  height: 20vh;
+  margin-right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-#board-bottom-gameover h3{
+#board-bottom-gameover h3 {
   display: inline-block;
   font-size: 45px;
-  margin: 0;
+  margin: 0 auto;
 }
 
 #board-bottom-gameover {
@@ -195,7 +190,6 @@ ul {
   list-style: none;
   padding: 0;
   margin-right: 15px;
-  margin-left: 15px;
 }
 
 li {
@@ -358,19 +352,44 @@ ul li:nth-of-type(2) {
 
   ul {
     grid-template-columns: repeat(2, 1fr);
-    margin: 1.5rem 2rem;
     padding: 0;
   }
 
-  #swap {
-    top: 0;
-    right: 0;
-    margin: 15px 2rem;
-    font-size: 3rem;
+  .buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin: 0 15px;
   }
 
-  .name {
+  #swap {
+    top: 1rem;
+    right: 1rem;
+    position: absolute;
+    cursor: pointer;
+    color: #3B3B3B;
+  }
+
+  #board-bottom-gameover #outcome {
+    text-align: center;
+    font-size: 3rem;
+    line-height: 1.2;
+    margin-top: 1rem;
+  }
+
+  .board {
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  ul .name {
     text-align: left;
+    transform: none !important;
+  }
+
+  ul {
+    margin-left: 15px;
   }
 
   #score h3 {
@@ -385,7 +404,7 @@ ul li:nth-of-type(2) {
 
   #score {
     position: relative;
-    margin: 15px 2rem;
+    margin: 15px;
     font-size: 12px;
   }
 
@@ -409,24 +428,25 @@ ul li:nth-of-type(2) {
     margin: 0;
   }
 
-  /* .buttons {
-    display: block;
-    margin: 0 15px;
-    padding: 15px;
-  } */
+  #board-bottom,
+  #board-bottom-gameover {
+    height: 15vh;
+  }
 
-  .pushable {
-    margin: 0.75rem;
+  .pushable,
+  .not-pushable {
+    margin: 0.25rem;
+    min-width: auto;
   }
 
   .front {
-    padding: 8px 22px;
+    padding: 0.75rem;
     font-size: 1.25rem;
   }
 
   #root {
     max-width: 100%;
-    margin: 0 15px;
+    margin: 0.75rem;
   }
 
   ul li:nth-of-type(3),
@@ -435,7 +455,7 @@ ul li:nth-of-type(2) {
   ul li:nth-of-type(6),
   ul li:nth-of-type(7),
   ul li:nth-of-type(8) {
-    aspect-ratio: 1.5;
+    aspect-ratio: 2.5;
   }
 
   ul li:nth-of-type(1) {
@@ -483,17 +503,22 @@ ul li:nth-of-type(2) {
   }
 
   .name {
-    font-size: 1.75rem;
+    font-size: 2.25rem;
     margin: 15px;
   }
 
   .card-value {
-    font-size: 1.75rem;
+    font-size: 2.25rem;
   }
 
   .total {
-    font-size: 2rem;
+    font-size: 2.25rem;
     margin: 15px;
+  }
+
+  #board-bottom-gameover h3 {
+    font-size: 2rem;
+    margin: auto 1rem;
   }
 
     /* vertical divider  */
@@ -502,5 +527,18 @@ ul li:nth-of-type(2) {
   ul li:nth-of-type(7):after,
   ul li:nth-of-type(8):after  {
     width: 200px;
+  }
+}
+
+
+@media (max-width: 460px) { 
+
+  ul li:nth-of-type(3),
+  ul li:nth-of-type(4),
+  ul li:nth-of-type(5),
+  ul li:nth-of-type(6),
+  ul li:nth-of-type(7),
+  ul li:nth-of-type(8) {
+    aspect-ratio: 1.5;
   }
 }

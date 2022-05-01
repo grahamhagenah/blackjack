@@ -42,37 +42,48 @@ const Controls = ({ gameover, deal, stand, playerWins, clear, playersTurn, view,
           <button onClick = { stand } className="pushable">
            <span className="front">2X</span>
          </button>
-         <Swap view={view} />
+         <Swap view={view} playersTurn={true} />
         </div>
       </div>
     )
   else if(switchView === true)
     return (
       <div id="board-bottom">
-        <Swap view={view} />
+         <div className="buttons">
+          <button className="not-pushable">
+            <span className="front">Hit</span>
+          </button>
+          <button className="not-pushable">
+            <span className="front">Stand</span>
+          </button>
+          <button className="not-pushable">
+           <span className="front">2X</span>
+         </button>
+         <Swap view={view} playersTurn={false} />
+        </div>
       </div>
     )
   else if(!gameover && !playersTurn)
     return (
       <div id="board-bottom">
         <div id="board-bottom-gameover">
-        {<h3 id="outcome">Dealing<span className="blink">...</span></h3>}
-      </div>
+          {<h3 id="outcome">Dealing<span className="blink">...</span></h3>}
+        </div>
       </div>
     )
   else 
   return (
     <div id="board-bottom-gameover">
-      {(playerWins) && <h3 id="outcome">Game over; you <span className="blink">won.</span></h3>}
-      {(!playerWins) && <h3 id="outcome">Game over; you <span className="blink">lost.</span></h3>}
+      {(playerWins) && <h3 id="outcome">You <span className="blink">won.</span></h3>}
+      {(!playerWins) && <h3 id="outcome">You <span className="blink">lost.</span></h3>}
     </div>
   )
 }
 
-const Swap = ({ view }) => {
+const Swap = ({ view, playersTurn }) => {
   return (
-    <button id="swap" onClick = { view } >
-      <AiOutlineSwap />
+    <button id="swap" onClick = { view } className="pushable">
+      <span className="front">{playersTurn ? "Dealer" : "Player"}</span>
     </button>
   )
 }
