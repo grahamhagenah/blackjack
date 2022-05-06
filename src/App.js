@@ -3,8 +3,7 @@ import CountUp from 'react-countup';
 import './App.css';
 import { AiOutlineSwap } from "react-icons/ai"
 import { useTransition, animated } from 'react-spring'
-
-
+import {Helmet} from "react-helmet";
 
 const Hand = ({ name, hand, total, gameover }) => {
 
@@ -306,7 +305,12 @@ const App = ({cards}) => {
   }
 
 return (
- 		<>	
+ 		<>
+     <Helmet>
+        <meta charSet="utf-8" />
+        <title>Retro Blackjack</title>
+        <meta name="theme-color" content="#DBDBDB"></meta>
+      </Helmet>
      {/* <Help /> */}
       <Score 
         score={score} 

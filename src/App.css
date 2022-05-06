@@ -116,7 +116,7 @@ button {
 
 #board-bottom,
 #board-bottom-gameover {
-  height: 25vh;
+  height: 20vh;
   margin-right: 0;
   display: flex;
   flex-direction: column;
@@ -379,7 +379,7 @@ ul li:nth-of-type(2) {
   }
 
   .board {
-    height: 60vh;
+    height: 57vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
