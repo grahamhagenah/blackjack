@@ -82,7 +82,7 @@ const Controls = ({ gameover, deal, stand, playerWins, clear, playersTurn, view,
 const Swap = ({ view, playersTurn }) => {
   return (
     <button id="swap" onClick = { view } className="pushable">
-      <span className="front">{playersTurn ? "Dealer" : "Player"}</span>
+      <span className="front">View {playersTurn ? "Dealer" : "Player"}</span>
     </button>
   )
 }
@@ -248,6 +248,7 @@ const App = ({cards}) => {
   }
 
   const hitPlayer = () => {
+    window.navigator.vibrate(200)
     const newDeck = deck
     const newNextPlayerPosition = nextPlayerPosition
     const newPlayerHand = playerHand
