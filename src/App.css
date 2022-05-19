@@ -359,7 +359,7 @@ ul li:nth-of-type(2) {
 
   ul {
     grid-template-columns: repeat(2, 1fr);
-    padding: 2.5rem;
+    padding: 2.5rem 1rem;
     margin-left: 15px;
   }
 
@@ -384,10 +384,15 @@ ul li:nth-of-type(2) {
   }
 
   .board {
-    height: 57vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+
+  #board-bottom, 
+  #board-bottom-gameover {
+    height: 100%;
   }
 
   ul .name {
@@ -534,6 +539,6 @@ ul li:nth-of-type(2) {
   ul li:nth-of-type(6),
   ul li:nth-of-type(7),
   ul li:nth-of-type(8) {
-    aspect-ratio: 1.25;
+    aspect-ratio: 1.7;
   }
 }
