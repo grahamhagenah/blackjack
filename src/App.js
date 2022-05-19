@@ -5,30 +5,50 @@ import { AiOutlineSwap } from "react-icons/ai"
 import { useTransition, animated } from 'react-spring'
 import {Helmet} from "react-helmet";
 
-const Hand = ({ name, hand, total, gameover }) => {
+const Hand = ({ name, hand, total, gameover, score, change }) => {
 
-  return (
-    <div className="hand">
-      <div className="vertical-divider"></div>
-      <div className="horizontal-divider"></div>
-      <ul>		
-        <li className="name">{name}</li>
-        {(total === 0) && <li className="total"></li>}
-        {(total > 0) && <li className="total">{total}</li>}
-        <li><div className="card-value">{hand[0]}</div></li>
-        <li><div className="card-value">{hand[1]}</div></li>
-        <li><div className="card-value">{hand[2]}</div></li>
-        <li><div className="card-value">{hand[3]}</div></li>
-        <li><div className="card-value">{hand[4]}</div></li>
-        <li><div className="card-value">{hand[5]}</div></li>
-      </ul>	
-    </div>
-  )
+  // if(!gameover)
+    return (
+      <div className="hand">
+        <div className="vertical-divider"></div>
+        <div className="horizontal-divider"></div>
+        <ul>		
+          <li className="name">{name}</li>
+          {(total < 1) && <li className="total"></li>}
+          {console.log(total)}
+          {(total > 0) && <li className="total">{total}</li>}
+          <li><div className="card-value">{hand[0]}</div></li>
+          <li><div className="card-value">{hand[1]}</div></li>
+          <li><div className="card-value">{hand[2]}</div></li>
+          <li><div className="card-value">{hand[3]}</div></li>
+          <li><div className="card-value">{hand[4]}</div></li>
+          <li><div className="card-value">{hand[5]}</div></li>
+        </ul>	
+      </div>
+    )
+  // if(gameover)
+  //   return (
+  //     <LargeScore score={score} change={change} />
+  //   )
 }
 
-const Controls = ({ gameover, deal, stand, playerWins, clear, playersTurn, view, switchView }) => {
+const Controls = ({ gameover, deal, stand, playerWins, clear, playersTurn, view, switchView, beginningState }) => {
 
-  if(!gameover && playersTurn && (switchView === false))
+  if(beginningState)
+    return (
+      <div id="board-bottom">
+         <div className="buttons">
+          <button className="pushable">
+            <span className="front">Hit</span>
+          </button>
+          <button className="not-pushable">
+            <span className="front">Stand</span>
+          </button>
+         <Swap view={view} playersTurn={false} />
+        </div>
+      </div>
+    )
+  else if(!gameover && playersTurn && (switchView === false))
     return (
       <div id="board-bottom">
         <div className="buttons">
@@ -38,9 +58,6 @@ const Controls = ({ gameover, deal, stand, playerWins, clear, playersTurn, view,
           <button onClick = { stand } className="pushable">
             <span className="front">Stand</span>
           </button>
-          <button onClick = { stand } className="pushable">
-           <span className="front">2X</span>
-         </button>
          <Swap view={view} playersTurn={true} />
         </div>
       </div>
@@ -55,9 +72,6 @@ const Controls = ({ gameover, deal, stand, playerWins, clear, playersTurn, view,
           <button className="not-pushable">
             <span className="front">Stand</span>
           </button>
-          <button className="not-pushable">
-           <span className="front">2X</span>
-         </button>
          <Swap view={view} playersTurn={false} />
         </div>
       </div>
@@ -93,7 +107,15 @@ const Score = ( {score, change} ) => {
       <h2>Score</h2>
       <h3 id="score-count"><CountUp start={score} end={score+change} duration={2} /></h3>
     </div>
-    
+  )
+}
+
+const LargeScore = ( {score, change} ) => {
+  return (
+    <div id="large-score">
+      <h2>Score</h2>
+      <h3 id="score-count"><CountUp start={score} end={score+change} duration={2} /></h3>
+    </div>
   )
 }
 
@@ -107,21 +129,19 @@ const Help = () => {
   )
 }
 
-const Board = ( {score, gameover, turn, playerHand, playerTotal, dealerHand, dealerTotal, switchView}) => {
+const Board = ( {score, gameover, turn, playerHand, playerTotal, dealerHand, dealerTotal, switchView, change} ) => {
 
     if(turn === true && switchView === false) {
       return (
         <div className="board">
-          {/* <MiniHand name="Dealer" hand={playerHand} total={playerTotal} gameover={gameover} /> */}
-          <Hand name="Player" hand={playerHand} total={playerTotal} gameover={gameover} />
+          <Hand name="Player" hand={playerHand} total={playerTotal} gameover={gameover} score={score} change={change} />
         </div>
       )
     }
     else 
       return (
         <div className="board">
-          {/* <MiniHand name="Player" hand={playerHand} total={playerTotal} gameover={gameover} /> */}
-          <Hand name="Dealer" hand={dealerHand} total={dealerTotal} gameover={gameover} />
+          <Hand name="Dealer" hand={dealerHand} total={dealerTotal} gameover={gameover} score={score} change={change}  />
         </div>
       )
 }
@@ -129,6 +149,9 @@ const Board = ( {score, gameover, turn, playerHand, playerTotal, dealerHand, dea
 const App = ({cards}) => {
 
   const [deck, setDeck] = useState(cards)
+  const [hasAce, setHasAce] = useState(0)
+  const [dealerHasAce, setDealerHasAce] = useState(0)
+  const [beginningState, setBeginningState] = useState(true)
   const [playerHand, setPlayerHand] = useState(Array(6).fill(''))
   const [playerTotal, setPlayerTotal] = useState(0)
   const [dealerTotal, setDealerTotal] = useState(0)
@@ -159,8 +182,31 @@ const App = ({cards}) => {
 
   const total = (hand) => { 
     let sum = 0
+    var playerAces = 0
+    let dealerAces = 0
     for (let step = 0; step < hand.length; step++) {
+      if(getCardValue(hand[step]) === 11) {
+        if(playersTurn)
+          playerAces = playerAces + 1
+        else {
+          dealerAces = dealerAces + 1
+        }
+      }
       sum = sum + getCardValue(hand[step])
+    }
+    if((sum > 21) && (playersTurn)) {
+      while((playerAces > 0) && (sum > 21)) {
+        sum = sum - 10
+        playerAces = playerAces - 1
+        console.log(sum)
+        console.log(playerAces)
+      }
+    }
+    if((sum > 21) && (sum <= 17) && (!playersTurn)) {
+      while((dealerAces > 0) && (sum > 21)) {
+        sum = sum - 10
+        playerAces = playerAces - 1
+      }
     }
     return (sum)
   }
@@ -169,6 +215,11 @@ const App = ({cards}) => {
     if(isNaN(card))
       switch (card) {
         case 'A':
+          if(playersTurn) 
+            setHasAce(hasAce + 1)
+          else {
+            setDealerHasAce(dealerHasAce + 1)
+          }
           return 11
         case 'J':
           return 10
@@ -193,8 +244,6 @@ const App = ({cards}) => {
       newDealerTotal = total
       newPlayerTotal = playerTotal
     }
-    console.log(newDealerTotal + "newDealerTotal" )
-    console.log(newPlayerTotal + "newPlayerTotal" )
     if(total > 21 && !dealersTurn) {
       setplayerWins(false)
       setChange(-20)
@@ -215,8 +264,7 @@ const App = ({cards}) => {
         clearInterval(intervalId)
       }, 3000)
     }
-    else if((newDealerTotal > 16) && (newPlayerTotal > newDealerTotal) && !dealersTurn){
-      console.log("WIN")
+    else if((newDealerTotal > 16) && (newPlayerTotal > newDealerTotal) && dealersTurn){
       setplayerWins(true)
       setChange(20)
       setScore(score+change)
@@ -224,7 +272,17 @@ const App = ({cards}) => {
       const intervalId = setInterval(function() {
         clearState()
         clearInterval(intervalId)
-      }, 3000)
+      }, 5000)
+    }
+    else if((newDealerTotal > 16) && (newPlayerTotal < newDealerTotal) && dealersTurn){
+      setplayerWins(false)
+      setChange(-20)
+      setScore(score+change)
+      toggleGameOver(true)
+      const intervalId = setInterval(function() {
+        clearState()
+        clearInterval(intervalId)
+      }, 5000)
     }
   }
 
@@ -232,10 +290,6 @@ const App = ({cards}) => {
     if(playersTurn) {
       return hitPlayer()
     }
-    // else {
-    //   console.log("player's turn???" + playersTurn)
-    //   return hitDealer()
-    // }
   }
 
   const switchHandView = () => { 
@@ -248,7 +302,9 @@ const App = ({cards}) => {
   }
 
   const hitPlayer = () => {
-    window.navigator.vibrate(200)
+    if(beginningState) {
+      setBeginningState(false)
+    }
     const newDeck = deck
     const newNextPlayerPosition = nextPlayerPosition
     const newPlayerHand = playerHand
@@ -256,12 +312,15 @@ const App = ({cards}) => {
     setPlayerHand(newPlayerHand)
     setNextPlayerPosition(newNextPlayerPosition + 1)
     setDeck(newDeck)
-    const newPlayerTotal = total(playerHand)
+    const newPlayerTotal = total(playerHand) 
     setPlayerTotal(newPlayerTotal)
     declareWinner(newPlayerTotal, false)
   }
 
   const hitDealer = () => {
+    if(beginningState) {
+      setBeginningState(false)
+    }
     const newDeck = deck
     const newNextDealerPosition = ref.current
     const newDealerHand = dealerHand
@@ -294,7 +353,6 @@ const App = ({cards}) => {
 
   const autoDeal = () => { 
     const intervalId = setInterval(function() {
-      console.log("yeah" + playersTurn)
       if (total(dealerHand) < 17)
         hitDealer()
       else {
@@ -324,7 +382,8 @@ return (
         playerTotal={playerTotal} 
         dealerHand={dealerHand} 
         dealerTotal={dealerTotal}
-        switchView={switchView} />		
+        switchView={switchView}
+        change={change} />		
       <Controls 
         gameover = {gameOver}
         deal = {deal} 
@@ -333,7 +392,8 @@ return (
         clear={clearState}
         playersTurn={playersTurn}
         view={switchHandView}
-        switchView={ switchView }  />
+        switchView={ switchView }
+        hasAce={hasAce}  />
         {/* <Swap view={switchHandView} /> */}
 		</>	
     )

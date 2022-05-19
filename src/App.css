@@ -28,6 +28,11 @@ body {
   transform: scale(.5);
 }
 
+.buttons {
+  justify-content: space-between;
+  display: flex;
+}
+
 #gameover, 
 #win {
   font-size: 45px;
@@ -36,7 +41,7 @@ body {
 }
 
 #board-bottom-gameover #outcome {
-  font-size: 2rem;
+  font-size: 3rem;
 }
 
 button {
@@ -73,7 +78,7 @@ button {
   padding: 0;
   cursor: default;
   opacity: .5;
-  min-width: 165px;
+  min-width: 28%;
 }
 
 .not-pushable .front {
@@ -86,7 +91,7 @@ button {
   border-radius: 15px;
   padding: 0;
   cursor: pointer;
-  min-width: 165px;
+  min-width: 28%;
 }
 
 .front {
@@ -360,7 +365,7 @@ ul li:nth-of-type(2) {
 
   .buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     margin: 0 15px;
   }
 
