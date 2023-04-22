@@ -1,35 +1,27 @@
 import React, { useRef, useState } from "react";
 import CountUp from 'react-countup';
 import './App.css';
-import { AiOutlineSwap } from "react-icons/ai"
-import { useTransition, animated } from 'react-spring'
 import {Helmet} from "react-helmet";
 
 const Hand = ({ name, hand, total, gameover, score, change }) => {
-
-  // if(!gameover)
-    return (
-      <div className="hand">
-        <div className="vertical-divider"></div>
-        <div className="horizontal-divider"></div>
-        <ul>		
-          <li className="name">{name}</li>
-          {(total < 1) && <li className="total"></li>}
-          {console.log(total)}
-          {(total > 0) && <li className="total">{total}</li>}
-          <li><div className="card-value">{hand[0]}</div></li>
-          <li><div className="card-value">{hand[1]}</div></li>
-          <li><div className="card-value">{hand[2]}</div></li>
-          <li><div className="card-value">{hand[3]}</div></li>
-          <li><div className="card-value">{hand[4]}</div></li>
-          <li><div className="card-value">{hand[5]}</div></li>
-        </ul>	
-      </div>
-    )
-  // if(gameover)
-  //   return (
-  //     <LargeScore score={score} change={change} />
-  //   )
+  return (
+    <div className="hand">
+      <div className="vertical-divider"></div>
+      <div className="horizontal-divider"></div>
+      <ul>		
+        <li className="name">{name}</li>
+        {(total < 1) && <li className="total"></li>}
+        {console.log(total)}
+        {(total > 0) && <li className="total">{total}</li>}
+        <li><div className="card-value">{hand[0]}</div></li>
+        <li><div className="card-value">{hand[1]}</div></li>
+        <li><div className="card-value">{hand[2]}</div></li>
+        <li><div className="card-value">{hand[3]}</div></li>
+        <li><div className="card-value">{hand[4]}</div></li>
+        <li><div className="card-value">{hand[5]}</div></li>
+      </ul>	
+    </div>
+  )
 }
 
 const Controls = ({ gameover, deal, stand, playerWins, clear, playersTurn, view, switchView, beginningState }) => {
@@ -337,14 +329,12 @@ const App = ({cards}) => {
   function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (max - min) + min);
   }
 
   //If you want to perform an action on state update, you need to use the useEffect hook, much like using componentDidUpdate in className components since the setter returned by useState doesn't have a callback pattern
 
   const stand = () => { 
-    // console.log("yeah" + !playersTurn + playersTurn)
-    // let newPlayersTurn = playersTurn
     togglePlayersTurn(!playersTurn) 
     if(playersTurn){
       autoDeal()
@@ -394,33 +384,8 @@ return (
         view={switchHandView}
         switchView={ switchView }
         hasAce={hasAce}  />
-        {/* <Swap view={switchHandView} /> */}
 		</>	
     )
 }
 
 export default App
-
-
-//TODO:
-//what if total equals 21
-//figure out automatic dealing for dealer and logic to stand at 17, use timeout for slight delay to see numbers loading
-//figure out scoring system, look up how it's done 
-//figure out what double means and how to implement
-//implement resset to intitial state
-//add animations using spring or framer motion to show numbers blinking into place
-//add cool buttons inspired by josh comeau's 3D buttons
-//disable buttons while dealer is dealing
-//add CSS and HTML to make it look good
-//on win or lose, show full width score board counting up or down to the new total of points
-//add sound effects
-//deploy to netflify
-//don't refactor unless you have to! just promise to do better next time
-
-//need to put h1 and two buttons into own compenent to change that when game is over and winner is declared
-
-
-// I still don't get what's going on with immutablity, look into this later and refactor if necc.
-//huge misunderdstanding, I thought for some reason that ... would be for assigning a variable to another variable
-//rememerbt ah tf you want to use destructing, it can cut down on code bc you don't have to write props.everything, just use shrot prop names
-//you can refactor til the cows come home
