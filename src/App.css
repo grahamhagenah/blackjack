@@ -19,6 +19,28 @@ body {
   overflow: hidden;
 }
 
+#root {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#game-area {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  padding: 2rem 0;
+  box-sizing: border-box;
+}
+
 .hand {
   min-width: 750px;
 }
@@ -31,6 +53,12 @@ body {
 .buttons {
   justify-content: space-between;
   display: flex;
+  align-items: center;
+  min-height: 72px;
+}
+
+.buttons.dealing {
+  justify-content: center;
 }
 
 #gameover, 
@@ -78,7 +106,6 @@ button {
   padding: 0;
   cursor: default;
   opacity: .5;
-  min-width: 28%;
 }
 
 .not-pushable .front {
@@ -91,7 +118,6 @@ button {
   border-radius: 15px;
   padding: 0;
   cursor: pointer;
-  min-width: 28%;
 }
 
 .front {
@@ -119,13 +145,98 @@ button {
   height: 10vh;
 }
 
+#outcome-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 16px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.help-button {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 11;
+}
+
+.help-button .front {
+  padding: 8px 16px;
+  font-size: 1.5rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(59, 59, 59, 0.25);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.modal {
+  background: #DBDBDB;
+  border: 3px solid #3B3B3B;
+  border-radius: 18px;
+  width: min(720px, 92vw);
+  padding: 20px 24px 24px;
+  box-shadow: 0 16px 60px rgba(59, 59, 59, 0.25);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.modal-body p {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+.modal-body .modal-note {
+  font-size: 1rem;
+  opacity: 0.85;
+}
+
+.modal-close {
+  margin: 0;
+}
+
+#outcome-banner .outcome.lost {
+  font-size: 3.5rem;
+}
+
+#outcome-banner .outcome.won {
+  font-size: 3.5rem;
+}
+
+#outcome-banner.hide {
+  visibility: hidden;
+}
+
 #board-bottom,
 #board-bottom-gameover {
-  height: 20vh;
+  height: auto;
   margin-right: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-top: 0;
 }
 
 #board-bottom-gameover h3 {
@@ -139,6 +250,7 @@ button {
   flex-direction: column;
   justify-content: center;
 }
+
 
 .pushable:focus:not(:focus-visible) {
   outline: none;
