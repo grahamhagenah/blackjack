@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 import App from './App'
 
 //create deck of cards
@@ -11,7 +11,5 @@ for(var suits = 0; suits < 4; suits++) {
   }
 }
 
-ReactDOM.render(
-  <App cards={ cards } />, 
-  document.getElementById('root')
-)
+const root = ReactDOM.createRoot(document.getElementById('root'))
+root.render(<App cards={ cards } />)

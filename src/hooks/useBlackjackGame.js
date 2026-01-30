@@ -68,7 +68,6 @@ const useBlackjackGame = (cards) => {
   const [dealerHand, setDealerHand] = useState(createEmptyHand);
   const [playerTotal, setPlayerTotal] = useState(0);
   const [dealerTotal, setDealerTotal] = useState(0);
-  const [nextPlayerIndex, setNextPlayerIndex] = useState(0);
   const [nextDealerIndex, setNextDealerIndex] = useState(0);
   const [playersTurn, setPlayersTurn] = useState(true);
   const [gameOver, setGameOver] = useState(false);
@@ -167,7 +166,6 @@ const useBlackjackGame = (cards) => {
     setPlayerTotal(0);
     setDealerTotal(0);
     setDeck(cards.slice());
-    setNextPlayerIndex(0);
     setNextDealerIndex(0);
     nextDealerIndexRef.current = 0;
     nextPlayerIndexRef.current = 0;
@@ -215,7 +213,6 @@ const useBlackjackGame = (cards) => {
     };
     setDeck(nextDeck);
     setPlayerHand(nextHand);
-    setNextPlayerIndex(index + 1);
     setPlayerTotal(nextTotal);
     applyOutcome(
       evaluateWinner({
