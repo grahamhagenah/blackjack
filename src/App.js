@@ -33,16 +33,23 @@ const App = ({ cards }) => {
   } = useBlackjackGame(cards);
 
   // Delay showing the end game screen so player can see the final result
+  // Skip delay for push (change === 0)
   useEffect(() => {
     if (gameOver) {
-      const timer = setTimeout(() => {
+      if (change === 0) {
+        // Push - show end game immediately
         setShowEndGameScreen(true);
-      }, 2000); // 2 second delay to see the bust/result
-      return () => clearTimeout(timer);
+      } else {
+        // Win/loss - delay to show result
+        const timer = setTimeout(() => {
+          setShowEndGameScreen(true);
+        }, 2000);
+        return () => clearTimeout(timer);
+      }
     } else {
       setShowEndGameScreen(false);
     }
-  }, [gameOver]);
+  }, [gameOver, change]);
 
   return (
     <>

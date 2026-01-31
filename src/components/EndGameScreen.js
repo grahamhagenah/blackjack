@@ -56,8 +56,11 @@ const EndGameScreen = ({
               <>Player <span className="blink">{playerWins ? "won" : "lost"}.</span></>
             )}
           </h2>
-          <div className={`end-game-score ${change === 0 ? "neutral" : playerWins ? "positive" : "negative"}`}>
-            {displayScore}
+          <div className="end-game-score-container">
+            <span className="end-game-score-label">Score</span>
+            <div className={`end-game-score ${change === 0 ? "neutral" : playerWins ? "positive" : "negative"}`}>
+              {displayScore}
+            </div>
           </div>
         </div>
 
