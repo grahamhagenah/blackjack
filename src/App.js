@@ -127,7 +127,7 @@ const App = ({ cards }) => {
               <ol className="modal-list">
                 <li>
                   Draw cards to reach 21 without going over. Face cards are
-                  worth 10, Aces are worth 11 (and drop to 1 if you’d bust).
+                  worth 10, Aces are worth 11 (and drop to 1 if you'd bust).
                 </li>
                 <li>
                   Hit to take a card. Stand to end your turn—then the dealer
@@ -136,6 +136,10 @@ const App = ({ cards }) => {
                 <li>
                   If you bust, you lose. If the dealer busts, you win.
                   Otherwise, the higher total wins.
+                </li>
+                <li>
+                  If your total equals the dealer's, you can Push to end the
+                  game as a tie with no score change.
                 </li>
               </ol>
               <p className="modal-tip">

@@ -52,6 +52,10 @@ const evaluateWinner = ({ total, dealersTurn, playerTotal, dealerTotal }) => {
   if (total > 21 && dealersTurn) {
     return { gameOver: true, playerWins: true };
   }
+  // If totals are equal after dealer finishes, don't end game - let player choose to push
+  if (dealersTurn && dealerTotal > 16 && playerTotal === dealerTotal) {
+    return { gameOver: false, playerWins: false };
+  }
   if (dealersTurn && dealerTotal > 16 && playerTotal > dealerTotal) {
     return { gameOver: true, playerWins: true };
   }
@@ -289,7 +293,11 @@ const useBlackjackGame = (cards) => {
         hitDealer();
       } else {
         stopDealer();
-        if (!current.gameOver) setPlayersTurn(true);
+        if (!current.gameOver) {
+          // Dealer finished, game not over (totals must be equal) - let player choose to push
+          setPlayersTurn(true);
+          setSwitchView(false);
+        }
       }
     }, 1000);
   }, [hitDealer, stopDealer]);
