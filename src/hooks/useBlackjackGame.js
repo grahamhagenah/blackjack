@@ -75,6 +75,7 @@ const useBlackjackGame = (cards) => {
   const [score, setScore] = useState(STARTING_SCORE);
   const [change, setChange] = useState(0);
   const [switchView, setSwitchView] = useState(false);
+  const [muted, setMuted] = useState(false);
 
   const playerSoundRef = useRef(null);
   const dealerSoundRef = useRef(null);
@@ -117,6 +118,13 @@ const useBlackjackGame = (cards) => {
     dealerSoundRef.current.volume = 0.2;
     resetSoundRef.current.volume = 0.25;
   }, []);
+
+  useEffect(() => {
+    const nextMuted = Boolean(muted);
+    if (playerSoundRef.current) playerSoundRef.current.muted = nextMuted;
+    if (dealerSoundRef.current) dealerSoundRef.current.muted = nextMuted;
+    if (resetSoundRef.current) resetSoundRef.current.muted = nextMuted;
+  }, [muted]);
 
   useEffect(() => {
     if (!didMountRef.current) {
@@ -297,6 +305,10 @@ const useBlackjackGame = (cards) => {
     setSwitchView((prev) => !prev);
   }, []);
 
+  const toggleMuted = useCallback(() => {
+    setMuted((prev) => !prev);
+  }, []);
+
   useEffect(() => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -314,11 +326,13 @@ const useBlackjackGame = (cards) => {
     playerWins,
     score,
     change,
+    muted,
     switchView,
     deal,
     stand,
     clearState,
     switchHandView,
+    toggleMuted,
   };
 };
 

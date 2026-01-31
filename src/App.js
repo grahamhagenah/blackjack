@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
 import { Helmet } from "react-helmet";
+import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/solid";
 import Controls from "./components/Controls";
 import Score from "./components/Score";
 import Board from "./components/Board";
@@ -20,11 +21,13 @@ const App = ({ cards }) => {
     playerWins,
     score,
     change,
+    muted,
     switchView,
     deal,
     stand,
     clearState,
     switchHandView,
+    toggleMuted,
   } = useBlackjackGame(cards);
 
   return (
@@ -34,14 +37,32 @@ const App = ({ cards }) => {
         <title>Retro Blackjack</title>
         <meta name="theme-color" content="#DBDBDB"></meta>
       </Helmet>
-      <Score score={score} change={change} />
-      <button
-        className="help-button"
-        onClick={() => setShowRules(true)}
-        aria-label="Show rules"
-      >
-        <span className="front">?</span>
-      </button>
+      <div className="top-bar">
+        <Score score={score} change={change} />
+        <div className="help-controls">
+          <button
+            className="pushable help-button"
+            onClick={() => setShowRules(true)}
+            aria-label="Show rules"
+          >
+            <span className="front">?</span>
+          </button>
+          <button
+            className="pushable help-button mute-button"
+            onClick={toggleMuted}
+            aria-pressed={muted}
+            aria-label={muted ? "Unmute sounds" : "Mute sounds"}
+          >
+            <span className="front">
+              {muted ? (
+                <SpeakerXMarkIcon aria-hidden="true" />
+              ) : (
+                <SpeakerWaveIcon aria-hidden="true" />
+              )}
+            </span>
+          </button>
+        </div>
+      </div>
       <div id="game-area">
         <OutcomeBanner gameOver={gameOver} playerWins={playerWins} />
         <Board
@@ -73,30 +94,34 @@ const App = ({ cards }) => {
           >
             <div className="modal-header">
               <h2>How to Play</h2>
-              <button
-                className="pushable modal-close"
-                onClick={() => setShowRules(false)}
-              >
-                <span className="front">Close</span>
-              </button>
             </div>
             <div className="modal-body">
-              <p>
-                Draw cards to reach 21 without going over. Face cards are worth
-                10, Aces are worth 11 (and drop to 1 if you’d bust).
+              <ol className="modal-list">
+                <li>
+                  Draw cards to reach 21 without going over. Face cards are
+                  worth 10, Aces are worth 11 (and drop to 1 if you’d bust).
+                </li>
+                <li>
+                  Hit to take a card. Stand to end your turn—then the dealer
+                  draws until their total is at least 17.
+                </li>
+                <li>
+                  If you bust, you lose. If the dealer busts, you win.
+                  Otherwise, the higher total wins.
+                </li>
+              </ol>
+              <p className="modal-tip">
+                Tip: Use “View Dealer / View Player” to toggle the board view at
+                any time.
               </p>
-              <p>
-                Hit to take a card. Stand to end your turn—then the dealer draws
-                until their total is at least 17.
-              </p>
-              <p>
-                If you bust, you lose. If the dealer busts, you win. Otherwise,
-                the higher total wins.
-              </p>
-              <p className="modal-note">
-                Use “View Dealer / View Player” to toggle the board view at any
-                time.
-              </p>
+              <div className="modal-actions">
+                <button
+                  className="pushable modal-close"
+                  onClick={() => setShowRules(false)}
+                >
+                  <span className="front">Got it</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
