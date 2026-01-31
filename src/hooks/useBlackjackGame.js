@@ -82,10 +82,8 @@ const useBlackjackGame = (cards) => {
   const [switchView, setSwitchView] = useState(false);
   const [muted, setMuted] = useState(false);
 
-  const playerSoundRef = useRef(null);
-  const dealerSoundRef = useRef(null);
-  const resetSoundRef = useRef(null);
-  const bustSoundRef = useRef(null);
+  const audioContextRef = useRef(null);
+  const audioBuffersRef = useRef({});
   const prevTotalsRef = useRef({ player: 0, dealer: 0 });
   const didMountRef = useRef(false);
   const suppressSoundRef = useRef(false);
@@ -118,24 +116,56 @@ const useBlackjackGame = (cards) => {
     gameOver,
   ]);
 
-  useEffect(() => {
-    playerSoundRef.current = new Audio("/retro-player.wav");
-    dealerSoundRef.current = new Audio("/retro-dealer.wav");
-    resetSoundRef.current = new Audio("/retro-reset.wav");
-    bustSoundRef.current = new Audio("/retro-bust.wav");
-    playerSoundRef.current.volume = 0.22;
-    dealerSoundRef.current.volume = 0.2;
-    resetSoundRef.current.volume = 0.25;
-    bustSoundRef.current.volume = 0.25;
+  const ensureAudioUnlocked = useCallback(() => {
+    const ctx = audioContextRef.current;
+    if (!ctx) return;
+    if (ctx.state !== "running") {
+      ctx.resume().catch(() => {});
+    }
   }, []);
 
+  const playSound = useCallback(
+    (key) => {
+      if (muted) return;
+      const ctx = audioContextRef.current;
+      const entry = audioBuffersRef.current[key];
+      if (!ctx || !entry?.buffer) return;
+      const source = ctx.createBufferSource();
+      const gain = ctx.createGain();
+      gain.gain.value = entry.volume;
+      source.buffer = entry.buffer;
+      source.connect(gain).connect(ctx.destination);
+      source.start(0);
+    },
+    [muted]
+  );
+
   useEffect(() => {
-    const nextMuted = Boolean(muted);
-    if (playerSoundRef.current) playerSoundRef.current.muted = nextMuted;
-    if (dealerSoundRef.current) dealerSoundRef.current.muted = nextMuted;
-    if (resetSoundRef.current) resetSoundRef.current.muted = nextMuted;
-    if (bustSoundRef.current) bustSoundRef.current.muted = nextMuted;
-  }, [muted]);
+    if (typeof window === "undefined" || !window.AudioContext) return;
+    const ctx = new window.AudioContext();
+    audioContextRef.current = ctx;
+
+    const loadBuffer = async (key, url, volume) => {
+      const response = await fetch(url);
+      const data = await response.arrayBuffer();
+      const buffer = await ctx.decodeAudioData(data);
+      audioBuffersRef.current[key] = { buffer, volume };
+    };
+
+    Promise.all([
+      loadBuffer("player", "/retro-player.wav", 0.22),
+      loadBuffer("dealer", "/retro-dealer.wav", 0.2),
+      loadBuffer("reset", "/retro-reset.wav", 0.25),
+      loadBuffer("bust", "/retro-bust.wav", 0.25),
+    ]).catch(() => {});
+
+    return () => {
+      if (audioContextRef.current) {
+        audioContextRef.current.close().catch(() => {});
+        audioContextRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!didMountRef.current) {
@@ -151,43 +181,27 @@ const useBlackjackGame = (cards) => {
     const prev = prevTotalsRef.current;
     const playerChanged = prev.player !== playerTotal;
     const dealerChanged = prev.dealer !== dealerTotal;
-    if (playerChanged && playerSoundRef.current) {
+    if (playerChanged) {
       if (suppressNextPlayerSoundRef.current) {
         suppressNextPlayerSoundRef.current = false;
       } else {
-      try {
-        playerSoundRef.current.currentTime = 0;
-        playerSoundRef.current.play();
-      } catch (e) {
-        // ignore autoplay errors
-      }
+        playSound("player");
       }
     }
-    if (dealerChanged && dealerSoundRef.current) {
+    if (dealerChanged) {
       if (suppressNextDealerSoundRef.current) {
         suppressNextDealerSoundRef.current = false;
       } else {
-      try {
-        dealerSoundRef.current.currentTime = 0;
-        dealerSoundRef.current.play();
-      } catch (e) {
-        // ignore autoplay errors
-      }
+        playSound("dealer");
       }
     }
     prevTotalsRef.current = { player: playerTotal, dealer: dealerTotal };
-  }, [playerTotal, dealerTotal]);
+  }, [playerTotal, dealerTotal, playSound]);
 
   const clearState = useCallback(() => {
+    ensureAudioUnlocked();
     suppressSoundRef.current = true;
-    if (resetSoundRef.current) {
-      try {
-        resetSoundRef.current.currentTime = 0;
-        resetSoundRef.current.play();
-      } catch (e) {
-        // ignore autoplay errors
-      }
-    }
+    playSound("reset");
     setPlayerHand(createEmptyHand());
     setDealerHand(createEmptyHand());
     setPlayerTotal(0);
@@ -205,7 +219,7 @@ const useBlackjackGame = (cards) => {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-  }, [cards]);
+  }, [cards, ensureAudioUnlocked, playSound]);
 
   const applyOutcome = useCallback(
     ({ gameOver: isGameOver, playerWins: didWin }) => {
@@ -248,18 +262,21 @@ const useBlackjackGame = (cards) => {
         dealerTotal: current.dealerTotal,
       });
 
-    if (outcome.gameOver && nextTotal > 21 && bustSoundRef.current) {
+    if (outcome.gameOver && nextTotal > 21) {
+      ensureAudioUnlocked();
       suppressNextPlayerSoundRef.current = true;
-      try {
-        bustSoundRef.current.currentTime = 0;
-        bustSoundRef.current.play();
-      } catch (e) {
-        // ignore autoplay errors
-      }
+      playSound("bust");
     }
 
     applyOutcome(outcome);
-  }, [gameOver, playersTurn, beginningState, applyOutcome]);
+  }, [
+    gameOver,
+    playersTurn,
+    beginningState,
+    applyOutcome,
+    ensureAudioUnlocked,
+    playSound,
+  ]);
 
   const hitDealer = useCallback(() => {
     if (gameOver) return;
@@ -291,22 +308,19 @@ const useBlackjackGame = (cards) => {
         dealerTotal: nextTotal,
       });
 
-    if (outcome.gameOver && nextTotal > 21 && bustSoundRef.current) {
+    if (outcome.gameOver && nextTotal > 21) {
+      ensureAudioUnlocked();
       suppressNextDealerSoundRef.current = true;
-      try {
-        bustSoundRef.current.currentTime = 0;
-        bustSoundRef.current.play();
-      } catch (e) {
-        // ignore autoplay errors
-      }
+      playSound("bust");
     }
 
     applyOutcome(outcome);
-  }, [gameOver, beginningState, applyOutcome]);
+  }, [gameOver, beginningState, applyOutcome, ensureAudioUnlocked, playSound]);
 
   const deal = useCallback(() => {
+    ensureAudioUnlocked();
     if (playersTurn) hitPlayer();
-  }, [playersTurn, hitPlayer]);
+  }, [ensureAudioUnlocked, playersTurn, hitPlayer]);
 
   const stopDealer = useCallback(() => {
     if (intervalRef.current) {
@@ -338,23 +352,26 @@ const useBlackjackGame = (cards) => {
   }, [hitDealer, stopDealer]);
 
   const stand = useCallback(() => {
+    ensureAudioUnlocked();
     if (!playersTurn || gameOver) return;
     setPlayersTurn(false);
     setSwitchView(true);
     autoDeal();
-  }, [playersTurn, gameOver, autoDeal]);
+  }, [ensureAudioUnlocked, playersTurn, gameOver, autoDeal]);
 
   const push = useCallback(() => {
+    ensureAudioUnlocked();
     if (!playersTurn || gameOver) return;
     // End game as a tie - no score change
     setChange(0);
     setGameOver(true);
     setPlayerWins(false); // Not a win, but not a loss either
-  }, [playersTurn, gameOver]);
+  }, [ensureAudioUnlocked, playersTurn, gameOver]);
 
   const switchHandView = useCallback(() => {
+    ensureAudioUnlocked();
     setSwitchView((prev) => !prev);
-  }, []);
+  }, [ensureAudioUnlocked]);
 
   const toggleMuted = useCallback(() => {
     setMuted((prev) => !prev);

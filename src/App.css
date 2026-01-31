@@ -909,7 +909,8 @@ button {
 
   #game-area {
     gap: 1rem;
-    padding: 0 1rem;
+    padding: 2rem 1rem;
+    justify-content: center;
   }
 
   #outcome-banner {
