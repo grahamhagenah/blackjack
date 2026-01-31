@@ -14,9 +14,19 @@ const Board = ({
   return (
     <div className="board">
       {showPlayer ? (
-        <Hand name="Player" hand={playerHand} total={playerTotal} />
+        <Hand
+          name="Player"
+          hand={playerHand}
+          total={playerTotal}
+          playersTurn={playersTurn}
+        />
       ) : (
-        <Hand name="Dealer" hand={dealerHand} total={dealerTotal} />
+        <Hand
+          name="Dealer"
+          hand={dealerHand}
+          total={dealerTotal}
+          playersTurn={playersTurn}
+        />
       )}
     </div>
   );

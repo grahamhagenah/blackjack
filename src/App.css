@@ -615,6 +615,8 @@ button {
 .hand-grid .total {
   font-weight: 800;
   aspect-ratio: auto;
+  position: relative;
+  overflow: visible;
 }
 
 .total-label {
@@ -758,6 +760,34 @@ button {
 .hand-grid .total {
   position: relative;
   z-index: 3;
+}
+
+.total-burst {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #3B3B3B;
+  pointer-events: none;
+  animation: total-burst-float 1.2s ease-out forwards;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes total-burst-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -120%) scale(1.05);
+  }
 }
 
 .hand-grid li:nth-of-type(5) {

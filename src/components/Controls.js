@@ -61,7 +61,8 @@ const Controls = ({
     const canHit =
       !gameOver &&
       (beginningState || (playersTurn && switchView === false));
-    const canStand = !gameOver && playersTurn && switchView === false;
+    const canStand =
+      !gameOver && playersTurn && switchView === false && !beginningState;
     const canSwap = !gameOver && !beginningState;
 
     if (!canHit) {
