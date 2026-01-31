@@ -18,6 +18,7 @@ const App = ({ cards }) => {
     dealerHand,
     playerTotal,
     dealerTotal,
+    nextDealerIndex,
     playersTurn,
     gameOver,
     playerWins,
@@ -111,6 +112,7 @@ const App = ({ cards }) => {
               switchView={switchView}
               playerTotal={playerTotal}
               dealerTotal={dealerTotal}
+              dealerCardCount={nextDealerIndex}
               gameOver={gameOver}
               onHit={deal}
               onStand={stand}

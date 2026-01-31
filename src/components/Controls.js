@@ -7,6 +7,7 @@ const Controls = ({
   switchView,
   playerTotal,
   dealerTotal,
+  dealerCardCount,
   gameOver,
   onHit,
   onStand,
@@ -18,13 +19,18 @@ const Controls = ({
   const [isFadingToDealing, setIsFadingToDealing] = useState(false);
   const [showPlayerBust, setShowPlayerBust] = useState(false);
   const [showDealerBust, setShowDealerBust] = useState(false);
+  const [dealingDots, setDealingDots] = useState(0);
+  const [isHitPressed, setIsHitPressed] = useState(false);
   const prevPlayersTurnRef = useRef(playersTurn);
+  const dealingBaseIndexRef = useRef(dealerCardCount);
 
   // Handle player stand transition (player's turn -> dealer's turn)
   useEffect(() => {
     if (!playersTurn && prevPlayersTurnRef.current && !gameOver) {
       // Player just stood - fade out buttons, then show dealing
       setIsFadingToDealing(true);
+      dealingBaseIndexRef.current = dealerCardCount;
+      setDealingDots(0);
       const timer = setTimeout(() => {
         setIsFadingToDealing(false);
         setShowDealing(true);
@@ -37,9 +43,88 @@ const Controls = ({
       setIsFadingToDealing(false);
       setShowPlayerBust(false);
       setShowDealerBust(false);
+      setDealingDots(0);
       prevPlayersTurnRef.current = playersTurn;
     }
-  }, [playersTurn, gameOver]);
+  }, [playersTurn, gameOver, dealerCardCount]);
+
+  useEffect(() => {
+    if (playersTurn || !showDealing) return;
+    const nextDots = Math.max(
+      0,
+      dealerCardCount - dealingBaseIndexRef.current
+    );
+    setDealingDots(nextDots);
+  }, [dealerCardCount, playersTurn, showDealing]);
+
+  useEffect(() => {
+    const canHit =
+      !gameOver &&
+      (beginningState || (playersTurn && switchView === false));
+    const canStand = !gameOver && playersTurn && switchView === false;
+    const canSwap = !gameOver && !beginningState;
+
+    if (!canHit) {
+      setIsHitPressed(false);
+    }
+
+    const handleKeyDown = (event) => {
+      const key = event.key?.toLowerCase();
+
+      if (
+        event.code === "Space" ||
+        event.key === " " ||
+        event.code === "Enter" ||
+        event.key === "Enter"
+      ) {
+        if (event.repeat || !canHit) return;
+        event.preventDefault();
+        setIsHitPressed(true);
+        onHit();
+        return;
+      }
+
+      if (key === "s") {
+        if (event.repeat || !canStand) return;
+        event.preventDefault();
+        onStand();
+        return;
+      }
+
+      if (key === "v") {
+        if (event.repeat || !canSwap) return;
+        event.preventDefault();
+        onSwap();
+      }
+    };
+
+    const handleKeyUp = (event) => {
+      if (
+        event.code === "Space" ||
+        event.key === " " ||
+        event.code === "Enter" ||
+        event.key === "Enter"
+      ) {
+        event.preventDefault();
+        setIsHitPressed(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [
+    beginningState,
+    gameOver,
+    onHit,
+    onStand,
+    onSwap,
+    playersTurn,
+    switchView,
+  ]);
 
   // Handle player bust
   useEffect(() => {
@@ -66,7 +151,9 @@ const Controls = ({
     return (
       <div id="board-bottom">
         <div className="buttons dealing">
-          <h3 id="outcome" className="blink bust">Bust!</h3>
+          <div className="outcome-box bust blink">
+            <span className="outcome-text">Busted!</span>
+          </div>
         </div>
       </div>
     );
@@ -77,7 +164,9 @@ const Controls = ({
     return (
       <div id="board-bottom">
         <div className="buttons dealing">
-          <h3 id="outcome" className="blink dealer-bust">Dealer busted!</h3>
+          <div className="outcome-box dealer-bust blink">
+            <span className="outcome-text">Dealer busted!</span>
+          </div>
         </div>
       </div>
     );
@@ -104,7 +193,10 @@ const Controls = ({
     return (
       <div id="board-bottom">
         <div className="buttons">
-          <button onClick={onHit} className="pushable">
+          <button
+            onClick={onHit}
+            className={`pushable ${isHitPressed ? "is-pressed" : ""}`}
+          >
             <span className="front">Hit</span>
           </button>
           <button className="not-pushable">
@@ -121,7 +213,9 @@ const Controls = ({
     return (
       <div id="board-bottom">
         <div className="buttons dealing fading-in">
-          <h3 id="outcome" className="blink">Dealing...</h3>
+          <h3 id="outcome" className="blink">
+            Dealing{".".repeat(dealingDots)}
+          </h3>
         </div>
       </div>
     );
@@ -131,7 +225,10 @@ const Controls = ({
     return (
       <div id="board-bottom">
         <div className="buttons">
-          <button onClick={onHit} className="pushable">
+          <button
+            onClick={onHit}
+            className={`pushable ${isHitPressed ? "is-pressed" : ""}`}
+          >
             <span className="front">Hit</span>
           </button>
           {canPush ? (

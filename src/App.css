@@ -201,16 +201,32 @@ body {
 }
 
 .buttons.dealing #outcome {
-  font-size: 2.5rem;
+  font-size: 3rem;
   font-weight: 700;
   margin: 0;
 }
 
-.buttons.dealing #outcome.bust {
+.outcome-box {
+  background: #DBDBDB;
+  border: 3px solid #3B3B3B;
+  border-radius: 15px;
+  padding: 15px 40px;
+  transform: translateY(-4px);
+}
+
+.outcome-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  display: inline-block;
+}
+
+.outcome-box.bust .outcome-text {
   color: #c43c3c;
 }
 
-.buttons.dealing #outcome.dealer-bust {
+.outcome-box.dealer-bust .outcome-text {
   color: #2d8a2d;
 }
 
@@ -276,6 +292,10 @@ button {
 }
 
 .pushable:active .front {
+  transform: translateY(-2px);
+}
+
+.pushable.is-pressed .front {
   transform: translateY(-2px);
 }
 
@@ -937,9 +957,9 @@ button {
     align-items: center;
   }
 
-  .buttons.dealing #outcome {
-    font-size: 2rem;
-  }
+.buttons.dealing #outcome {
+  font-size: 2.5rem;
+}
 
 .end-actions {
   width: 100%;

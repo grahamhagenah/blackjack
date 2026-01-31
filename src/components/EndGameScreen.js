@@ -39,6 +39,23 @@ const EndGameScreen = ({
     return () => clearInterval(interval);
   }, [score, change, oldScore]);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (
+        event.code === "Space" ||
+        event.key === " " ||
+        event.code === "Enter" ||
+        event.key === "Enter"
+      ) {
+        event.preventDefault();
+        onRestart();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onRestart]);
+
   return (
     <div className="end-game-screen">
       <div className="end-game-content">

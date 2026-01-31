@@ -85,9 +85,12 @@ const useBlackjackGame = (cards) => {
   const playerSoundRef = useRef(null);
   const dealerSoundRef = useRef(null);
   const resetSoundRef = useRef(null);
+  const bustSoundRef = useRef(null);
   const prevTotalsRef = useRef({ player: 0, dealer: 0 });
   const didMountRef = useRef(false);
   const suppressSoundRef = useRef(false);
+  const suppressNextPlayerSoundRef = useRef(false);
+  const suppressNextDealerSoundRef = useRef(false);
   const intervalRef = useRef(null);
   const stateRef = useRef(null);
   const nextDealerIndexRef = useRef(0);
@@ -119,9 +122,11 @@ const useBlackjackGame = (cards) => {
     playerSoundRef.current = new Audio("/retro-player.wav");
     dealerSoundRef.current = new Audio("/retro-dealer.wav");
     resetSoundRef.current = new Audio("/retro-reset.wav");
+    bustSoundRef.current = new Audio("/retro-bust.wav");
     playerSoundRef.current.volume = 0.22;
     dealerSoundRef.current.volume = 0.2;
     resetSoundRef.current.volume = 0.25;
+    bustSoundRef.current.volume = 0.25;
   }, []);
 
   useEffect(() => {
@@ -129,6 +134,7 @@ const useBlackjackGame = (cards) => {
     if (playerSoundRef.current) playerSoundRef.current.muted = nextMuted;
     if (dealerSoundRef.current) dealerSoundRef.current.muted = nextMuted;
     if (resetSoundRef.current) resetSoundRef.current.muted = nextMuted;
+    if (bustSoundRef.current) bustSoundRef.current.muted = nextMuted;
   }, [muted]);
 
   useEffect(() => {
@@ -146,19 +152,27 @@ const useBlackjackGame = (cards) => {
     const playerChanged = prev.player !== playerTotal;
     const dealerChanged = prev.dealer !== dealerTotal;
     if (playerChanged && playerSoundRef.current) {
+      if (suppressNextPlayerSoundRef.current) {
+        suppressNextPlayerSoundRef.current = false;
+      } else {
       try {
         playerSoundRef.current.currentTime = 0;
         playerSoundRef.current.play();
       } catch (e) {
         // ignore autoplay errors
       }
+      }
     }
     if (dealerChanged && dealerSoundRef.current) {
+      if (suppressNextDealerSoundRef.current) {
+        suppressNextDealerSoundRef.current = false;
+      } else {
       try {
         dealerSoundRef.current.currentTime = 0;
         dealerSoundRef.current.play();
       } catch (e) {
         // ignore autoplay errors
+      }
       }
     }
     prevTotalsRef.current = { player: playerTotal, dealer: dealerTotal };
@@ -227,14 +241,24 @@ const useBlackjackGame = (cards) => {
     setDeck(nextDeck);
     setPlayerHand(nextHand);
     setPlayerTotal(nextTotal);
-    applyOutcome(
-      evaluateWinner({
+    const outcome = evaluateWinner({
         total: nextTotal,
         dealersTurn: false,
         playerTotal: nextTotal,
         dealerTotal: current.dealerTotal,
-      })
-    );
+      });
+
+    if (outcome.gameOver && nextTotal > 21 && bustSoundRef.current) {
+      suppressNextPlayerSoundRef.current = true;
+      try {
+        bustSoundRef.current.currentTime = 0;
+        bustSoundRef.current.play();
+      } catch (e) {
+        // ignore autoplay errors
+      }
+    }
+
+    applyOutcome(outcome);
   }, [gameOver, playersTurn, beginningState, applyOutcome]);
 
   const hitDealer = useCallback(() => {
@@ -260,14 +284,24 @@ const useBlackjackGame = (cards) => {
     setDealerHand(nextHand);
     setNextDealerIndex(index + 1);
     setDealerTotal(nextTotal);
-    applyOutcome(
-      evaluateWinner({
+    const outcome = evaluateWinner({
         total: nextTotal,
         dealersTurn: true,
         playerTotal: current.playerTotal,
         dealerTotal: nextTotal,
-      })
-    );
+      });
+
+    if (outcome.gameOver && nextTotal > 21 && bustSoundRef.current) {
+      suppressNextDealerSoundRef.current = true;
+      try {
+        bustSoundRef.current.currentTime = 0;
+        bustSoundRef.current.play();
+      } catch (e) {
+        // ignore autoplay errors
+      }
+    }
+
+    applyOutcome(outcome);
   }, [gameOver, beginningState, applyOutcome]);
 
   const deal = useCallback(() => {
@@ -338,6 +372,7 @@ const useBlackjackGame = (cards) => {
     dealerHand,
     playerTotal,
     dealerTotal,
+    nextDealerIndex,
     playersTurn,
     gameOver,
     playerWins,
