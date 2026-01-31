@@ -39,6 +39,7 @@ const App = ({ cards }) => {
       </Helmet>
       <div className="top-bar">
         <Score score={score} change={change} />
+        <OutcomeBanner gameOver={gameOver} playerWins={playerWins} />
         <div className="help-controls">
           <button
             className="pushable help-button"
@@ -64,7 +65,6 @@ const App = ({ cards }) => {
         </div>
       </div>
       <div id="game-area">
-        <OutcomeBanner gameOver={gameOver} playerWins={playerWins} />
         <Board
           playersTurn={playersTurn}
           playerHand={playerHand}
