@@ -110,7 +110,7 @@ const Controls = ({
           <button className="not-pushable">
             <span className="front">Stand</span>
           </button>
-          <Swap onClick={onSwap} switchView={switchView} />
+          <Swap onClick={onSwap} switchView={switchView} disabled />
         </div>
       </div>
     );

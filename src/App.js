@@ -7,6 +7,7 @@ import Score from "./components/Score";
 import Board from "./components/Board";
 import EndGameScreen from "./components/EndGameScreen";
 import useBlackjackGame from "./hooks/useBlackjackGame";
+import { DEAL_INTERVAL_MS } from "./constants";
 
 const App = ({ cards }) => {
   const [showRules, setShowRules] = useState(false);
@@ -43,7 +44,7 @@ const App = ({ cards }) => {
         // Win/loss - delay to show result
         const timer = setTimeout(() => {
           setShowEndGameScreen(true);
-        }, 2000);
+        }, DEAL_INTERVAL_MS);
         return () => clearTimeout(timer);
       }
     } else {

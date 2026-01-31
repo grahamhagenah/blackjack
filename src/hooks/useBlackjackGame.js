@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { DEAL_INTERVAL_MS } from "../constants";
 
 const HAND_SIZE = 6;
 const STARTING_SCORE = 200;
@@ -299,7 +300,7 @@ const useBlackjackGame = (cards) => {
           setSwitchView(false);
         }
       }
-    }, 1000);
+    }, DEAL_INTERVAL_MS);
   }, [hitDealer, stopDealer]);
 
   const stand = useCallback(() => {

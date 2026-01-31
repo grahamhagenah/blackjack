@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <title>Spade</title>
+  <path
+    fill="#111111"
+    d="M50 6 C36 20 16 35 16 55 C16 70 30 80 44 70 C40 79 36 88 31 95 L69 95 C64 88 60 79 56 70 C70 80 84 70 84 55 C84 35 64 20 50 6 Z"
+  />
+</svg>

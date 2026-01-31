@@ -14,6 +14,12 @@ const EndGameScreen = ({
   const [displayScore, setDisplayScore] = useState(oldScore);
 
   useEffect(() => {
+    // For push (change === 0), just show the score without animation
+    if (change === 0) {
+      setDisplayScore(score);
+      return;
+    }
+
     // Animate from old score to new score
     const step = change > 0 ? 1 : -1;
     const totalSteps = Math.abs(change);
