@@ -788,6 +788,13 @@ button {
   font-weight: 800;
 }
 
+.ace-indicator {
+  font-size: 0.6em;
+  margin-left: 4px;
+  vertical-align: super;
+  opacity: 0.75;
+}
+
 .blink {
   animation: blink-animation 1.2s ease-in-out infinite;
   -webkit-animation: blink-animation 1.2s ease-in-out infinite;
