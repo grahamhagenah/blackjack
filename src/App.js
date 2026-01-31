@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Helmet } from "react-helmet";
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/solid";
 import Controls from "./components/Controls";
 import Score from "./components/Score";
 import Board from "./components/Board";
-import OutcomeBanner from "./components/OutcomeBanner";
+import EndGameScreen from "./components/EndGameScreen";
 import useBlackjackGame from "./hooks/useBlackjackGame";
 
 const App = ({ cards }) => {
   const [showRules, setShowRules] = useState(false);
+  const [showEndGameScreen, setShowEndGameScreen] = useState(false);
   const {
     beginningState,
     playerHand,
@@ -25,10 +26,23 @@ const App = ({ cards }) => {
     switchView,
     deal,
     stand,
+    push,
     clearState,
     switchHandView,
     toggleMuted,
   } = useBlackjackGame(cards);
+
+  // Delay showing the end game screen so player can see the final result
+  useEffect(() => {
+    if (gameOver) {
+      const timer = setTimeout(() => {
+        setShowEndGameScreen(true);
+      }, 2000); // 2 second delay to see the bust/result
+      return () => clearTimeout(timer);
+    } else {
+      setShowEndGameScreen(false);
+    }
+  }, [gameOver]);
 
   return (
     <>
@@ -37,53 +51,67 @@ const App = ({ cards }) => {
         <title>Retro Blackjack</title>
         <meta name="theme-color" content="#DBDBDB"></meta>
       </Helmet>
-      <div className="top-bar">
-        <Score score={score} change={change} />
-        <OutcomeBanner gameOver={gameOver} playerWins={playerWins} />
-        <div className="help-controls">
-          <button
-            className="pushable help-button"
-            onClick={() => setShowRules(true)}
-            aria-label="Show rules"
-          >
-            <span className="front">?</span>
-          </button>
-          <button
-            className="pushable help-button mute-button"
-            onClick={toggleMuted}
-            aria-pressed={muted}
-            aria-label={muted ? "Unmute sounds" : "Mute sounds"}
-          >
-            <span className="front">
-              {muted ? (
-                <SpeakerXMarkIcon aria-hidden="true" />
-              ) : (
-                <SpeakerWaveIcon aria-hidden="true" />
-              )}
-            </span>
-          </button>
-        </div>
-      </div>
-      <div id="game-area">
-        <Board
-          playersTurn={playersTurn}
-          playerHand={playerHand}
+      {showEndGameScreen ? (
+        <EndGameScreen
           playerTotal={playerTotal}
-          dealerHand={dealerHand}
           dealerTotal={dealerTotal}
-          switchView={switchView}
-        />
-        <Controls
-          beginningState={beginningState}
-          gameOver={gameOver}
-          playersTurn={playersTurn}
-          switchView={switchView}
-          onHit={deal}
-          onStand={stand}
+          playerWins={playerWins}
+          score={score}
+          change={change}
           onRestart={clearState}
-          onSwap={switchHandView}
         />
-      </div>
+      ) : (
+        <>
+          <div className="top-bar">
+            <Score score={gameOver ? score - change : score} change={0} />
+            <div className="help-controls">
+              <button
+                className="pushable help-button"
+                onClick={() => setShowRules(true)}
+                aria-label="Show rules"
+              >
+                <span className="front">?</span>
+              </button>
+              <button
+                className="pushable help-button mute-button"
+                onClick={toggleMuted}
+                aria-pressed={muted}
+                aria-label={muted ? "Unmute sounds" : "Mute sounds"}
+              >
+                <span className="front">
+                  {muted ? (
+                    <SpeakerXMarkIcon aria-hidden="true" />
+                  ) : (
+                    <SpeakerWaveIcon aria-hidden="true" />
+                  )}
+                </span>
+              </button>
+            </div>
+          </div>
+          <div id="game-area">
+            <Board
+              playersTurn={playersTurn}
+              playerHand={playerHand}
+              playerTotal={playerTotal}
+              dealerHand={dealerHand}
+              dealerTotal={dealerTotal}
+              switchView={switchView}
+            />
+            <Controls
+              beginningState={beginningState}
+              playersTurn={playersTurn}
+              switchView={switchView}
+              playerTotal={playerTotal}
+              dealerTotal={dealerTotal}
+              gameOver={gameOver}
+              onHit={deal}
+              onStand={stand}
+              onPush={push}
+              onSwap={switchHandView}
+            />
+          </div>
+        </>
+      )}
       {showRules && (
         <div className="modal-overlay" onClick={() => setShowRules(false)}>
           <div

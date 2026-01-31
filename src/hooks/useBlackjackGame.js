@@ -193,11 +193,11 @@ const useBlackjackGame = (cards) => {
       if (!isGameOver) return;
       const delta = didWin ? SCORE_DELTA : -SCORE_DELTA;
       setChange(delta);
-      setScore(score + change);
+      setScore(score + delta);
       setGameOver(true);
       setPlayerWins(didWin);
     },
-    [score, change]
+    [score]
   );
 
   const hitPlayer = useCallback(() => {
@@ -301,6 +301,14 @@ const useBlackjackGame = (cards) => {
     autoDeal();
   }, [playersTurn, gameOver, autoDeal]);
 
+  const push = useCallback(() => {
+    if (!playersTurn || gameOver) return;
+    // End game as a tie - no score change
+    setChange(0);
+    setGameOver(true);
+    setPlayerWins(false); // Not a win, but not a loss either
+  }, [playersTurn, gameOver]);
+
   const switchHandView = useCallback(() => {
     setSwitchView((prev) => !prev);
   }, []);
@@ -330,6 +338,7 @@ const useBlackjackGame = (cards) => {
     switchView,
     deal,
     stand,
+    push,
     clearState,
     switchHandView,
     toggleMuted,

@@ -1,9 +1,9 @@
 import React from "react";
 
-const Swap = ({ onClick, playersTurn }) => {
+const Swap = ({ onClick, switchView }) => {
   return (
     <button id="swap" onClick={onClick} className="pushable">
-      <span className="front">View {playersTurn ? "Dealer" : "Player"}</span>
+      <span className="front">View {switchView ? "Player" : "Dealer"}</span>
     </button>
   );
 };

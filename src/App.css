@@ -28,6 +28,94 @@ body {
   justify-content: center;
 }
 
+/* End Game Screen */
+.end-game-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.end-game-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rem;
+}
+
+.end-game-totals {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.end-game-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.end-game-label {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+}
+
+.end-game-value {
+  font-size: 6rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.end-game-vs {
+  font-size: 1.5rem;
+  font-weight: 600;
+  opacity: 0.5;
+  margin-top: 2.5rem;
+}
+
+.end-game-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.end-game-outcome {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.end-game-score {
+  font-size: 6rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.end-game-score.positive {
+  color: #2d8a2d;
+}
+
+.end-game-score.negative {
+  color: #c43c3c;
+}
+
+.end-game-score.neutral {
+  color: #3B3B3B;
+}
+
+.end-game-outcome.push {
+  color: #3B3B3B;
+}
+
 #game-area {
   position: relative;
   height: 100%;
@@ -50,10 +138,10 @@ body {
   padding: 0.75rem 1rem 0;
   box-sizing: border-box;
   flex-wrap: wrap;
+  position: relative;
 }
 
-#score,
-#outcome-banner {
+#score {
   flex: 0 0 auto;
 }
 
@@ -85,7 +173,48 @@ body {
   justify-content: center;
 }
 
-#gameover, 
+.buttons.dealing #outcome {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.buttons.dealing #outcome.bust {
+  color: #c43c3c;
+}
+
+.buttons.dealing #outcome.dealer-bust {
+  color: #2d8a2d;
+}
+
+.buttons.fading-out {
+  animation: buttons-fade-out 300ms ease-out forwards;
+  pointer-events: none;
+}
+
+.buttons.fading-in {
+  animation: buttons-fade-in 300ms ease-out forwards;
+}
+
+@keyframes buttons-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes buttons-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#gameover,
 #win {
   font-size: 45px;
   font-weight: 600;
@@ -175,7 +304,9 @@ button {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  position: relative;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 10;
   pointer-events: none;
 }
@@ -183,22 +314,22 @@ button {
 #outcome-banner .outcome {
   background: #3B3B3B;
   color: #DBDBDB;
-  padding: 0.65rem 1rem;
-  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  padding-left: 3rem;
+  border-radius: 12px;
   position: relative;
-  font-size: 1.35rem;
+  font-size: 2.5rem;
   font-weight: 700;
   line-height: 1.1;
-  padding-left: 2rem;
 }
 
 #outcome-banner .outcome::before {
   content: "←";
   position: absolute;
-  left: 0.6rem;
+  left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 1.2rem;
+  font-size: 2rem;
   line-height: 1;
   color: #DBDBDB;
 }
@@ -321,32 +452,32 @@ button {
   justify-content: center;
 }
 
-#outcome-banner .outcome.lost,
-#outcome-banner .outcome.won {
-  font-size: 1.35rem;
-}
-
 @media (min-width: 761px) {
   #outcome-banner .outcome {
-    font-size: 1.6rem;
-    padding: 0.85rem 1.25rem;
-    border-radius: 12px;
-    padding-left: 2.4rem;
+    font-size: 3rem;
+    padding: 1.25rem 2rem;
+    padding-left: 3.5rem;
+    border-radius: 14px;
   }
 
   #outcome-banner .outcome::before {
-    left: 0.7rem;
-    font-size: 1.4rem;
+    left: 1.1rem;
+    font-size: 2.5rem;
   }
 }
 
 #outcome-banner.hide {
-  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#outcome-banner.show {
+  opacity: 1;
 }
 
 #board-bottom,
 #board-bottom-gameover {
-  height: auto;
+  height: 72px;
   margin-right: 0;
   display: flex;
   flex-direction: column;
@@ -366,6 +497,23 @@ button {
   justify-content: center;
 }
 
+.end-actions {
+  opacity: 0;
+  animation-name: end-actions-fade-in;
+  animation-duration: 1200ms;
+  animation-timing-function: ease-out;
+  animation-delay: 1s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes end-actions-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
 .pushable:focus:not(:focus-visible) {
   outline: none;
@@ -614,30 +762,36 @@ button {
 }
 
 .blink {
-  animation: blink-animation 1s steps(2, start) infinite;
-  -webkit-animation: blink-animation 1s steps(2, start) infinite;
+  animation: blink-animation 1.2s ease-in-out infinite;
+  -webkit-animation: blink-animation 1.2s ease-in-out infinite;
 }
 
 .blink-delay {
-  animation: blink-animation .5s steps(2, start) infinite;
-  -webkit-animation: blink-animation 1s steps(2, start) infinite;
+  animation: blink-animation 1.2s ease-in-out infinite;
+  -webkit-animation: blink-animation 1.2s ease-in-out infinite;
   animation-delay: .5s;
 }
 
 .blink-delay-2 {
-  animation: blink-animation 2s steps(2, start) infinite;
-  -webkit-animation: blink-animation 2s steps(2, start) infinite;
+  animation: blink-animation 2s ease-in-out infinite;
+  -webkit-animation: blink-animation 2s ease-in-out infinite;
   animation-delay: 2s;
 }
 
 @keyframes blink-animation {
-  to {
-    visibility: hidden;
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
   }
 }
 @-webkit-keyframes blink-animation {
-  to {
-    visibility: hidden;
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
   }
 }
 
@@ -706,10 +860,20 @@ button {
 
   .hand-grid {
     grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     padding: 0;
     margin-left: 0;
     width: 100%;
     aspect-ratio: 5 / 2;
+    border: none;
+    border-radius: 0;
+    gap: 0;
+  }
+
+  .hand-grid::before,
+  .hand-grid .vertical-divider,
+  .hand-grid .horizontal-divider {
+    display: none;
   }
 
   .buttons {
@@ -731,6 +895,16 @@ button {
 
   .buttons button:nth-of-type(2) {
     order: 1;
+  }
+
+  .buttons.dealing {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .buttons.dealing #outcome {
+    font-size: 2rem;
   }
 
 .end-actions {
@@ -766,11 +940,16 @@ button {
   }
 
   #outcome-banner .outcome {
-    font-size: 1.2rem;
+    font-size: 1.75rem;
     line-height: 1.1;
-    padding: 0.55rem 0.9rem;
-    padding-left: 2.2rem;
+    padding: 0.75rem 1.25rem;
+    padding-left: 2.75rem;
     margin: 0;
+  }
+
+  #outcome-banner .outcome::before {
+    font-size: 1.5rem;
+    left: 0.85rem;
   }
 
   .board {
@@ -780,9 +959,10 @@ button {
     justify-content: flex-start;
   }
 
-  #board-bottom, 
+  #board-bottom,
   #board-bottom-gameover {
-    height: 100%;
+    height: auto;
+    min-height: 140px;
     width: 100%;
     margin: 0 0.5rem;
   }
@@ -832,21 +1012,33 @@ button {
 
   .hand-grid li {
     font-size: 2rem;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    aspect-ratio: auto;
   }
 
-  .hand-grid li:nth-of-type(2),
-  .hand-grid li:nth-of-type(3),
-  .hand-grid li:nth-of-type(4) {
-    box-shadow: inset 0 3px 0 #3B3B3B;
-  }
-
-  .hand-grid::before {
-    z-index: 2;
-  }
+  /* Reset all grid positions for mobile */
+  .hand-grid li:nth-of-type(1) { grid-column: 1; grid-row: 1; }
+  .hand-grid li:nth-of-type(2) { grid-column: 2; grid-row: 1; }
+  .hand-grid li:nth-of-type(3) { grid-column: 3; grid-row: 1; }
+  .hand-grid li:nth-of-type(4) { grid-column: 4; grid-row: 1; }
+  .hand-grid li:nth-of-type(5) { grid-column: 5; grid-row: 1; }
+  .hand-grid li:nth-of-type(6) { grid-column: 1; grid-row: 2; }
+  .hand-grid li:nth-of-type(7) { grid-column: 2; grid-row: 2; }
+  .hand-grid li:nth-of-type(8) { grid-column: 3; grid-row: 2; }
+  .hand-grid li:nth-of-type(9) { grid-column: 4; grid-row: 2; }
+  .hand-grid li:nth-of-type(10) { grid-column: 5; grid-row: 2; }
 
   .vertical-divider,
   .horizontal-divider {
-    z-index: 1;
+    display: none;
+  }
+
+  /* Hide the name/total pseudo-element backgrounds on mobile */
+  .hand-grid .name::before,
+  .hand-grid .total::before {
+    display: none;
   }
 
 
@@ -869,6 +1061,40 @@ button {
   #board-bottom-gameover h3 {
     font-size: 2rem;
     margin: auto 1rem;
+  }
+
+  /* End Game Screen Mobile */
+  .end-game-screen {
+    padding: 1.5rem;
+  }
+
+  .end-game-content {
+    gap: 3rem;
+  }
+
+  .end-game-totals {
+    gap: 2rem;
+  }
+
+  .end-game-label {
+    font-size: 1.1rem;
+  }
+
+  .end-game-value {
+    font-size: 4rem;
+  }
+
+  .end-game-vs {
+    font-size: 1.25rem;
+    margin-top: 1.75rem;
+  }
+
+  .end-game-outcome {
+    font-size: 2rem;
+  }
+
+  .end-game-score {
+    font-size: 4.5rem;
   }
 
 }
