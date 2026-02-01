@@ -153,8 +153,7 @@ const App = ({ cards }) => {
                 </li>
               </ol>
               <p className="modal-tip">
-                Tip: Use “View Dealer / View Player” to toggle the board view at
-                any time.
+                Tip: Use “View Dealer / View Player” to toggle views.
               </p>
               <div className="modal-actions">
                 <button

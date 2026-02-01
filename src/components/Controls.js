@@ -62,7 +62,11 @@ const Controls = ({
       !gameOver &&
       (beginningState || (playersTurn && switchView === false));
     const canStand =
-      !gameOver && playersTurn && switchView === false && !beginningState;
+      !gameOver &&
+      playersTurn &&
+      switchView === false &&
+      !beginningState &&
+      !canPush;
     const canSwap = !gameOver && !beginningState;
 
     if (!canHit) {
@@ -89,6 +93,13 @@ const Controls = ({
         if (event.repeat || !canStand) return;
         event.preventDefault();
         onStand();
+        return;
+      }
+
+      if (key === "p") {
+        if (event.repeat || !canPush) return;
+        event.preventDefault();
+        onPush();
         return;
       }
 
@@ -119,6 +130,7 @@ const Controls = ({
     };
   }, [
     beginningState,
+    canPush,
     gameOver,
     onHit,
     onStand,

@@ -74,7 +74,7 @@ const Hand = ({ name, hand, total, playersTurn }) => {
       triggers.push("Ace!", "Lucky!", "Nice!");
     }
     if (addedCard === "J") {
-      triggers.push("Sir!", "Jolly!", "Nice!");
+      triggers.push("Haha", "Jolly!", "Nice!");
     }
     if (addedCard === "Q") {
       triggers.push("Your Majesty", "Queen!", "Royal!");
@@ -91,8 +91,13 @@ const Hand = ({ name, hand, total, playersTurn }) => {
     if (triggers.length > 0) {
       const word = triggers[Math.floor(Math.random() * triggers.length)];
       const id = burstIdRef.current++;
-      const offsetX =
-        (Math.random() < 0.5 ? -1 : 1) * (24 + Math.floor(Math.random() * 30));
+      const isMobile =
+        typeof window !== "undefined" &&
+        window.matchMedia("(max-width: 760px)").matches;
+      const offsetX = isMobile
+        ? -14 + (Math.random() * 12 - 6)
+        : (Math.random() < 0.5 ? -1 : 1) *
+          (24 + Math.floor(Math.random() * 30));
       const offsetY = -56 - Math.floor(Math.random() * 24);
       setBursts((prev) => [
         ...prev,
