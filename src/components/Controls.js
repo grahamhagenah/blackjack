@@ -266,9 +266,15 @@ const Controls = ({
           <button className="not-pushable">
             <span className="front">Hit</span>
           </button>
-          <button className="not-pushable">
-            <span className="front">Stand</span>
-          </button>
+          {canPush ? (
+            <button onClick={onPush} className="pushable">
+              <span className="front">Push</span>
+            </button>
+          ) : (
+            <button className="not-pushable">
+              <span className="front">Stand</span>
+            </button>
+          )}
           <Swap onClick={onSwap} switchView={switchView} />
         </div>
       </div>
