@@ -153,10 +153,12 @@ const useBlackjackGame = (cards) => {
     };
 
     Promise.all([
-      loadBuffer("player", "/retro-player.wav", 0.22),
+      loadBuffer("player", "/player.wav", 0.22),
       loadBuffer("dealer", "/retro-dealer.wav", 0.2),
       loadBuffer("reset", "/retro-reset.wav", 0.25),
       loadBuffer("bust", "/retro-bust.wav", 0.25),
+      loadBuffer("lose", "/down.wav", 0.25),
+      loadBuffer("win", "/win.wav", 0.12),
     ]).catch(() => {});
 
     return () => {
@@ -201,7 +203,6 @@ const useBlackjackGame = (cards) => {
   const clearState = useCallback(() => {
     ensureAudioUnlocked();
     suppressSoundRef.current = true;
-    playSound("reset");
     setPlayerHand(createEmptyHand());
     setDealerHand(createEmptyHand());
     setPlayerTotal(0);
@@ -377,6 +378,14 @@ const useBlackjackGame = (cards) => {
     setMuted((prev) => !prev);
   }, []);
 
+  const playEndGameSound = useCallback(
+    (didWin) => {
+      ensureAudioUnlocked();
+      playSound(didWin ? "win" : "lose");
+    },
+    [ensureAudioUnlocked, playSound]
+  );
+
   useEffect(() => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -403,6 +412,7 @@ const useBlackjackGame = (cards) => {
     clearState,
     switchHandView,
     toggleMuted,
+    playEndGameSound,
   };
 };
 

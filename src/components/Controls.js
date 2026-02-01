@@ -226,7 +226,7 @@ const Controls = ({
     return (
       <div id="board-bottom">
         <div className="buttons dealing fading-in">
-          <h3 id="outcome" className="blink">
+          <h3 id="outcome">
             Dealing{".".repeat(dealingDots)}
           </h3>
         </div>

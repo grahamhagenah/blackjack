@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { Helmet } from "react-helmet";
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/solid";
@@ -32,7 +32,9 @@ const App = ({ cards }) => {
     clearState,
     switchHandView,
     toggleMuted,
+    playEndGameSound,
   } = useBlackjackGame(cards);
+  const lastEndGameSoundRef = useRef(null);
 
   // Delay showing the end game screen so player can see the final result
   // Skip delay for push (change === 0)
@@ -52,6 +54,20 @@ const App = ({ cards }) => {
       setShowEndGameScreen(false);
     }
   }, [gameOver, change]);
+
+  useEffect(() => {
+    if (!showEndGameScreen || !gameOver || change === 0) return;
+    const soundKey = `${playerWins}-${score}-${change}`;
+    if (lastEndGameSoundRef.current === soundKey) return;
+    playEndGameSound(playerWins);
+    lastEndGameSoundRef.current = soundKey;
+  }, [showEndGameScreen, gameOver, change, playerWins, score, playEndGameSound]);
+
+  useEffect(() => {
+    if (!showEndGameScreen) {
+      lastEndGameSoundRef.current = null;
+    }
+  }, [showEndGameScreen]);
 
   return (
     <>
