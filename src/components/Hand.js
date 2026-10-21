@@ -148,9 +148,13 @@ const Hand = ({ name, hand, total, playersTurn }) => {
         : (Math.random() < 0.5 ? -1 : 1) *
           (24 + Math.floor(Math.random() * 30));
       const offsetY = -56 - Math.floor(Math.random() * 24);
+      // Sideways drift while floating up; on phones mostly leftward to stay on screen
+      const driftX = isMobile
+        ? -10 - Math.floor(Math.random() * 20)
+        : (Math.random() < 0.5 ? -1 : 1) * (12 + Math.floor(Math.random() * 20));
       setBursts((prev) => [
         ...prev,
-        { id, word, offsetX, offsetY },
+        { id, word, offsetX, offsetY, driftX },
       ]);
       const timer = setTimeout(() => {
         setBursts((prev) => prev.filter((burst) => burst.id !== id));
@@ -205,6 +209,7 @@ const Hand = ({ name, hand, total, playersTurn }) => {
                 left: `calc(50% + ${burst.offsetX}px)`,
                 top: `calc(50% + ${burst.offsetY}px)`,
                 animationDuration: `${BURST_DURATION_MS}ms`,
+                "--drift-x": `${burst.driftX}px`,
               }}
             >
               {burst.word}

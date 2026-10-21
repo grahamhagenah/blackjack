@@ -732,26 +732,32 @@ button {
   transform: translate(-50%, -50%);
 }
 
-/* Pop in, hold, then drift up and fade */
+/* Pop in, then float up along a gentle sway while fading away.
+   --drift-x (set per word) picks the sideways direction. */
 @keyframes total-burst-float {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.6);
+    transform: translate(-50%, -50%) scale(0.6) rotate(0deg);
   }
   8% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1.15);
+    transform: translate(-50%, -55%) scale(1.15) rotate(0deg);
   }
-  14% {
-    transform: translate(-50%, -50%) scale(1);
-  }
-  70% {
+  15% {
     opacity: 1;
-    transform: translate(-50%, -70%) scale(1);
+    transform: translate(-50%, -65%) scale(1) rotate(0deg);
+  }
+  40% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--drift-x) * 0.5), -110%) scale(1) rotate(-3deg);
+  }
+  65% {
+    opacity: 0.75;
+    transform: translate(calc(-50% - var(--drift-x) * 0.2), -160%) scale(0.98) rotate(2deg);
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -150%) scale(1);
+    transform: translate(calc(-50% + var(--drift-x)), -240%) scale(0.92) rotate(-2deg);
   }
 }
 
