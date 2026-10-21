@@ -854,12 +854,10 @@ button {
     justify-self: stretch;
   }
 
-  .buttons button:first-of-type {
-    order: 4;
-  }
-
+  /* Top row: Double | View Dealer (less frequent, kept away from Hit).
+     Bottom row: Stand | Hit, under the thumb and a little taller. */
   .buttons #double {
-    order: 3;
+    order: 1;
   }
 
   .buttons #swap {
@@ -867,7 +865,17 @@ button {
   }
 
   .buttons button:nth-of-type(2) {
-    order: 1;
+    order: 3;
+  }
+
+  .buttons button:first-of-type {
+    order: 4;
+  }
+
+  .buttons button:first-of-type .front,
+  .buttons button:nth-of-type(2) .front {
+    padding-top: 1.125rem;
+    padding-bottom: 1.125rem;
   }
 
   .buttons.dealing {
