@@ -163,12 +163,12 @@ const useBlackjackGame = (cards) => {
     };
 
     Promise.all([
-      loadBuffer("player", "/player.wav", 0.22),
-      loadBuffer("dealer", "/retro-dealer.wav", 0.2),
-      loadBuffer("reset", "/retro-reset.wav", 0.25),
-      loadBuffer("bust", "/retro-bust.wav", 0.25),
-      loadBuffer("lose", "/down.wav", 0.25),
-      loadBuffer("win", "/win.wav", 0.12),
+      loadBuffer("player", `${process.env.PUBLIC_URL}/player.wav`, 0.22),
+      loadBuffer("dealer", `${process.env.PUBLIC_URL}/retro-dealer.wav`, 0.2),
+      loadBuffer("reset", `${process.env.PUBLIC_URL}/retro-reset.wav`, 0.25),
+      loadBuffer("bust", `${process.env.PUBLIC_URL}/retro-bust.wav`, 0.25),
+      loadBuffer("lose", `${process.env.PUBLIC_URL}/down.wav`, 0.25),
+      loadBuffer("win", `${process.env.PUBLIC_URL}/win.wav`, 0.12),
     ]).catch(() => {});
 
     return () => {
@@ -230,7 +230,7 @@ const useBlackjackGame = (cards) => {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-  }, [cards, ensureAudioUnlocked, playSound]);
+  }, [cards, ensureAudioUnlocked]);
 
   const applyOutcome = useCallback(
     ({ gameOver: isGameOver, playerWins: didWin, push: isPush }) => {
