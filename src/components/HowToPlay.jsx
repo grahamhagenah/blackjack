@@ -50,6 +50,8 @@ const HowToPlay = ({ onClose }) => {
       tabIndex={-1}
       ref={pageRef}
     >
+      {/* Solid strip so text scrolls under it instead of under the × */}
+      <div className="rules-topbar" aria-hidden="true" />
       <button
         className="pushable help-button rules-x"
         onClick={onClose}

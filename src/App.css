@@ -180,11 +180,19 @@ body {
   position: fixed;
   top: 2rem;
   right: 2rem;
-  z-index: 21;
+  z-index: 22;
 }
 
-.rules-x .front {
+/* The strip behind the ×: as tall as the button plus its top offset, with
+   the same space again below it */
+.rules-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(2rem + 48px + 1rem);
   background: #DBDBDB;
+  z-index: 21;
 }
 
 .rules-x svg {
@@ -195,7 +203,8 @@ body {
 .rules-content {
   max-width: 640px;
   margin: 0 auto;
-  padding: 4rem 2rem 3rem;
+  /* Start below the top strip */
+  padding: calc(2rem + 48px + 1rem) 2rem 3rem;
   box-sizing: border-box;
 }
 
@@ -1078,15 +1087,17 @@ button {
 
 @media (max-width: 760px) {
   .rules-content {
-    padding: calc(2.5rem + env(safe-area-inset-top)) 1.25rem
+    padding: calc(0.75rem + 48px + 0.75rem + env(safe-area-inset-top)) 1.25rem
       calc(2rem + env(safe-area-inset-bottom));
   }
 
   .rules-content h1 {
     font-size: 2.5rem;
     margin-bottom: 2rem;
-    /* Keep the title clear of the × in the corner */
-    padding-right: 3.5rem;
+  }
+
+  .rules-topbar {
+    height: calc(0.75rem + 48px + 0.75rem + env(safe-area-inset-top));
   }
 
   .rules-x {
