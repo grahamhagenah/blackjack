@@ -158,9 +158,9 @@ const Controls = ({
     return (
       <div id="board-bottom">
         <div className="buttons dealing">
-          <div className="outcome-box bust blink">
-            <span className="outcome-text">Busted!</span>
-          </div>
+          <h3 id="outcome" className="bust blink">
+            Busted!
+          </h3>
         </div>
       </div>
     );
@@ -171,9 +171,9 @@ const Controls = ({
     return (
       <div id="board-bottom">
         <div className="buttons dealing">
-          <div className="outcome-box dealer-bust blink">
-            <span className="outcome-text">Dealer busted!</span>
-          </div>
+          <h3 id="outcome" className="dealer-bust blink">
+            Dealer busted!
+          </h3>
         </div>
       </div>
     );

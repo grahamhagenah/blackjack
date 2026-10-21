@@ -206,38 +206,12 @@ body {
   margin: 0;
 }
 
-.outcome-box {
-  background: #DBDBDB;
-  border: 3px solid #3B3B3B;
-  border-radius: 15px;
-  padding: 22px 56px;
-  transform: translateY(-4px);
+.buttons.dealing #outcome.bust {
+  color: #c43c3c;
 }
 
-.outcome-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin: 0;
-  display: inline-block;
-}
-
-.outcome-box.bust .outcome-text {
-  color: #DBDBDB;
-}
-
-.outcome-box.bust {
-  background: #c43c3c;
-  border-color: #c43c3c;
-}
-
-.outcome-box.dealer-bust .outcome-text {
-  color: #DBDBDB;
-}
-
-.outcome-box.dealer-bust {
-  background: #2d8a2d;
-  border-color: #2d8a2d;
+.buttons.dealing #outcome.dealer-bust {
+  color: #2d8a2d;
 }
 
 .buttons.fading-out {
