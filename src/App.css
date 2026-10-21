@@ -329,6 +329,12 @@ button {
   .buttons > button {
     margin: 0;
   }
+
+  /* Room for "View Dealer · 10" without crowding the row */
+  .buttons .front {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
 }
 
 #score {
@@ -625,19 +631,16 @@ button {
   aspect-ratio: auto;
 }
 
-/* "shows Q" under View Dealer; trimmed padding keeps the button's height */
-.swap-note {
-  display: block;
-  font-size: 0.6em;
-  font-weight: 600;
-  line-height: 1;
-  margin-top: 2px;
-  opacity: 0.75;
+#swap .front {
+  white-space: nowrap;
 }
 
-#swap .front.has-note {
-  padding-top: 6.8px;
-  padding-bottom: 6.8px;
+/* "· Q" after View Dealer, a little smaller and lighter than the label */
+.swap-note {
+  font-size: 0.75em;
+  font-weight: 600;
+  line-height: 1;
+  opacity: 0.75;
 }
 
 .hand-grid .total {
@@ -1025,6 +1028,15 @@ button {
   #swap .front {
     width: auto;
     box-sizing: border-box;
+    /* Fit "View Player · 17" on one line, scaling with the phone's width */
+    font-size: min(1.05rem, 4.1vw);
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  /* Same height for every control even when the swap text is smaller */
+  .buttons .front {
+    line-height: 22px;
   }
 
   #board-bottom-gameover #outcome {
@@ -1129,11 +1141,6 @@ button {
     font-size: 1.75rem;
     margin: 0 15px 15px 15px;
     min-height: 3rem;
-  }
-
-  #swap .front.has-note {
-    padding-top: 6px;
-    padding-bottom: 6px;
   }
 
   .card-value {

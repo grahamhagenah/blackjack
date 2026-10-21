@@ -13,14 +13,14 @@ describe("swapNote", () => {
   };
 
   it("shows the dealer's face-up card on View Dealer", () => {
-    expect(swapNote(base)).toBe("shows Q");
+    expect(swapNote(base)).toBe("Q");
   });
 
   it("shows the player's total on View Player, also while the dealer draws", () => {
-    expect(swapNote({ ...base, switchView: true })).toBe("shows 17");
+    expect(swapNote({ ...base, switchView: true })).toBe("17");
     expect(
       swapNote({ ...base, switchView: true, playersTurn: false, dealerHand: hand("Q", 6) })
-    ).toBe("shows 17");
+    ).toBe("17");
   });
 
   it("shows nothing before the deal", () => {
@@ -32,11 +32,9 @@ describe("swapNote", () => {
 });
 
 describe("Swap", () => {
-  it("puts the note on a second line of the button", () => {
-    render(<Swap switchView={false} note="shows Q" onClick={() => {}} />);
-    const button = screen.getByRole("button");
-    expect(button).toHaveTextContent("View Dealer");
-    expect(button).toHaveTextContent("shows Q");
+  it("puts the note after the label on the same line", () => {
+    render(<Swap switchView={false} note="Q" onClick={() => {}} />);
+    expect(screen.getByRole("button")).toHaveTextContent("View Dealer · Q");
   });
 
   it("is just the label without a note", () => {

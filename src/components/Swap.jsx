@@ -12,9 +12,9 @@ const Swap = ({ onClick, switchView, disabled = false, note }) => {
       disabled={disabled}
       aria-disabled={disabled}
     >
-      <span className={note ? "front has-note" : "front"}>
+      <span className="front">
         View {switchView ? "Player" : "Dealer"}
-        {note && <span className="swap-note">{note}</span>}
+        {note && <span className="swap-note"> · {note}</span>}
       </span>
     </button>
   );
