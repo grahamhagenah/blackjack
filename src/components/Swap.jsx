@@ -14,8 +14,7 @@ const Swap = ({ onClick, switchView, disabled = false, note }) => {
     >
       <span className="front">
         View {switchView ? "Player" : "Dealer"}
-        {/* Always present so the button keeps one width, value or not */}
-        <span className="swap-note">{note ? ` · ${note}` : ""}</span>
+        {note && <span className="swap-note"> · {note}</span>}
       </span>
     </button>
   );

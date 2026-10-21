@@ -335,6 +335,12 @@ button {
     padding-left: 30px;
     padding-right: 30px;
   }
+
+  /* Always as wide as "View Dealer · 10" (11 characters plus the 5-character
+     note at 0.75 size), so the label stays centered when there's no value */
+  #swap .front {
+    min-width: calc(11ch + 5ch * 0.75);
+  }
 }
 
 #score {
@@ -636,7 +642,7 @@ button {
 }
 
 /* "· Q" after View Dealer, a little smaller and lighter than the label.
-   Fixed at " · 00" wide so the button doesn't resize as the value changes. */
+   Fixed at " · 00" wide so the button doesn't resize between "Q" and "19". */
 .swap-note {
   display: inline-block;
   width: 5ch;
