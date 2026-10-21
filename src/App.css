@@ -174,13 +174,13 @@ body {
   outline: none;
 }
 
-/* Close button in the same spot as the ? button that opened the page */
+/* Close button lined up with the corner buttons (same offsets and margins
+   as .help-controls, so it lands exactly where the sound button sits) */
 .rules-x {
   position: fixed;
   top: 2rem;
   right: 2rem;
   z-index: 21;
-  margin: 0;
 }
 
 .rules-x .front {
