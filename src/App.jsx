@@ -28,6 +28,7 @@ const App = ({ cards }) => {
     switchView,
     locked,
     blackjack,
+    canStand,
     canDouble,
     deal,
     stand,
@@ -126,6 +127,7 @@ const App = ({ cards }) => {
               dealerTotal={dealerTotal}
               dealerCardCount={nextDealerIndex}
               gameOver={gameOver}
+              canStand={canStand}
               canDouble={canDouble}
               locked={locked}
               onHit={deal}

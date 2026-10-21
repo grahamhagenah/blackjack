@@ -10,6 +10,7 @@ const Controls = ({
   dealerTotal,
   dealerCardCount,
   gameOver,
+  canStand,
   canDouble,
   locked,
   onHit,
@@ -69,12 +70,7 @@ const Controls = ({
       !gameOver &&
       !locked &&
       (beginningState || (playersTurn && switchView === false));
-    const canStand =
-      !gameOver &&
-      !locked &&
-      playersTurn &&
-      switchView === false &&
-      !beginningState;
+    const standAllowed = canStand && switchView === false;
     const canSwap = !gameOver && !beginningState;
 
     if (!canHit) {
@@ -98,7 +94,7 @@ const Controls = ({
       }
 
       if (key === "s") {
-        if (event.repeat || !canStand) return;
+        if (event.repeat || !standAllowed) return;
         event.preventDefault();
         onStand();
         return;
@@ -138,6 +134,7 @@ const Controls = ({
     };
   }, [
     beginningState,
+    canStand,
     canDouble,
     locked,
     gameOver,
@@ -284,7 +281,10 @@ const Controls = ({
           >
             <span className="front">Hit</span>
           </button>
-          <button onClick={onStand} className="pushable">
+          <button
+            onClick={canStand ? onStand : undefined}
+            className={canStand ? "pushable" : "not-pushable"}
+          >
             <span className="front">Stand</span>
           </button>
           {doubleButton(canDouble)}

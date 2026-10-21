@@ -142,6 +142,21 @@ describe("useBlackjackGame", () => {
     expect(game.current.change).toBe(40);
   });
 
+  it("doesn't let you stand on a single card", () => {
+    rigDeck([10, 6, 7]);
+    const game = startGame();
+    press(game, "deal");
+
+    expect(game.current.canStand).toBe(false);
+    press(game, "stand");
+    expect(game.current.playersTurn).toBe(true);
+
+    press(game, "deal");
+    expect(game.current.canStand).toBe(true);
+    press(game, "stand");
+    expect(game.current.playersTurn).toBe(false);
+  });
+
   it("only lets you double on your first two cards", () => {
     rigDeck([2, 6, 3, 4]);
     const game = startGame();

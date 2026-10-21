@@ -391,6 +391,8 @@ const useBlackjackGame = (cards) => {
   const stand = useCallback(() => {
     ensureAudioUnlocked();
     if (!playersTurn || gameOver) return;
+    // A hand needs at least two cards before the player can stand on it
+    if (stateRef.current.playerHand.filter(Boolean).length < 2) return;
     setPlayersTurn(false);
     setSwitchView(true);
     autoDeal();
@@ -444,12 +446,9 @@ const useBlackjackGame = (cards) => {
     };
   }, []);
 
-  const canDouble =
-    playersTurn &&
-    !gameOver &&
-    !doubled &&
-    !locked &&
-    playerHand.filter(Boolean).length === 2;
+  const playerCardCount = playerHand.filter(Boolean).length;
+  const canStand = playersTurn && !gameOver && !locked && playerCardCount >= 2;
+  const canDouble = canStand && !doubled && playerCardCount === 2;
 
   return {
     beginningState,
@@ -467,6 +466,7 @@ const useBlackjackGame = (cards) => {
     switchView,
     locked,
     blackjack,
+    canStand,
     canDouble,
     deal,
     stand,
