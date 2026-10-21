@@ -176,31 +176,34 @@ const Controls = ({
     </button>
   );
 
-  // Player busted - show bust message
-  if (showPlayerBust) {
-    return (
-      <div id="board-bottom">
-        <div className="buttons dealing">
-          <h3 id="outcome" className="blink">
-            Busted!
-          </h3>
-        </div>
+  // A message ("Dealing", "Busted!") shown over an invisible copy of the
+  // buttons, so the controls area keeps exactly the same size and nothing
+  // above it moves
+  const withMessage = (message, { blink = false, fadeIn = false } = {}) => (
+    <div id="board-bottom">
+      <div className="buttons placeholder" aria-hidden="true">
+        <button className="not-pushable" disabled>
+          <span className="front">Hit</span>
+        </button>
+        <button className="not-pushable" disabled>
+          <span className="front">Stand</span>
+        </button>
+        <button id="double" className="not-pushable" disabled>
+          <span className="front">Double</span>
+        </button>
+        <Swap switchView={switchView} disabled />
       </div>
-    );
-  }
+      <div className={`buttons dealing message${fadeIn ? " fading-in" : ""}`}>
+        <h3 id="outcome" className={blink ? "blink" : undefined}>
+          {message}
+        </h3>
+      </div>
+    </div>
+  );
 
-  // Dealer busted - show dealer bust message
-  if (showDealerBust) {
-    return (
-      <div id="board-bottom">
-        <div className="buttons dealing">
-          <h3 id="outcome" className="blink">
-            Dealer busted!
-          </h3>
-        </div>
-      </div>
-    );
-  }
+  if (showPlayerBust) return withMessage("Busted!", { blink: true });
+
+  if (showDealerBust) return withMessage("Dealer busted!", { blink: true });
 
   // During fade-out to dealing
   if (isFadingToDealing || justStood) {
@@ -242,15 +245,7 @@ const Controls = ({
 
   // Dealer's turn - show "Dealing..."
   if (!playersTurn && showDealing) {
-    return (
-      <div id="board-bottom">
-        <div className="buttons dealing fading-in">
-          <h3 id="outcome">
-            Dealing{".".repeat(dealingDots)}
-          </h3>
-        </div>
-      </div>
-    );
+    return withMessage(`Dealing${".".repeat(dealingDots)}`, { fadeIn: true });
   }
 
   // Locked while a double or a blackjack plays out
