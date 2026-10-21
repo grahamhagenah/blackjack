@@ -999,9 +999,11 @@ button {
     justify-content: flex-start;
   }
 
+  /* Always as tall as the two rows of buttons (52px + 80px buttons, their
+     0.25rem margins and the 0.5rem row gap), so swapping the buttons for
+     "Dealing" or "Busted!" doesn't change the height and nudge the board */
   #board-bottom {
-    height: auto;
-    min-height: 140px;
+    height: calc(52px + 80px + 4 * 0.25rem + 0.5rem);
     width: 100%;
     margin: 0 0.5rem;
   }
