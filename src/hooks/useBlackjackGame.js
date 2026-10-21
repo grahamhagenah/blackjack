@@ -53,7 +53,6 @@ const useBlackjackGame = (cards) => {
   const intervalRef = useRef(null);
   const dealingDelayRef = useRef(null);
   const doubleStandRef = useRef(null);
-  const naturalRef = useRef(null);
   const doubledRef = useRef(false);
   const stateRef = useRef(null);
   const nextDealerIndexRef = useRef(0);
@@ -199,10 +198,6 @@ const useBlackjackGame = (cards) => {
       clearTimeout(doubleStandRef.current);
       doubleStandRef.current = null;
     }
-    if (naturalRef.current) {
-      clearTimeout(naturalRef.current);
-      naturalRef.current = null;
-    }
     stopDealer();
   }, [cards, ensureAudioUnlocked, stopDealer]);
 
@@ -340,31 +335,16 @@ const useBlackjackGame = (cards) => {
   const deal = useCallback(() => {
     ensureAudioUnlocked();
     if (!playersTurn) return;
+    // No hitting a blackjack: it can only throw the 21 away
+    if (stateRef.current && isNatural(stateRef.current.playerHand)) return;
     // One card per press. The first press also turns up the dealer's card;
     // the dealer draws the rest after the player stands.
     hitPlayer();
     if (beginningState) {
       suppressNextDealerSoundRef.current = true;
       hitDealer();
-      return;
     }
-    if (isNatural(stateRef.current.playerHand)) {
-      // A blackjack on the first two cards: let "Blackjack!" show before the
-      // dealer's second card settles it
-      setLocked(true);
-      naturalRef.current = setTimeout(() => {
-        naturalRef.current = null;
-        resolveNatural();
-      }, DEAL_INTERVAL_MS);
-    }
-  }, [
-    ensureAudioUnlocked,
-    playersTurn,
-    beginningState,
-    hitPlayer,
-    hitDealer,
-    resolveNatural,
-  ]);
+  }, [ensureAudioUnlocked, playersTurn, beginningState, hitPlayer, hitDealer]);
 
   const autoDeal = useCallback(() => {
     stopDealer();
@@ -395,8 +375,18 @@ const useBlackjackGame = (cards) => {
     if (stateRef.current.playerHand.filter(Boolean).length < 2) return;
     setPlayersTurn(false);
     setSwitchView(true);
+    if (isNatural(stateRef.current.playerHand)) {
+      // Standing on a blackjack: show "Dealing", then the dealer turns over
+      // one more card to settle it (+30, or a push on a dealer blackjack)
+      stopDealer();
+      dealingDelayRef.current = setTimeout(() => {
+        dealingDelayRef.current = null;
+        resolveNatural();
+      }, DEALING_DELAY_MS + DEAL_INTERVAL_MS);
+      return;
+    }
     autoDeal();
-  }, [ensureAudioUnlocked, playersTurn, gameOver, autoDeal]);
+  }, [ensureAudioUnlocked, playersTurn, gameOver, autoDeal, stopDealer, resolveNatural]);
 
   // Double down: on exactly two cards, double the stake, take one card, then stand
   const double = useCallback(() => {
@@ -440,15 +430,17 @@ const useBlackjackGame = (cards) => {
   useEffect(() => {
     return () => {
       if (doubleStandRef.current) clearTimeout(doubleStandRef.current);
-      if (naturalRef.current) clearTimeout(naturalRef.current);
       if (dealingDelayRef.current) clearTimeout(dealingDelayRef.current);
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, []);
 
   const playerCardCount = playerHand.filter(Boolean).length;
+  const hasBlackjack = isNatural(playerHand);
   const canStand = playersTurn && !gameOver && !locked && playerCardCount >= 2;
-  const canDouble = canStand && !doubled && playerCardCount === 2;
+  // A blackjack can only stand: hitting or doubling would throw it away
+  const canHit = playersTurn && !gameOver && !locked && !hasBlackjack;
+  const canDouble = canStand && !doubled && !hasBlackjack && playerCardCount === 2;
 
   return {
     beginningState,
@@ -466,6 +458,7 @@ const useBlackjackGame = (cards) => {
     switchView,
     locked,
     blackjack,
+    canHit,
     canStand,
     canDouble,
     deal,

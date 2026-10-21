@@ -10,6 +10,7 @@ const Controls = ({
   dealerTotal,
   dealerCardCount,
   gameOver,
+  canHit,
   canStand,
   canDouble,
   locked,
@@ -66,14 +67,12 @@ const Controls = ({
   }, [dealerCardCount, playersTurn, showDealing]);
 
   useEffect(() => {
-    const canHit =
-      !gameOver &&
-      !locked &&
-      (beginningState || (playersTurn && switchView === false));
+    const hitAllowed =
+      beginningState || (canHit && switchView === false);
     const standAllowed = canStand && switchView === false;
     const canSwap = !gameOver && !beginningState;
 
-    if (!canHit) {
+    if (!hitAllowed) {
       setIsHitPressed(false);
     }
 
@@ -86,7 +85,7 @@ const Controls = ({
         event.code === "Enter" ||
         event.key === "Enter"
       ) {
-        if (event.repeat || !canHit) return;
+        if (event.repeat || !hitAllowed) return;
         event.preventDefault();
         setIsHitPressed(true);
         onHit();
@@ -134,6 +133,7 @@ const Controls = ({
     };
   }, [
     beginningState,
+    canHit,
     canStand,
     canDouble,
     locked,
@@ -276,8 +276,10 @@ const Controls = ({
       <div id="board-bottom">
         <div className="buttons">
           <button
-            onClick={onHit}
-            className={`pushable ${isHitPressed ? "is-pressed" : ""}`}
+            onClick={canHit ? onHit : undefined}
+            className={
+              canHit ? `pushable ${isHitPressed ? "is-pressed" : ""}` : "not-pushable"
+            }
           >
             <span className="front">Hit</span>
           </button>

@@ -132,8 +132,9 @@ const HowToPlay = ({ onClose }) => {
             </tbody>
           </table>
           <p>
-            A blackjack wins right away unless the dealer's second card gives
-            them blackjack too, which is a push. Fill all six card slots
+            With a blackjack you can only stand: Hit and Double are off so the
+            21 can't be thrown away. Stand to collect, unless the dealer's
+            second card gives them blackjack too, which is a push. Fill all six card slots
             without busting and that hand wins automatically (six-card
             Charlie), for you or the dealer.
           </p>

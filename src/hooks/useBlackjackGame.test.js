@@ -58,16 +58,26 @@ describe("useBlackjackGame", () => {
     expect(game.current.gameOver).toBe(false);
   });
 
-  it("pays +30 for a blackjack once the dealer's second card is turned", () => {
+  it("waits for Stand on a blackjack, then pays +30", () => {
     rigDeck(["A", 6, "K", 9]);
     const game = startGame();
     press(game, "deal");
-    expect(game.current.locked).toBe(false);
     press(game, "deal");
 
-    expect(game.current.locked).toBe(true);
+    // The hand waits: only Stand is offered
+    runTimers();
     expect(game.current.gameOver).toBe(false);
+    expect(game.current.playersTurn).toBe(true);
+    expect(game.current.canStand).toBe(true);
+    expect(game.current.canHit).toBe(false);
+    expect(game.current.canDouble).toBe(false);
 
+    // Hitting is ignored, so the blackjack can't be thrown away
+    press(game, "deal");
+    expect(cardsIn(game.current.playerHand)).toEqual(["A", "K"]);
+
+    press(game, "stand");
+    expect(game.current.gameOver).toBe(false);
     runTimers();
     expect(cardsIn(game.current.dealerHand)).toEqual([6, 9]);
     expect(game.current.gameOver).toBe(true);
@@ -81,6 +91,7 @@ describe("useBlackjackGame", () => {
     const game = startGame();
     press(game, "deal");
     press(game, "deal");
+    press(game, "stand");
     runTimers();
 
     expect(game.current.gameOver).toBe(true);
