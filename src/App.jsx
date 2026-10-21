@@ -1,6 +1,11 @@
 import React, { useCallback, useState, useEffect, useRef } from "react";
 import "./App.css";
-import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/solid";
+import {
+  MoonIcon,
+  SpeakerWaveIcon,
+  SpeakerXMarkIcon,
+  SunIcon,
+} from "@heroicons/react/24/solid";
 import Controls from "./components/Controls";
 import Score from "./components/Score";
 import Board from "./components/Board";
@@ -8,11 +13,13 @@ import EndGameScreen from "./components/EndGameScreen";
 import HowToPlay from "./components/HowToPlay";
 import swapNote from "./components/swapNote";
 import useBlackjackGame from "./hooks/useBlackjackGame";
+import useTheme from "./hooks/useTheme";
 import { DEAL_INTERVAL_MS } from "./constants";
 
 const App = ({ cards }) => {
   const [showRules, setShowRules] = useState(false);
   const closeRules = useCallback(() => setShowRules(false), []);
+  const [theme, toggleTheme] = useTheme();
   const [showEndGameScreen, setShowEndGameScreen] = useState(false);
   const {
     beginningState,
@@ -95,6 +102,20 @@ const App = ({ cards }) => {
                 aria-label="Show rules"
               >
                 <span className="front">?</span>
+              </button>
+              <button
+                className="pushable help-button"
+                onClick={toggleTheme}
+                aria-pressed={theme === "dark"}
+                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                <span className="front">
+                  {theme === "dark" ? (
+                    <SunIcon aria-hidden="true" />
+                  ) : (
+                    <MoonIcon aria-hidden="true" />
+                  )}
+                </span>
               </button>
               <button
                 className="pushable help-button mute-button"

@@ -1,5 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
 
+/* Theme colors. Light is the default; dark is a soft charcoal, not black. */
+:root {
+  --bg: #DBDBDB;
+  --fg: #3B3B3B;
+  --hover: #CFCFCF;
+  --press: #C4C4C4;
+  --rule: rgba(59, 59, 59, 0.15);
+  --win: #2d8a2d;
+  --lose: #c43c3c;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #2B2C2E;
+  --fg: #D6D6D6;
+  --hover: #36383B;
+  --press: #404246;
+  --rule: rgba(214, 214, 214, 0.15);
+  --win: #6DC46D;
+  --lose: #E87C7C;
+  color-scheme: dark;
+}
+
+
 html, 
 body {
   height: 100%;
@@ -7,12 +31,12 @@ body {
 
 body {
   font-family: 'JetBrains Mono', monospace;
-  background-color: #DBDBDB;
+  background-color: var(--bg);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #3B3B3B;
+  color: var(--fg);
   font-weight: 500;
   height: 100%;
   overflow: hidden;
@@ -139,11 +163,11 @@ body {
 }
 
 .end-game-delta.positive {
-  color: #2d8a2d;
+  color: var(--win);
 }
 
 .end-game-delta.negative {
-  color: #c43c3c;
+  color: var(--lose);
 }
 
 .end-game-delta.neutral {
@@ -169,8 +193,8 @@ body {
   inset: 0;
   z-index: 20;
   overflow-y: auto;
-  background: #DBDBDB;
-  color: #3B3B3B;
+  background: var(--bg);
+  color: var(--fg);
   outline: none;
 }
 
@@ -191,7 +215,7 @@ body {
   left: 0;
   right: 0;
   height: calc(2rem + 48px + 1rem);
-  background: #DBDBDB;
+  background: var(--bg);
   z-index: 21;
 }
 
@@ -270,7 +294,7 @@ body {
 
 .rules-results td {
   padding: 0.5rem 0;
-  border-bottom: 2px solid rgba(59, 59, 59, 0.15);
+  border-bottom: 2px solid var(--rule);
 }
 
 .rules-results td:last-child {
@@ -285,7 +309,7 @@ body {
   font-weight: 700;
   font-size: 0.9rem;
   padding: 2px 8px;
-  border: 2px solid #3B3B3B;
+  border: 2px solid var(--fg);
   border-radius: 6px;
 }
 
@@ -414,7 +438,7 @@ button {
 }
 
 .not-pushable {
-  background: #3B3B3B;
+  background: var(--fg);
   border: none;
   border-radius: 15px;
   padding: 0;
@@ -427,7 +451,7 @@ button {
 }
 
 .pushable {
-  background: #3B3B3B;
+  background: var(--fg);
   border: none;
   border-radius: 15px;
   padding: 0;
@@ -440,10 +464,10 @@ button {
   padding: 15px 40px;
   border-radius: 15px;
   font-size: 1.5rem;
-  color: #3B3B3B;
+  color: var(--fg);
   transform: translateY(-4px);
-  background: #DBDBDB;
-  border: 3px solid #3B3B3B;
+  background: var(--bg);
+  border: 3px solid var(--fg);
   font-weight: 700;
 }
 
@@ -526,18 +550,18 @@ button {
 }
 
 .help-button:hover .front {
-  background: #CFCFCF;
+  background: var(--hover);
 }
 
 .help-button:active .front {
-  background: #C4C4C4;
+  background: var(--press);
 }
 
 .mute-button .front {
   font-size: 1.1rem;
 }
 
-.mute-button svg {
+.help-button svg {
   width: 22px;
   height: 22px;
 }
@@ -624,7 +648,7 @@ button {
   list-style: none;
   padding: 0;
   position: relative;
-  background: #DBDBDB;
+  background: var(--bg);
   border-radius: 18px;
   isolation: isolate;
 }
@@ -641,7 +665,7 @@ button {
 
 .board-lines path {
   fill: none;
-  stroke: #3B3B3B;
+  stroke: var(--fg);
   stroke-width: 3px;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -649,7 +673,7 @@ button {
 }
 
 .hand-grid li {
-  color: #3B3B3B;
+  color: var(--fg);
   font-size: 55px;
   border-radius: 15px;
   text-align: center;
@@ -659,7 +683,7 @@ button {
   flex-direction: column;
   justify-content: center;
   border: 0;
-  background: #DBDBDB;
+  background: var(--bg);
   aspect-ratio: 1;
   position: relative;
 }
@@ -682,7 +706,7 @@ button {
 .hand-grid li:nth-of-type(3),
 .hand-grid li:nth-of-type(4),
 .hand-grid li:nth-of-type(5) {
-  background: #DBDBDB;
+  background: var(--bg);
 }
 
 .hand-grid .name,
@@ -698,7 +722,7 @@ button {
   font-family: 'JetBrains Mono', monospace;
   font-size: 1.6rem;
   font-weight: 800;
-  color: #3B3B3B;
+  color: var(--fg);
   pointer-events: none;
   z-index: 5;
   /* Size, position and fade each run as their own smooth animation */
@@ -931,7 +955,7 @@ button {
     grid-column: auto;
     width: auto;
     cursor: pointer;
-    color: #3B3B3B;
+    color: var(--fg);
   }
 
   #swap .front {

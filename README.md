@@ -20,6 +20,9 @@ handheld LCD games. Play it at
 - You start with 200 points, kept between visits. At zero the game is over and
   **New Game** starts again at 200.
 
+The moon/sun button switches between light and a soft dark mode. Until you
+pick one it follows your device's setting, and your choice is remembered.
+
 Keyboard: Space or Enter to deal and hit, **S** to stand, **D** to double,
 **V** to switch between your hand and the dealer's.
 

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import App from "./App";
 
 const buildDeck = () => {
@@ -15,4 +15,18 @@ const buildDeck = () => {
 test("renders score heading", () => {
   render(<App cards={buildDeck()} />);
   expect(screen.getByText(/score/i)).toBeInTheDocument();
+});
+
+test("switches between light and dark and remembers the choice", () => {
+  document.documentElement.dataset.theme = "light";
+  window.localStorage.clear();
+  render(<App cards={buildDeck()} />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Switch to dark mode" }));
+  expect(document.documentElement.dataset.theme).toBe("dark");
+  expect(window.localStorage.getItem("retro-blackjack-theme")).toBe("dark");
+
+  fireEvent.click(screen.getByRole("button", { name: "Switch to light mode" }));
+  expect(document.documentElement.dataset.theme).toBe("light");
+  expect(window.localStorage.getItem("retro-blackjack-theme")).toBe("light");
 });
