@@ -15,6 +15,7 @@ const Board = ({
     <div className="board">
       {showPlayer ? (
         <Hand
+          key="player"
           name="Player"
           hand={playerHand}
           total={playerTotal}
@@ -22,6 +23,7 @@ const Board = ({
         />
       ) : (
         <Hand
+          key="dealer"
           name="Dealer"
           hand={dealerHand}
           total={dealerTotal}

@@ -81,6 +81,13 @@ const Hand = ({ name, hand, total, playersTurn }) => {
       }
     }
 
+    // Effects are for a card being dealt, not for a hand coming back into view
+    if (!addedCard) {
+      prevTotalRef.current = total;
+      prevHandRef.current = hand;
+      return;
+    }
+
     const bustHappened = total > 21 && prevTotal <= 21;
     const hitTwentyOne = total === 21 && prevTotal !== 21;
     const lastCards = hand.filter(Boolean);
