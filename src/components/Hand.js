@@ -58,6 +58,9 @@ const BOARD_LINES = [
   ...[100, 200, 300, 400].map((x) => join(x, 200, [LEFT, RIGHT, UP])),
 ].join("");
 
+// How long a text effect like "Blackjack!" stays on screen
+const BURST_DURATION_MS = 2400;
+
 const Hand = ({ name, hand, total, playersTurn }) => {
   const lowAces = getLowAceIndexes(hand);
   const [bursts, setBursts] = useState([]);
@@ -139,8 +142,9 @@ const Hand = ({ name, hand, total, playersTurn }) => {
       const isMobile =
         typeof window !== "undefined" &&
         window.matchMedia("(max-width: 760px)").matches;
+      // On phones the total sits by the right edge, so center the word to its left
       const offsetX = isMobile
-        ? -14 + (Math.random() * 12 - 6)
+        ? -60 + (Math.random() * 12 - 6)
         : (Math.random() < 0.5 ? -1 : 1) *
           (24 + Math.floor(Math.random() * 30));
       const offsetY = -56 - Math.floor(Math.random() * 24);
@@ -150,7 +154,7 @@ const Hand = ({ name, hand, total, playersTurn }) => {
       ]);
       const timer = setTimeout(() => {
         setBursts((prev) => prev.filter((burst) => burst.id !== id));
-      }, 1200);
+      }, BURST_DURATION_MS);
       prevTotalRef.current = total;
       prevHandRef.current = hand;
       return () => clearTimeout(timer);
@@ -190,9 +194,6 @@ const Hand = ({ name, hand, total, playersTurn }) => {
         <li className="spacer"></li>
         <li className="spacer"></li>
         <li className="total">
-          <span className={`total-label ${total > 0 ? "" : "is-hidden"}`}>
-            Total
-          </span>
           <span className={`total-value ${total > 0 ? "" : "is-hidden"}`}>
             {total > 0 ? total : "0"}
           </span>
@@ -203,6 +204,7 @@ const Hand = ({ name, hand, total, playersTurn }) => {
               style={{
                 left: `calc(50% + ${burst.offsetX}px)`,
                 top: `calc(50% + ${burst.offsetY}px)`,
+                animationDuration: `${BURST_DURATION_MS}ms`,
               }}
             >
               {burst.word}

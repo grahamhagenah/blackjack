@@ -632,15 +632,6 @@ button {
   overflow: visible;
 }
 
-.total-label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-
 .total-value {
   display: block;
 }
@@ -731,26 +722,36 @@ button {
   left: 50%;
   top: 50%;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 800;
   color: #3B3B3B;
   pointer-events: none;
-  animation: total-burst-float 1.2s ease-out forwards;
+  z-index: 5;
+  animation: total-burst-float 2.4s ease-out forwards;
   white-space: nowrap;
   transform: translate(-50%, -50%);
 }
 
+/* Pop in, hold, then drift up and fade */
 @keyframes total-burst-float {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: translate(-50%, -50%) scale(0.6);
   }
-  15% {
+  8% {
     opacity: 1;
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+  14% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -70%) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -120%) scale(1.05);
+    transform: translate(-50%, -150%) scale(1);
   }
 }
 
@@ -1104,6 +1105,10 @@ button {
     font-size: 2rem;
     min-height: 3rem;
     margin: 0 15px 15px 15px;
+  }
+
+  .total-burst {
+    font-size: 1.25rem;
   }
 
   #board-bottom-gameover h3 {
