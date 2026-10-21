@@ -28,6 +28,36 @@ const getLowAceIndexes = (hand) => {
   return reduced;
 };
 
+// Board outline drawn like the handheld's LCD: only the corners and the
+// joins between cards are lit, leaving a gap along the middle of each edge.
+// Units are one card = 100; the grid is 5 cards wide and 2 tall.
+const ARM = 30;
+const RADIUS = 14;
+
+const corner = (x, y, dx, dy) =>
+  `M${x + dx * ARM} ${y}L${x + dx * RADIUS} ${y}` +
+  `Q${x} ${y} ${x} ${y + dy * RADIUS}L${x} ${y + dy * ARM}`;
+
+const join = (x, y, arms) =>
+  arms.map(([dx, dy]) => `M${x} ${y}L${x + dx * ARM} ${y + dy * ARM}`).join("");
+
+const UP = [0, -1];
+const DOWN = [0, 1];
+const LEFT = [-1, 0];
+const RIGHT = [1, 0];
+
+const BOARD_LINES = [
+  corner(0, 0, 1, 1),
+  corner(100, 0, -1, 1),
+  corner(500, 100, -1, 1),
+  corner(0, 200, 1, -1),
+  corner(500, 200, -1, -1),
+  join(0, 100, [UP, DOWN, RIGHT]),
+  join(100, 100, [UP, DOWN, LEFT, RIGHT]),
+  ...[200, 300, 400].map((x) => join(x, 100, [LEFT, RIGHT, DOWN])),
+  ...[100, 200, 300, 400].map((x) => join(x, 200, [LEFT, RIGHT, UP])),
+].join("");
+
 const Hand = ({ name, hand, total, playersTurn }) => {
   const lowAces = getLowAceIndexes(hand);
   const [bursts, setBursts] = useState([]);
@@ -131,17 +161,14 @@ const Hand = ({ name, hand, total, playersTurn }) => {
   return (
     <div className="hand">
       <ul className="hand-grid">
-        <div className="vertical-divider">
-          <span className="divider-segment" />
-          <span className="divider-segment" />
-          <span className="divider-segment" />
-          <span className="divider-segment" />
-          <span className="divider-segment" />
-        </div>
-        <div className="horizontal-divider">
-          <span className="divider-segment" />
-          <span className="divider-segment" />
-        </div>
+        <svg
+          className="board-lines"
+          viewBox="0 0 500 200"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d={BOARD_LINES} />
+        </svg>
         <li className="card-cell">
           <div className={`card-value ${hand[0] ? "" : "is-hidden"}`}>
             {renderCardValue(hand[0], 0)}

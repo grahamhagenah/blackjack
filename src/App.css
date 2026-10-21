@@ -175,11 +175,6 @@ body {
 .hand {
   min-width: 750px;
   position: relative;
-  --cross-thickness: 34px;
-  --cross-x: 50%;
-  --cross-y: 70%;
-  --cross-vertical-height: 140%;
-  --cross-horizontal-width: 130%;
 }
 
 .mini-hand {
@@ -626,58 +621,23 @@ button {
   isolation: isolate;
 }
 
-.hand-grid::before {
-  content: "";
+.board-lines {
   position: absolute;
   inset: 0;
-  border: 3px solid #3B3B3B;
-  border-radius: 18px;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.vertical-divider,
-.horizontal-divider {
-  position: absolute;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.vertical-divider {
   width: 100%;
-  height: var(--cross-vertical-height);
-  background: transparent;
-  left: var(--cross-x);
-  top: var(--cross-y);
-  transform: translate(-50%, -60%);
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-}
-
-.vertical-divider .divider-segment {
-  justify-self: center;
-  width: var(--cross-thickness);
   height: 100%;
-  background-color: #DBDBDB;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 4;
 }
 
-.horizontal-divider {
-  width: var(--cross-horizontal-width);
-  height: 100%;
-  background: transparent;
-  left: var(--cross-x);
-  top: 0;
-  transform: translateX(-50%);
-  display: grid;
-  grid-template-rows: repeat(2, 1fr);
-  align-items: center;
-  justify-items: center;
-}
-
-.horizontal-divider .divider-segment {
-  width: 100%;
-  height: var(--cross-thickness);
-  background-color: #DBDBDB;
+.board-lines path {
+  fill: none;
+  stroke: #3B3B3B;
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
 }
 
 .hand-grid li {
@@ -703,8 +663,6 @@ button {
 .hand-grid li:nth-of-type(1) {
   grid-column: 1 / 2;
   grid-row: 1;
-  border-radius: 15px 0 0 0;
-  box-shadow: inset 3px 0 0 #3B3B3B, inset -3px 0 0 #3B3B3B, inset 0 3px 0 #3B3B3B;
 }
 
 .hand-grid li:nth-of-type(2) {
@@ -719,18 +677,6 @@ button {
   background: #DBDBDB;
 }
 
-
-.hand-grid .name::before,
-.hand-grid .total::before {
-  content: "";
-  position: absolute;
-  top: -3px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #DBDBDB;
-  z-index: -1;
-}
 
 .hand-grid .name,
 .hand-grid .total {
@@ -769,43 +715,32 @@ button {
 .hand-grid li:nth-of-type(5) {
   grid-column: 5 / 6;
   grid-row: 1;
-  border-radius: 0 15px 0 0;
 }
 
 
 .hand-grid li:nth-of-type(6) {
   grid-column: 1 / 2;
   grid-row: 2;
-  border-radius: 0 0 0 15px;
-  box-shadow: inset 3px 0 0 #3B3B3B, inset -3px 0 0 #3B3B3B, inset 0 -3px 0 #3B3B3B, inset 0 3px 0 #3B3B3B;
 }
 
 .hand-grid li:nth-of-type(7) {
   grid-column: 2 / 3;
   grid-row: 2;
-  border-radius: 0;
-  box-shadow: inset -3px 0 0 #3B3B3B, inset 0 -3px 0 #3B3B3B, inset 0 3px 0 #3B3B3B;
 }
 
 .hand-grid li:nth-of-type(8) {
   grid-column: 3 / 4;
   grid-row: 2;
-  border-radius: 0;
-  box-shadow: inset -3px 0 0 #3B3B3B, inset 0 -3px 0 #3B3B3B, inset 0 3px 0 #3B3B3B;
 }
 
 .hand-grid li:nth-of-type(9) {
   grid-column: 4 / 5;
   grid-row: 2;
-  border-radius: 0;
-  box-shadow: inset -3px 0 0 #3B3B3B, inset 0 -3px 0 #3B3B3B, inset 0 3px 0 #3B3B3B;
 }
 
 .hand-grid li:nth-of-type(10) {
   grid-column: 5 / 6;
   grid-row: 2;
-  border-radius: 0 0 15px 0;
-  box-shadow: inset -3px 0 0 #3B3B3B, inset 0 -3px 0 #3B3B3B, inset 0 3px 0 #3B3B3B;
 }
 
 .card-value {
@@ -861,10 +796,6 @@ button {
   }
 
   .hand {
-    --cross-thickness: 14px;
-    --cross-y: 68%;
-    --cross-vertical-height: 120%;
-    --cross-horizontal-width: 120%;
     padding: 1.5rem 0;
   }
 
@@ -950,12 +881,6 @@ button {
     border: none;
     border-radius: 0;
     gap: 0;
-  }
-
-  .hand-grid::before,
-  .hand-grid .vertical-divider,
-  .hand-grid .horizontal-divider {
-    display: none;
   }
 
   .buttons {
@@ -1111,17 +1036,6 @@ button {
   .hand-grid li:nth-of-type(8) { grid-column: 3; grid-row: 2; }
   .hand-grid li:nth-of-type(9) { grid-column: 4; grid-row: 2; }
   .hand-grid li:nth-of-type(10) { grid-column: 5; grid-row: 2; }
-
-  .vertical-divider,
-  .horizontal-divider {
-    display: none;
-  }
-
-  /* Hide the name/total pseudo-element backgrounds on mobile */
-  .hand-grid .name::before,
-  .hand-grid .total::before {
-    display: none;
-  }
 
 
   .name {
