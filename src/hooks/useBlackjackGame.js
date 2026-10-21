@@ -91,6 +91,7 @@ const useBlackjackGame = (cards) => {
   const [change, setChange] = useState(0);
   const [switchView, setSwitchView] = useState(false);
   const [muted, setMuted] = useState(false);
+  const [doubled, setDoubled] = useState(false);
 
   const audioContextRef = useRef(null);
   const audioBuffersRef = useRef({});
@@ -101,6 +102,8 @@ const useBlackjackGame = (cards) => {
   const suppressNextDealerSoundRef = useRef(false);
   const intervalRef = useRef(null);
   const dealingDelayRef = useRef(null);
+  const doubleStandRef = useRef(null);
+  const doubledRef = useRef(false);
   const stateRef = useRef(null);
   const nextDealerIndexRef = useRef(0);
   const nextPlayerIndexRef = useRef(0);
@@ -238,13 +241,20 @@ const useBlackjackGame = (cards) => {
     setPlayersTurn(true);
     setGameOver(false);
     setPlayerWins(false);
+    setDoubled(false);
+    doubledRef.current = false;
+    if (doubleStandRef.current) {
+      clearTimeout(doubleStandRef.current);
+      doubleStandRef.current = null;
+    }
     stopDealer();
   }, [cards, ensureAudioUnlocked, stopDealer]);
 
   const applyOutcome = useCallback(
     ({ gameOver: isGameOver, playerWins: didWin, push: isPush }) => {
       if (!isGameOver) return;
-      const delta = isPush ? 0 : didWin ? SCORE_DELTA : -SCORE_DELTA;
+      const stake = doubledRef.current ? SCORE_DELTA * 2 : SCORE_DELTA;
+      const delta = isPush ? 0 : didWin ? stake : -stake;
       setChange(delta);
       setScore(score + delta);
       setGameOver(true);
@@ -374,6 +384,22 @@ const useBlackjackGame = (cards) => {
     autoDeal();
   }, [ensureAudioUnlocked, playersTurn, gameOver, autoDeal]);
 
+  // Double down: on exactly two cards, double the stake, take one card, then stand
+  const double = useCallback(() => {
+    ensureAudioUnlocked();
+    if (!playersTurn || gameOver || doubledRef.current) return;
+    if (nextPlayerIndexRef.current !== 2) return;
+    doubledRef.current = true;
+    setDoubled(true);
+    hitPlayer();
+    if (stateRef.current.playerTotal > 21) return;
+    // Leave the drawn card on screen for a beat before the dealer plays
+    doubleStandRef.current = setTimeout(() => {
+      doubleStandRef.current = null;
+      stand();
+    }, DEAL_INTERVAL_MS);
+  }, [ensureAudioUnlocked, playersTurn, gameOver, hitPlayer, stand]);
+
   const switchHandView = useCallback(() => {
     ensureAudioUnlocked();
     setSwitchView((prev) => !prev);
@@ -398,10 +424,17 @@ const useBlackjackGame = (cards) => {
 
   useEffect(() => {
     return () => {
+      if (doubleStandRef.current) clearTimeout(doubleStandRef.current);
       if (dealingDelayRef.current) clearTimeout(dealingDelayRef.current);
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, []);
+
+  const canDouble =
+    playersTurn &&
+    !gameOver &&
+    !doubled &&
+    playerHand.filter(Boolean).length === 2;
 
   return {
     beginningState,
@@ -417,8 +450,11 @@ const useBlackjackGame = (cards) => {
     change,
     muted,
     switchView,
+    doubled,
+    canDouble,
     deal,
     stand,
+    double,
     clearState,
     switchHandView,
     toggleMuted,

@@ -312,6 +312,18 @@ button {
   margin: 0 10px;
 }
 
+/* Spread the control row evenly across the board's width */
+@media (min-width: 761px) {
+  #board-bottom {
+    width: 100%;
+    max-width: 750px;
+  }
+
+  .buttons > button {
+    margin: 0;
+  }
+}
+
 #score {
   height: auto;
   position: static;
@@ -908,15 +920,22 @@ button {
 
   .buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     margin: 0;
     width: 100%;
     row-gap: 0.5rem;
   }
 
+  .buttons > button {
+    justify-self: stretch;
+  }
+
   .buttons button:first-of-type {
+    order: 4;
+  }
+
+  .buttons #double {
     order: 3;
-    grid-column: 1 / -1;
   }
 
   .buttons #swap {
@@ -953,7 +972,6 @@ button {
     position: static;
     grid-column: auto;
     width: auto;
-    margin: 0;
     cursor: pointer;
     color: #3B3B3B;
   }

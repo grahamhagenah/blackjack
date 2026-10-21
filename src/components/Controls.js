@@ -10,8 +10,11 @@ const Controls = ({
   dealerTotal,
   dealerCardCount,
   gameOver,
+  canDouble,
+  doubled,
   onHit,
   onStand,
+  onDouble,
   onSwap,
   onDealingShown,
 }) => {
@@ -63,9 +66,11 @@ const Controls = ({
   useEffect(() => {
     const canHit =
       !gameOver &&
+      !doubled &&
       (beginningState || (playersTurn && switchView === false));
     const canStand =
       !gameOver &&
+      !doubled &&
       playersTurn &&
       switchView === false &&
       !beginningState;
@@ -98,6 +103,13 @@ const Controls = ({
         return;
       }
 
+      if (key === "d") {
+        if (event.repeat || !canDouble || switchView) return;
+        event.preventDefault();
+        onDouble();
+        return;
+      }
+
       if (key === "v") {
         if (event.repeat || !canSwap) return;
         event.preventDefault();
@@ -125,9 +137,12 @@ const Controls = ({
     };
   }, [
     beginningState,
+    canDouble,
+    doubled,
     gameOver,
     onHit,
     onStand,
+    onDouble,
     onSwap,
     playersTurn,
     switchView,
@@ -152,6 +167,16 @@ const Controls = ({
   }, [gameOver, dealerTotal, playerTotal]);
 
   const justStood = !playersTurn && prevPlayersTurnRef.current && !gameOver;
+
+  const doubleButton = (enabled) => (
+    <button
+      id="double"
+      onClick={enabled ? onDouble : undefined}
+      className={enabled ? "pushable" : "not-pushable"}
+    >
+      <span className="front">Double</span>
+    </button>
+  );
 
   // Player busted - show bust message
   if (showPlayerBust) {
@@ -190,6 +215,7 @@ const Controls = ({
           <button className="not-pushable">
             <span className="front">Stand</span>
           </button>
+          {doubleButton(false)}
           <Swap onClick={onSwap} switchView={switchView} />
         </div>
       </div>
@@ -209,6 +235,7 @@ const Controls = ({
           <button className="not-pushable">
             <span className="front">Stand</span>
           </button>
+          {doubleButton(false)}
           <Swap onClick={onSwap} switchView={switchView} disabled />
         </div>
       </div>
@@ -228,6 +255,24 @@ const Controls = ({
     );
   }
 
+  // Doubled: the one extra card is showing, wait for the dealer to start
+  if (playersTurn && doubled) {
+    return (
+      <div id="board-bottom">
+        <div className="buttons">
+          <button className="not-pushable">
+            <span className="front">Hit</span>
+          </button>
+          <button className="not-pushable">
+            <span className="front">Stand</span>
+          </button>
+          {doubleButton(false)}
+          <Swap onClick={onSwap} switchView={switchView} disabled />
+        </div>
+      </div>
+    );
+  }
+
   if (playersTurn && switchView === false) {
     return (
       <div id="board-bottom">
@@ -241,6 +286,7 @@ const Controls = ({
           <button onClick={onStand} className="pushable">
             <span className="front">Stand</span>
           </button>
+          {doubleButton(canDouble)}
           <Swap onClick={onSwap} switchView={switchView} />
         </div>
       </div>
@@ -257,6 +303,7 @@ const Controls = ({
           <button className="not-pushable">
             <span className="front">Stand</span>
           </button>
+          {doubleButton(false)}
           <Swap onClick={onSwap} switchView={switchView} />
         </div>
       </div>

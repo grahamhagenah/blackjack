@@ -26,8 +26,11 @@ const App = ({ cards }) => {
     change,
     muted,
     switchView,
+    doubled,
+    canDouble,
     deal,
     stand,
+    double,
     clearState,
     switchHandView,
     toggleMuted,
@@ -123,8 +126,11 @@ const App = ({ cards }) => {
               dealerTotal={dealerTotal}
               dealerCardCount={nextDealerIndex}
               gameOver={gameOver}
+              canDouble={canDouble}
+              doubled={doubled}
               onHit={deal}
               onStand={stand}
+              onDouble={double}
               onSwap={switchHandView}
               onDealingShown={playDealingSound}
             />
@@ -151,6 +157,10 @@ const App = ({ cards }) => {
                 <li>
                   Hit to take a card. Stand to end your turn—then the dealer
                   draws until their total is at least 17.
+                </li>
+                <li>
+                  With exactly two cards you can Double: your win or loss
+                  counts twice, you get one more card, and then you stand.
                 </li>
                 <li>
                   If you bust, you lose. If the dealer busts, you win.
