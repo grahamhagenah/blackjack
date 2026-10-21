@@ -340,6 +340,12 @@ button {
     padding-right: 30px;
   }
 
+  /* Deal becomes Hit after the first press; size it for "Deal" so the row
+     doesn't shift when the label gets shorter */
+  .buttons > button:first-child .front {
+    min-width: 4ch;
+  }
+
   /* Always as wide as "View Dealer: 10" (12 characters with the colon, plus
      the 3-character value at 0.75 size), so the label stays centered when
      there's no value */
