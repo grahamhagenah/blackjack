@@ -206,14 +206,6 @@ body {
   margin: 0;
 }
 
-.buttons.dealing #outcome.bust {
-  color: #c43c3c;
-}
-
-.buttons.dealing #outcome.dealer-bust {
-  color: #2d8a2d;
-}
-
 .buttons.fading-out {
   animation: buttons-fade-out 300ms ease-out forwards;
   pointer-events: none;

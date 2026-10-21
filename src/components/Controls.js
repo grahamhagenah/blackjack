@@ -158,7 +158,7 @@ const Controls = ({
     return (
       <div id="board-bottom">
         <div className="buttons dealing">
-          <h3 id="outcome" className="bust blink">
+          <h3 id="outcome" className="blink">
             Busted!
           </h3>
         </div>
@@ -171,7 +171,7 @@ const Controls = ({
     return (
       <div id="board-bottom">
         <div className="buttons dealing">
-          <h3 id="outcome" className="dealer-bust blink">
+          <h3 id="outcome" className="blink">
             Dealer busted!
           </h3>
         </div>
