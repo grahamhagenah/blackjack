@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Swap from "./Swap";
+import { DEALING_DELAY_MS } from "../constants";
 
 const Controls = ({
   beginningState,
@@ -36,7 +37,7 @@ const Controls = ({
         setIsFadingToDealing(false);
         setShowDealing(true);
         onDealingShownRef.current();
-      }, 300);
+      }, DEALING_DELAY_MS);
       prevPlayersTurnRef.current = playersTurn;
       return () => clearTimeout(timer);
     } else if (playersTurn && !prevPlayersTurnRef.current) {

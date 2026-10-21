@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { DEAL_INTERVAL_MS } from "../constants";
+import { DEAL_INTERVAL_MS, DEALING_DELAY_MS } from "../constants";
 
 const HAND_SIZE = 6;
 const STARTING_SCORE = 200;
@@ -100,6 +100,7 @@ const useBlackjackGame = (cards) => {
   const suppressNextPlayerSoundRef = useRef(false);
   const suppressNextDealerSoundRef = useRef(false);
   const intervalRef = useRef(null);
+  const dealingDelayRef = useRef(null);
   const stateRef = useRef(null);
   const nextDealerIndexRef = useRef(0);
   const nextPlayerIndexRef = useRef(0);
@@ -210,6 +211,17 @@ const useBlackjackGame = (cards) => {
     prevTotalsRef.current = { player: playerTotal, dealer: dealerTotal };
   }, [playerTotal, dealerTotal, playSound]);
 
+  const stopDealer = useCallback(() => {
+    if (dealingDelayRef.current) {
+      clearTimeout(dealingDelayRef.current);
+      dealingDelayRef.current = null;
+    }
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
   const clearState = useCallback(() => {
     ensureAudioUnlocked();
     suppressSoundRef.current = true;
@@ -226,11 +238,8 @@ const useBlackjackGame = (cards) => {
     setPlayersTurn(true);
     setGameOver(false);
     setPlayerWins(false);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  }, [cards, ensureAudioUnlocked]);
+    stopDealer();
+  }, [cards, ensureAudioUnlocked, stopDealer]);
 
   const applyOutcome = useCallback(
     ({ gameOver: isGameOver, playerWins: didWin, push: isPush }) => {
@@ -335,16 +344,9 @@ const useBlackjackGame = (cards) => {
     if (playersTurn) hitPlayer();
   }, [ensureAudioUnlocked, playersTurn, hitPlayer]);
 
-  const stopDealer = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  }, []);
-
   const autoDeal = useCallback(() => {
     stopDealer();
-    intervalRef.current = setInterval(() => {
+    const drawDealerCard = () => {
       const current = stateRef.current;
       if (!current || current.gameOver) {
         stopDealer();
@@ -356,7 +358,12 @@ const useBlackjackGame = (cards) => {
       } else {
         stopDealer();
       }
-    }, DEAL_INTERVAL_MS);
+    };
+    // Wait for "Dealing" to show so every dealer card lands DEAL_INTERVAL_MS apart
+    dealingDelayRef.current = setTimeout(() => {
+      dealingDelayRef.current = null;
+      intervalRef.current = setInterval(drawDealerCard, DEAL_INTERVAL_MS);
+    }, DEALING_DELAY_MS);
   }, [hitDealer, stopDealer]);
 
   const stand = useCallback(() => {
@@ -391,6 +398,7 @@ const useBlackjackGame = (cards) => {
 
   useEffect(() => {
     return () => {
+      if (dealingDelayRef.current) clearTimeout(dealingDelayRef.current);
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, []);
