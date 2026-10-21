@@ -163,6 +163,112 @@ body {
   padding: 18px 64px;
 }
 
+/* How to Play: a full-screen page over the game */
+.rules-page {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  overflow-y: auto;
+  background: #DBDBDB;
+  color: #3B3B3B;
+  outline: none;
+  animation: end-game-fade-in 300ms ease-out;
+}
+
+.rules-content {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 4rem 2rem 3rem;
+  box-sizing: border-box;
+}
+
+.rules-content h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: 0 0 2.5rem;
+}
+
+.rules-content section {
+  margin-bottom: 2.25rem;
+}
+
+.rules-content h2 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+  margin: 0 0 0.75rem;
+}
+
+.rules-content p,
+.rules-content li,
+.rules-content dd,
+.rules-content td {
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.rules-content p {
+  margin: 0.75rem 0 0;
+}
+
+.rules-content ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+/* Term on the left, explanation on the right */
+.rules-actions {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.6rem 1.25rem;
+  margin: 0;
+}
+
+.rules-actions dt {
+  font-weight: 800;
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.rules-actions dd {
+  margin: 0;
+}
+
+.rules-results {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rules-results td {
+  padding: 0.5rem 0;
+  border-bottom: 2px solid rgba(59, 59, 59, 0.15);
+}
+
+.rules-results td:last-child {
+  text-align: right;
+  font-weight: 800;
+  white-space: nowrap;
+  padding-left: 1rem;
+}
+
+.rules-content kbd {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 2px 8px;
+  border: 2px solid #3B3B3B;
+  border-radius: 6px;
+}
+
+.rules-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
 #game-area {
   position: relative;
   height: 100%;
@@ -408,87 +514,6 @@ button {
 .mute-button svg {
   width: 22px;
   height: 22px;
-}
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(59, 59, 59, 0.25);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 20;
-}
-
-.modal {
-  background: #DBDBDB;
-  border: 3px solid #3B3B3B;
-  border-radius: 18px;
-  width: min(720px, 92vw);
-  padding: 28px 32px 32px;
-  box-shadow: 0 16px 60px rgba(59, 59, 59, 0.25);
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-.modal-header h2 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-.modal-body p {
-  margin: 0 0 0.75rem 0;
-  font-size: 1.15rem;
-  line-height: 1.5;
-}
-
-.modal-list {
-  margin: 0;
-  padding: 0.5rem 0 0.5rem 1.75rem;
-  list-style: decimal;
-  list-style-position: outside;
-  font-size: 1.15rem;
-  line-height: 1.5;
-}
-
-.modal-list li {
-  margin: 0 0 0.75rem 0;
-  font-size: 1.15rem;
-  color: #3B3B3B;
-  border-radius: 0;
-  text-align: left;
-  min-width: 0;
-  display: list-item;
-  transform: none;
-}
-
-.modal-list .modal-tip {
-  font-size: 1rem;
-  opacity: 0.9;
-}
-
-.modal-tip {
-  margin: 0;
-  font-size: 1rem;
-  font-style: italic;
-  opacity: 0.85;
-}
-
-.modal-close {
-  margin: 0;
-}
-
-.modal-actions {
-  margin-top: 16px;
-  display: flex;
-  justify-content: center;
 }
 
 #board-bottom {
@@ -811,25 +836,6 @@ button {
     justify-content: flex-end;
   }
 
-  .modal {
-    padding: 20px 20px 24px;
-  }
-
-  .modal-header h2 {
-    font-size: 1.5rem;
-  }
-
-  .modal-body p,
-  .modal-list,
-  .modal-list li {
-    font-size: 1rem;
-  }
-
-  .modal-list .modal-tip,
-  .modal-tip {
-    font-size: 0.9rem;
-  }
-
   body, html {
     width: 100%;
     margin: 0 auto;
@@ -1041,7 +1047,6 @@ button {
     font-size: 2.5rem;
   }
 
-
   .end-game-screen .restart {
     width: 100%;
   }
@@ -1051,5 +1056,49 @@ button {
     box-sizing: border-box;
     font-size: 1.25rem;
     padding: 1rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .rules-content {
+    padding: calc(2.5rem + env(safe-area-inset-top)) 1.25rem
+      calc(2rem + env(safe-area-inset-bottom));
+  }
+
+  .rules-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .rules-content p,
+  .rules-content li,
+  .rules-content dd,
+  .rules-content td,
+  .rules-actions dt {
+    font-size: 0.95rem;
+  }
+
+  /* Stack each term above its explanation on narrow screens */
+  .rules-actions {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .rules-actions dd {
+    margin-bottom: 0.9rem;
+  }
+
+  /* Keyboard shortcuts don't apply to touch screens */
+  .rules-keys {
+    display: none;
+  }
+
+  .rules-close {
+    width: 100%;
+  }
+
+  .rules-close .front {
+    width: 100%;
+    box-sizing: border-box;
   }
 }

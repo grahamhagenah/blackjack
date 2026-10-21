@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import "./App.css";
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/solid";
 import Controls from "./components/Controls";
 import Score from "./components/Score";
 import Board from "./components/Board";
 import EndGameScreen from "./components/EndGameScreen";
+import HowToPlay from "./components/HowToPlay";
 import swapNote from "./components/swapNote";
 import useBlackjackGame from "./hooks/useBlackjackGame";
 import { DEAL_INTERVAL_MS } from "./constants";
 
 const App = ({ cards }) => {
   const [showRules, setShowRules] = useState(false);
+  const closeRules = useCallback(() => setShowRules(false), []);
   const [showEndGameScreen, setShowEndGameScreen] = useState(false);
   const {
     beginningState,
@@ -140,67 +142,7 @@ const App = ({ cards }) => {
           </div>
         </>
       )}
-      {showRules && (
-        <div className="modal-overlay" onClick={() => setShowRules(false)}>
-          <div
-            className="modal"
-            role="dialog"
-            aria-modal="true"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="modal-header">
-              <h2>How to Play</h2>
-            </div>
-            <div className="modal-body">
-              <ol className="modal-list">
-                <li>
-                  Draw cards to reach 21 without going over. Face cards are
-                  worth 10, Aces are worth 11 (and drop to 1 if you'd bust).
-                </li>
-                <li>
-                  Deal gives you your first card and turns up the dealer's
-                  card (View Dealer shows it). Hit takes one more card at a
-                  time. Stand to end your turn—then the dealer draws until
-                  their total is at least 17.
-                </li>
-                <li>
-                  On your first two cards you can Double: your win or loss
-                  counts twice, you get one more card, and then you stand.
-                </li>
-                <li>
-                  If you bust, you lose. If the dealer busts, you win.
-                  Otherwise, the higher total wins.
-                </li>
-                <li>
-                  If your total equals the dealer's, it's a push: no score
-                  change.
-                </li>
-                <li>
-                  Blackjack (an Ace and a ten-card as your first two cards)
-                  wins right away for +30, unless the dealer's second card
-                  gives them blackjack too, which is a push.
-                </li>
-                <li>
-                  Fill all six card slots without busting and you win
-                  automatically (six-card Charlie). The same goes for the
-                  dealer.
-                </li>
-              </ol>
-              <p className="modal-tip">
-                Tip: Use “View Dealer / View Player” to toggle views.
-              </p>
-              <div className="modal-actions">
-                <button
-                  className="pushable modal-close"
-                  onClick={() => setShowRules(false)}
-                >
-                  <span className="front">Got it</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {showRules && <HowToPlay onClose={closeRules} />}
     </>
   );
 };
