@@ -37,4 +37,10 @@ npm run build   # production build in build/
 ```
 
 Every push to `main` is linted, tested, built and deployed to GitHub Pages
-(`.github/workflows/deploy.yml`).
+(`.github/workflows/deploy.yml`). Pull requests get the same checks without
+deploying (`.github/workflows/ci.yml`).
+
+Node 24 is pinned in `.nvmrc`. Dependabot opens monthly update pull requests
+for npm packages and GitHub Actions, skipping releases younger than two
+weeks. The JetBrains Mono font is bundled from `@fontsource/jetbrains-mono`,
+so the game doesn't depend on Google Fonts.
