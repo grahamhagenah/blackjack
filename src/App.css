@@ -76,14 +76,14 @@ body {
 
 .end-game-totals {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 1.25rem;
   opacity: 0.6;
 }
 
 .end-game-total {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.5rem;
 }
 
@@ -120,10 +120,11 @@ body {
   opacity: 0.6;
 }
 
-.end-game-score-row {
+/* "SCORE −20": the change sits beside the label so the score stays one number */
+.end-game-score-heading {
   display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .end-game-score {
@@ -133,7 +134,7 @@ body {
 }
 
 .end-game-delta {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 800;
 }
 
@@ -1026,9 +1027,6 @@ button {
     font-size: 2.5rem;
   }
 
-  .end-game-delta {
-    font-size: 1.25rem;
-  }
 
   .end-game-screen .restart {
     width: 100%;

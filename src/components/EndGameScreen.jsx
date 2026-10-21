@@ -87,11 +87,11 @@ const EndGameScreen = ({
 
         {/* 2. Where the score stands now */}
         <div className="end-game-score-container">
-          <span className="end-game-score-label">Score</span>
-          <div className="end-game-score-row">
-            <span className="end-game-score">{displayScore}</span>
+          <div className="end-game-score-heading">
+            <span className="end-game-score-label">Score</span>
             <span className={`end-game-delta ${tone}`}>{delta}</span>
           </div>
+          <span className="end-game-score">{displayScore}</span>
           {outOfPoints && (
             <p className="end-game-note">Out of points.</p>
           )}
