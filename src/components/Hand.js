@@ -61,7 +61,7 @@ const BOARD_LINES = [
 // How long a text effect like "Blackjack!" stays on screen
 const BURST_DURATION_MS = 2400;
 
-const Hand = ({ name, hand, total, playersTurn }) => {
+const Hand = ({ name, note, hand, total, playersTurn }) => {
   const lowAces = getLowAceIndexes(hand);
   const [bursts, setBursts] = useState([]);
   const prevTotalRef = useRef(total);
@@ -194,7 +194,10 @@ const Hand = ({ name, hand, total, playersTurn }) => {
             {renderCardValue(hand[0], 0)}
           </div>
         </li>
-        <li className="name">{name}</li>
+        <li className="name">
+          {name}
+          {note && <span className="hand-note">{note}</span>}
+        </li>
         <li className="spacer"></li>
         <li className="spacer"></li>
         <li className="total">

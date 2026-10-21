@@ -26,7 +26,8 @@ const App = ({ cards }) => {
     change,
     muted,
     switchView,
-    doubled,
+    locked,
+    blackjack,
     canDouble,
     deal,
     stand,
@@ -79,6 +80,7 @@ const App = ({ cards }) => {
           playerTotal={playerTotal}
           dealerTotal={dealerTotal}
           playerWins={playerWins}
+          blackjack={blackjack}
           score={score}
           change={change}
           outOfPoints={outOfPoints}
@@ -130,7 +132,7 @@ const App = ({ cards }) => {
               dealerCardCount={nextDealerIndex}
               gameOver={gameOver}
               canDouble={canDouble}
-              doubled={doubled}
+              locked={locked}
               onHit={deal}
               onStand={stand}
               onDouble={double}
@@ -174,6 +176,11 @@ const App = ({ cards }) => {
                 <li>
                   If your total equals the dealer's, it's a push: no score
                   change.
+                </li>
+                <li>
+                  Blackjack (an Ace and a ten-card as your first two cards)
+                  wins right away for +30, unless the dealer's second card
+                  gives them blackjack too, which is a push.
                 </li>
                 <li>
                   Fill all six card slots without busting and you win

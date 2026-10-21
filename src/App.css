@@ -625,6 +625,15 @@ button {
   aspect-ratio: auto;
 }
 
+.hand-note {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  white-space: nowrap;
+  margin-top: 4px;
+  opacity: 0.75;
+}
+
 .hand-grid .total {
   font-weight: 800;
   aspect-ratio: auto;
@@ -1114,6 +1123,11 @@ button {
     font-size: 1.75rem;
     margin: 0 15px 15px 15px;
     min-height: 3rem;
+  }
+
+  .hand-note {
+    font-size: 0.75rem;
+    margin-top: 2px;
   }
 
   .card-value {

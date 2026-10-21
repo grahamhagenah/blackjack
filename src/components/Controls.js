@@ -11,7 +11,7 @@ const Controls = ({
   dealerCardCount,
   gameOver,
   canDouble,
-  doubled,
+  locked,
   onHit,
   onStand,
   onDouble,
@@ -66,11 +66,11 @@ const Controls = ({
   useEffect(() => {
     const canHit =
       !gameOver &&
-      !doubled &&
+      !locked &&
       (beginningState || (playersTurn && switchView === false));
     const canStand =
       !gameOver &&
-      !doubled &&
+      !locked &&
       playersTurn &&
       switchView === false &&
       !beginningState;
@@ -138,7 +138,7 @@ const Controls = ({
   }, [
     beginningState,
     canDouble,
-    doubled,
+    locked,
     gameOver,
     onHit,
     onStand,
@@ -255,8 +255,8 @@ const Controls = ({
     );
   }
 
-  // Doubled: the one extra card is showing, wait for the dealer to start
-  if (playersTurn && doubled) {
+  // Locked while a double or a blackjack plays out
+  if (playersTurn && locked) {
     return (
       <div id="board-bottom">
         <div className="buttons">

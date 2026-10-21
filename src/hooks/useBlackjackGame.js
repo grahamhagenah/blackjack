@@ -1,9 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DEAL_INTERVAL_MS, DEALING_DELAY_MS } from "../constants";
+import {
+  HAND_SIZE,
+  STARTING_SCORE,
+  calculateTotal,
+  createEmptyHand,
+  drawRandomCard,
+  evaluateWinner,
+  isNatural,
+  scoreChange,
+} from "../game/rules";
 
-const HAND_SIZE = 6;
-const STARTING_SCORE = 200;
-const SCORE_DELTA = 20;
 const SCORE_STORAGE_KEY = "retro-blackjack-score";
 
 // Pick up the score from the last visit; storage can be unavailable (private mode)
@@ -14,77 +21,6 @@ const loadScore = () => {
   } catch {
     return STARTING_SCORE;
   }
-};
-
-const createEmptyHand = () => Array(HAND_SIZE).fill("");
-
-const drawRandomCard = (deck) => {
-  const index = Math.floor(Math.random() * deck.length);
-  const card = deck[index];
-  const nextDeck = deck.slice(0, index).concat(deck.slice(index + 1));
-  return { card, deck: nextDeck };
-};
-
-const cardValue = (card) => {
-  if (card === "") return 0;
-  if (isNaN(card)) {
-    switch (card) {
-      case "A":
-        return 11;
-      case "J":
-      case "Q":
-      case "K":
-        return 10;
-      default:
-        return card;
-    }
-  }
-  return card;
-};
-
-const calculateTotal = (hand) => {
-  let sum = 0;
-  let aces = 0;
-  for (let i = 0; i < hand.length; i += 1) {
-    const value = cardValue(hand[i]);
-    if (value === 11) aces += 1;
-    sum += value;
-  }
-  while (aces > 0 && sum > 21) {
-    sum -= 10;
-    aces -= 1;
-  }
-  return sum;
-};
-
-const evaluateWinner = ({
-  total,
-  cardCount,
-  dealersTurn,
-  playerTotal,
-  dealerTotal,
-}) => {
-  if (total > 21 && !dealersTurn) {
-    return { gameOver: true, playerWins: false };
-  }
-  if (total > 21 && dealersTurn) {
-    return { gameOver: true, playerWins: true };
-  }
-  // Six-card Charlie: filling every slot without busting wins the hand
-  if (cardCount >= HAND_SIZE) {
-    return { gameOver: true, playerWins: !dealersTurn };
-  }
-  // Equal totals after the dealer stands is a push
-  if (dealersTurn && dealerTotal > 16 && playerTotal === dealerTotal) {
-    return { gameOver: true, playerWins: false, push: true };
-  }
-  if (dealersTurn && dealerTotal > 16 && playerTotal > dealerTotal) {
-    return { gameOver: true, playerWins: true };
-  }
-  if (dealersTurn && dealerTotal > 16 && playerTotal < dealerTotal) {
-    return { gameOver: true, playerWins: false };
-  }
-  return { gameOver: false, playerWins: false };
 };
 
 const useBlackjackGame = (cards) => {
@@ -103,6 +39,9 @@ const useBlackjackGame = (cards) => {
   const [switchView, setSwitchView] = useState(false);
   const [muted, setMuted] = useState(false);
   const [doubled, setDoubled] = useState(false);
+  // Controls are locked while a double or a blackjack plays out
+  const [locked, setLocked] = useState(false);
+  const [blackjack, setBlackjack] = useState(false);
 
   const audioContextRef = useRef(null);
   const audioBuffersRef = useRef({});
@@ -114,6 +53,7 @@ const useBlackjackGame = (cards) => {
   const intervalRef = useRef(null);
   const dealingDelayRef = useRef(null);
   const doubleStandRef = useRef(null);
+  const naturalRef = useRef(null);
   const doubledRef = useRef(false);
   const stateRef = useRef(null);
   const nextDealerIndexRef = useRef(0);
@@ -253,10 +193,16 @@ const useBlackjackGame = (cards) => {
     setGameOver(false);
     setPlayerWins(false);
     setDoubled(false);
+    setLocked(false);
+    setBlackjack(false);
     doubledRef.current = false;
     if (doubleStandRef.current) {
       clearTimeout(doubleStandRef.current);
       doubleStandRef.current = null;
+    }
+    if (naturalRef.current) {
+      clearTimeout(naturalRef.current);
+      naturalRef.current = null;
     }
     stopDealer();
   }, [cards, ensureAudioUnlocked, stopDealer]);
@@ -276,49 +222,71 @@ const useBlackjackGame = (cards) => {
   }, [clearState]);
 
   const applyOutcome = useCallback(
-    ({ gameOver: isGameOver, playerWins: didWin, push: isPush }) => {
-      if (!isGameOver) return;
-      const stake = doubledRef.current ? SCORE_DELTA * 2 : SCORE_DELTA;
-      const delta = isPush ? 0 : didWin ? stake : -stake;
+    (outcome) => {
+      if (!outcome.gameOver) return;
+      const delta = scoreChange(outcome, { doubled: doubledRef.current });
       setChange(delta);
       setScore(score + delta);
       setGameOver(true);
-      setPlayerWins(didWin);
+      setPlayerWins(outcome.playerWins);
+      setBlackjack(Boolean(outcome.natural && outcome.playerWins));
     },
     [score]
   );
 
+  // Put the next card from the deck into the player's or dealer's hand.
+  // Returns the new total and card count, or null if no card could be drawn.
+  const drawCard = useCallback((side) => {
+    const current = stateRef.current;
+    const indexRef = side === "player" ? nextPlayerIndexRef : nextDealerIndexRef;
+    if (!current || current.deck.length === 0) return null;
+    if (indexRef.current >= HAND_SIZE) return null;
+    const { card, deck: nextDeck } = drawRandomCard(current.deck);
+    const handKey = side === "player" ? "playerHand" : "dealerHand";
+    const nextHand = current[handKey].slice();
+    const index = indexRef.current;
+    nextHand[index] = card;
+    indexRef.current = index + 1;
+    const nextTotal = calculateTotal(nextHand);
+    setDeck(nextDeck);
+    if (side === "player") {
+      stateRef.current = {
+        ...current,
+        deck: nextDeck,
+        playerHand: nextHand,
+        playerTotal: nextTotal,
+      };
+      setPlayerHand(nextHand);
+      setPlayerTotal(nextTotal);
+    } else {
+      stateRef.current = {
+        ...current,
+        deck: nextDeck,
+        dealerHand: nextHand,
+        dealerTotal: nextTotal,
+        nextDealerIndex: index + 1,
+      };
+      setDealerHand(nextHand);
+      setNextDealerIndex(index + 1);
+      setDealerTotal(nextTotal);
+    }
+    return { total: nextTotal, cardCount: index + 1, hand: nextHand };
+  }, []);
+
   const hitPlayer = useCallback(() => {
     if (gameOver || !playersTurn) return;
     if (beginningState) setBeginningState(false);
-    const current = stateRef.current;
-    if (!current || current.deck.length === 0) return;
-    if (nextPlayerIndexRef.current >= HAND_SIZE) return;
-    const { card, deck: nextDeck } = drawRandomCard(current.deck);
-    const nextHand = current.playerHand.slice();
-    const index = nextPlayerIndexRef.current;
-    nextHand[index] = card;
-    nextPlayerIndexRef.current = index + 1;
-    const nextTotal = calculateTotal(nextHand);
-    stateRef.current = {
-      ...current,
-      deck: nextDeck,
-      playerHand: nextHand,
-      playerTotal: nextTotal,
-      nextPlayerIndex: index + 1,
-    };
-    setDeck(nextDeck);
-    setPlayerHand(nextHand);
-    setPlayerTotal(nextTotal);
+    const drawn = drawCard("player");
+    if (!drawn) return;
     const outcome = evaluateWinner({
-        total: nextTotal,
-        cardCount: index + 1,
-        dealersTurn: false,
-        playerTotal: nextTotal,
-        dealerTotal: current.dealerTotal,
-      });
+      total: drawn.total,
+      cardCount: drawn.cardCount,
+      dealersTurn: false,
+      playerTotal: drawn.total,
+      dealerTotal: stateRef.current.dealerTotal,
+    });
 
-    if (outcome.gameOver && nextTotal > 21) {
+    if (outcome.gameOver && drawn.total > 21) {
       ensureAudioUnlocked();
       suppressNextPlayerSoundRef.current = true;
       playSound("bust");
@@ -329,6 +297,7 @@ const useBlackjackGame = (cards) => {
     gameOver,
     playersTurn,
     beginningState,
+    drawCard,
     applyOutcome,
     ensureAudioUnlocked,
     playSound,
@@ -337,42 +306,37 @@ const useBlackjackGame = (cards) => {
   const hitDealer = useCallback(() => {
     if (gameOver) return;
     if (beginningState) setBeginningState(false);
-    const current = stateRef.current;
-    if (!current || current.deck.length === 0) return;
-    if (nextDealerIndexRef.current >= HAND_SIZE) return;
-    const { card, deck: nextDeck } = drawRandomCard(current.deck);
-    const nextHand = current.dealerHand.slice();
-    const index = nextDealerIndexRef.current;
-    nextHand[index] = card;
-    nextDealerIndexRef.current = index + 1;
-    const nextTotal = calculateTotal(nextHand);
-    stateRef.current = {
-      ...current,
-      deck: nextDeck,
-      dealerHand: nextHand,
-      dealerTotal: nextTotal,
-      nextDealerIndex: index + 1,
-    };
-    setDeck(nextDeck);
-    setDealerHand(nextHand);
-    setNextDealerIndex(index + 1);
-    setDealerTotal(nextTotal);
+    const drawn = drawCard("dealer");
+    if (!drawn) return;
     const outcome = evaluateWinner({
-        total: nextTotal,
-        cardCount: index + 1,
-        dealersTurn: true,
-        playerTotal: current.playerTotal,
-        dealerTotal: nextTotal,
-      });
+      total: drawn.total,
+      cardCount: drawn.cardCount,
+      dealersTurn: true,
+      playerTotal: stateRef.current.playerTotal,
+      dealerTotal: drawn.total,
+    });
 
-    if (outcome.gameOver && nextTotal > 21) {
+    if (outcome.gameOver && drawn.total > 21) {
       ensureAudioUnlocked();
       suppressNextDealerSoundRef.current = true;
       playSound("bust");
     }
 
     applyOutcome(outcome);
-  }, [gameOver, beginningState, applyOutcome, ensureAudioUnlocked, playSound]);
+  }, [gameOver, beginningState, drawCard, applyOutcome, ensureAudioUnlocked, playSound]);
+
+  // A dealt blackjack ends the hand: the dealer turns over a second card,
+  // and only a dealer blackjack too makes it a push
+  const resolveNatural = useCallback(() => {
+    setSwitchView(true);
+    const drawn = drawCard("dealer");
+    const dealerNatural = drawn ? isNatural(drawn.hand) : false;
+    applyOutcome(
+      dealerNatural
+        ? { gameOver: true, playerWins: false, push: true }
+        : { gameOver: true, playerWins: true, natural: true }
+    );
+  }, [drawCard, applyOutcome]);
 
   const deal = useCallback(() => {
     ensureAudioUnlocked();
@@ -384,10 +348,25 @@ const useBlackjackGame = (cards) => {
       hitPlayer();
       suppressNextDealerSoundRef.current = true;
       hitDealer();
+      if (isNatural(stateRef.current.playerHand)) {
+        // Let "Blackjack!" show before the dealer's second card settles it
+        setLocked(true);
+        naturalRef.current = setTimeout(() => {
+          naturalRef.current = null;
+          resolveNatural();
+        }, DEAL_INTERVAL_MS);
+      }
       return;
     }
     hitPlayer();
-  }, [ensureAudioUnlocked, playersTurn, beginningState, hitPlayer, hitDealer]);
+  }, [
+    ensureAudioUnlocked,
+    playersTurn,
+    beginningState,
+    hitPlayer,
+    hitDealer,
+    resolveNatural,
+  ]);
 
   const autoDeal = useCallback(() => {
     stopDealer();
@@ -426,6 +405,7 @@ const useBlackjackGame = (cards) => {
     if (nextPlayerIndexRef.current !== 2) return;
     doubledRef.current = true;
     setDoubled(true);
+    setLocked(true);
     hitPlayer();
     if (stateRef.current.playerTotal > 21) return;
     // Leave the drawn card on screen for a beat before the dealer plays
@@ -460,6 +440,7 @@ const useBlackjackGame = (cards) => {
   useEffect(() => {
     return () => {
       if (doubleStandRef.current) clearTimeout(doubleStandRef.current);
+      if (naturalRef.current) clearTimeout(naturalRef.current);
       if (dealingDelayRef.current) clearTimeout(dealingDelayRef.current);
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
@@ -469,6 +450,7 @@ const useBlackjackGame = (cards) => {
     playersTurn &&
     !gameOver &&
     !doubled &&
+    !locked &&
     playerHand.filter(Boolean).length === 2;
 
   return {
@@ -485,7 +467,8 @@ const useBlackjackGame = (cards) => {
     change,
     muted,
     switchView,
-    doubled,
+    locked,
+    blackjack,
     canDouble,
     deal,
     stand,

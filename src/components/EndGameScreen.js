@@ -6,6 +6,7 @@ const EndGameScreen = ({
   playerTotal,
   dealerTotal,
   playerWins,
+  blackjack,
   score,
   change,
   outOfPoints,
@@ -80,7 +81,11 @@ const EndGameScreen = ({
             {change === 0 ? (
               <span className="blink">Push!</span>
             ) : (
-              <>Player <span className="blink">{playerWins ? "won" : "lost"}.</span></>
+              blackjack ? (
+                <span className="blink">Blackjack!</span>
+              ) : (
+                <>Player <span className="blink">{playerWins ? "won" : "lost"}.</span></>
+              )
             )}
           </h2>
           {outOfPoints && (

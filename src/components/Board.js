@@ -10,6 +10,9 @@ const Board = ({
   dealerTotal,
 }) => {
   const showPlayer = !switchView;
+  // The dealer's face-up card, shown on the player's board while deciding
+  const upcard = dealerHand[0];
+  const dealerNote = playersTurn && upcard ? `Dealer shows ${upcard}` : null;
 
   return (
     <div className="board">
@@ -17,6 +20,7 @@ const Board = ({
         <Hand
           key="player"
           name="Player"
+          note={dealerNote}
           hand={playerHand}
           total={playerTotal}
           playersTurn={playersTurn}
