@@ -12,12 +12,13 @@ describe("HowToPlay", () => {
     expect(screen.getByText("−40")).toBeInTheDocument();
   });
 
-  it("closes with Escape and with the button", () => {
+  it("closes with Escape, the × button and Back to game", () => {
     const onClose = vi.fn();
     render(<HowToPlay onClose={onClose} />);
     fireEvent.keyDown(document.body, { key: "Escape" });
+    fireEvent.click(screen.getByRole("button", { name: "Close How to Play" }));
     fireEvent.click(screen.getByRole("button", { name: "Back to game" }));
-    expect(onClose).toHaveBeenCalledTimes(2);
+    expect(onClose).toHaveBeenCalledTimes(3);
   });
 
   it("keeps game shortcuts from reaching the game while open", () => {

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
 const RESULTS = [
   ["You win", "+20"],
@@ -49,6 +50,16 @@ const HowToPlay = ({ onClose }) => {
       tabIndex={-1}
       ref={pageRef}
     >
+      <button
+        className="pushable help-button rules-x"
+        onClick={onClose}
+        aria-label="Close How to Play"
+      >
+        <span className="front">
+          <XMarkIcon aria-hidden="true" />
+        </span>
+      </button>
+
       <div className="rules-content">
         <h1 id="rules-title">How to Play</h1>
 
