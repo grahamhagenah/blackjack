@@ -13,6 +13,8 @@ const Board = ({
   // The dealer's face-up card, shown on the player's board while deciding
   const upcard = dealerHand[0];
   const dealerNote = playersTurn && upcard ? `Dealer shows ${upcard}` : null;
+  // The player's total, shown on the dealer's board (also while the dealer draws)
+  const playerNote = playerTotal > 0 ? `Player shows ${playerTotal}` : null;
 
   return (
     <div className="board">
@@ -29,6 +31,7 @@ const Board = ({
         <Hand
           key="dealer"
           name="Dealer"
+          note={playerNote}
           hand={dealerHand}
           total={dealerTotal}
           playersTurn={playersTurn}
