@@ -156,10 +156,10 @@ const App = ({ cards }) => {
                   worth 10, Aces are worth 11 (and drop to 1 if you'd bust).
                 </li>
                 <li>
-                  Deal gives you two cards and the dealer one face-up card
-                  (View Dealer shows it). Hit to take another card. Stand to
-                  end your turn—then the dealer draws until their total is at
-                  least 17.
+                  Deal gives you your first card and turns up the dealer's
+                  card (View Dealer shows it). Hit takes one more card at a
+                  time. Stand to end your turn—then the dealer draws until
+                  their total is at least 17.
                 </li>
                 <li>
                   On your first two cards you can Double: your win or loss

@@ -340,24 +340,23 @@ const useBlackjackGame = (cards) => {
   const deal = useCallback(() => {
     ensureAudioUnlocked();
     if (!playersTurn) return;
+    // One card per press. The first press also turns up the dealer's card;
+    // the dealer draws the rest after the player stands.
+    hitPlayer();
     if (beginningState) {
-      // Opening deal like the handheld: two cards for the player and one
-      // face-up card for the dealer, who draws the rest after the player stands
-      hitPlayer();
-      hitPlayer();
       suppressNextDealerSoundRef.current = true;
       hitDealer();
-      if (isNatural(stateRef.current.playerHand)) {
-        // Let "Blackjack!" show before the dealer's second card settles it
-        setLocked(true);
-        naturalRef.current = setTimeout(() => {
-          naturalRef.current = null;
-          resolveNatural();
-        }, DEAL_INTERVAL_MS);
-      }
       return;
     }
-    hitPlayer();
+    if (isNatural(stateRef.current.playerHand)) {
+      // A blackjack on the first two cards: let "Blackjack!" show before the
+      // dealer's second card settles it
+      setLocked(true);
+      naturalRef.current = setTimeout(() => {
+        naturalRef.current = null;
+        resolveNatural();
+      }, DEAL_INTERVAL_MS);
+    }
   }, [
     ensureAudioUnlocked,
     playersTurn,

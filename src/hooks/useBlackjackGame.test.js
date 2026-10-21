@@ -41,11 +41,16 @@ afterEach(() => {
 });
 
 describe("useBlackjackGame", () => {
-  it("deals two cards to the player and one face-up card to the dealer", () => {
-    rigDeck([10, 7, 6]);
+  it("deals one card per press, turning up the dealer's card on the first", () => {
+    rigDeck([10, 6, 7]);
     const game = startGame();
     press(game, "deal");
 
+    expect(cardsIn(game.current.playerHand)).toEqual([10]);
+    expect(cardsIn(game.current.dealerHand)).toEqual([6]);
+    expect(game.current.canDouble).toBe(false);
+
+    press(game, "deal");
     expect(cardsIn(game.current.playerHand)).toEqual([10, 7]);
     expect(cardsIn(game.current.dealerHand)).toEqual([6]);
     expect(game.current.playerTotal).toBe(17);
@@ -54,8 +59,10 @@ describe("useBlackjackGame", () => {
   });
 
   it("pays +30 for a blackjack once the dealer's second card is turned", () => {
-    rigDeck(["A", "K", 6, 9]);
+    rigDeck(["A", 6, "K", 9]);
     const game = startGame();
+    press(game, "deal");
+    expect(game.current.locked).toBe(false);
     press(game, "deal");
 
     expect(game.current.locked).toBe(true);
@@ -70,8 +77,9 @@ describe("useBlackjackGame", () => {
   });
 
   it("pushes when both the player and the dealer have blackjack", () => {
-    rigDeck(["A", "K", "A", "Q"]);
+    rigDeck(["A", "A", "K", "Q"]);
     const game = startGame();
+    press(game, "deal");
     press(game, "deal");
     runTimers();
 
@@ -82,8 +90,9 @@ describe("useBlackjackGame", () => {
   });
 
   it("wins after standing when the dealer stops lower", () => {
-    rigDeck([10, 8, 10, 7]);
+    rigDeck([10, 10, 8, 7]);
     const game = startGame();
+    press(game, "deal");
     press(game, "deal");
     press(game, "stand");
     runTimers();
@@ -94,8 +103,9 @@ describe("useBlackjackGame", () => {
   });
 
   it("pushes automatically when the totals tie", () => {
-    rigDeck([10, 8, 10, 8]);
+    rigDeck([10, 10, 8, 8]);
     const game = startGame();
+    press(game, "deal");
     press(game, "deal");
     press(game, "stand");
     runTimers();
@@ -105,8 +115,9 @@ describe("useBlackjackGame", () => {
   });
 
   it("loses 20 when the player busts", () => {
-    rigDeck([10, 6, 9, "K"]);
+    rigDeck([10, 9, 6, "K"]);
     const game = startGame();
+    press(game, "deal");
     press(game, "deal");
     press(game, "deal");
 
@@ -116,8 +127,9 @@ describe("useBlackjackGame", () => {
   });
 
   it("doubles: one card, a locked pause, then the dealer plays for ±40", () => {
-    rigDeck([5, 6, 10, 10, 7]);
+    rigDeck([5, 10, 6, 10, 7]);
     const game = startGame();
+    press(game, "deal");
     press(game, "deal");
     press(game, "double");
 
@@ -131,8 +143,9 @@ describe("useBlackjackGame", () => {
   });
 
   it("only lets you double on your first two cards", () => {
-    rigDeck([2, 3, 6, 4]);
+    rigDeck([2, 6, 3, 4]);
     const game = startGame();
+    press(game, "deal");
     press(game, "deal");
     press(game, "deal");
 
@@ -142,8 +155,9 @@ describe("useBlackjackGame", () => {
   });
 
   it("ends the dealer's turn with a six-card Charlie instead of hanging", () => {
-    rigDeck([10, 9, 2, 2, 2, 2, 3, 3]);
+    rigDeck([10, 2, 9, 2, 2, 2, 3, 3]);
     const game = startGame();
+    press(game, "deal");
     press(game, "deal");
     press(game, "stand");
     runTimers();
@@ -156,10 +170,11 @@ describe("useBlackjackGame", () => {
 
   it("keeps the score between visits and ends the game at zero", () => {
     window.localStorage.setItem("retro-blackjack-score", "20");
-    rigDeck([10, 6, 10, 10]);
+    rigDeck([10, 10, 6, 10]);
     const game = startGame();
     expect(game.current.score).toBe(20);
 
+    press(game, "deal");
     press(game, "deal");
     press(game, "stand");
     runTimers();
