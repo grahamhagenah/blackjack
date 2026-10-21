@@ -12,6 +12,7 @@ const Controls = ({
   onHit,
   onStand,
   onSwap,
+  onDealingShown,
 }) => {
   const [showDealing, setShowDealing] = useState(false);
   const [isFadingToDealing, setIsFadingToDealing] = useState(false);
@@ -21,6 +22,8 @@ const Controls = ({
   const [isHitPressed, setIsHitPressed] = useState(false);
   const prevPlayersTurnRef = useRef(playersTurn);
   const dealingBaseIndexRef = useRef(dealerCardCount);
+  const onDealingShownRef = useRef(onDealingShown);
+  onDealingShownRef.current = onDealingShown;
 
   // Handle player stand transition (player's turn -> dealer's turn)
   useEffect(() => {
@@ -32,6 +35,7 @@ const Controls = ({
       const timer = setTimeout(() => {
         setIsFadingToDealing(false);
         setShowDealing(true);
+        onDealingShownRef.current();
       }, 300);
       prevPlayersTurnRef.current = playersTurn;
       return () => clearTimeout(timer);

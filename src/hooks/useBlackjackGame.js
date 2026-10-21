@@ -384,6 +384,11 @@ const useBlackjackGame = (cards) => {
     [ensureAudioUnlocked, playSound]
   );
 
+  const playDealingSound = useCallback(() => {
+    ensureAudioUnlocked();
+    playSound("dealer");
+  }, [ensureAudioUnlocked, playSound]);
+
   useEffect(() => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -410,6 +415,7 @@ const useBlackjackGame = (cards) => {
     switchHandView,
     toggleMuted,
     playEndGameSound,
+    playDealingSound,
   };
 };
 

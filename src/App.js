@@ -32,6 +32,7 @@ const App = ({ cards }) => {
     switchHandView,
     toggleMuted,
     playEndGameSound,
+    playDealingSound,
   } = useBlackjackGame(cards);
   const lastEndGameSoundRef = useRef(null);
 
@@ -125,6 +126,7 @@ const App = ({ cards }) => {
               onHit={deal}
               onStand={stand}
               onSwap={switchHandView}
+              onDealingShown={playDealingSound}
             />
           </div>
         </>
