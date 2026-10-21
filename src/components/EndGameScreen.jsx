@@ -61,42 +61,40 @@ const EndGameScreen = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onRestart]);
 
+  const tone = change === 0 ? "neutral" : playerWins ? "positive" : "negative";
+  const outcome =
+    change === 0 ? "Push" : blackjack ? "Blackjack!" : playerWins ? "You won" : "You lost";
+  const delta = change > 0 ? `+${change}` : change < 0 ? `−${-change}` : "±0";
+
   return (
     <div className="end-game-screen">
       <div className="end-game-content">
-        <div className="end-game-totals">
-          <div className="end-game-total">
-            <span className="end-game-label">Dealer</span>
-            <span className="end-game-value">{dealerTotal}</span>
-          </div>
-          <div className="end-game-vs">vs</div>
-          <div className="end-game-total">
-            <span className="end-game-label">Player</span>
-            <span className="end-game-value">{playerTotal}</span>
+        {/* 1. The result, then the hands that decided it */}
+        <div className="end-game-headline">
+          <h2 className="end-game-outcome">{outcome}</h2>
+          <div className="end-game-totals">
+            <span className="end-game-total">
+              <span className="end-game-label">Dealer</span>
+              <span className="end-game-value">{dealerTotal}</span>
+            </span>
+            <span className="end-game-vs">vs</span>
+            <span className="end-game-total">
+              <span className="end-game-label">Player</span>
+              <span className="end-game-value">{playerTotal}</span>
+            </span>
           </div>
         </div>
 
-        <div className="end-game-result">
-          <h2 className={`end-game-outcome ${change === 0 ? "push" : playerWins ? "won" : "lost"}`}>
-            {change === 0 ? (
-              <span className="blink">Push!</span>
-            ) : (
-              blackjack ? (
-                <span className="blink">Blackjack!</span>
-              ) : (
-                <>Player <span className="blink">{playerWins ? "won" : "lost"}.</span></>
-              )
-            )}
-          </h2>
-          {outOfPoints && (
-            <p className="end-game-note">Out of points. Start over at 200.</p>
-          )}
-          <div className="end-game-score-container">
-            <span className="end-game-score-label">Score</span>
-            <div className={`end-game-score ${change === 0 ? "neutral" : playerWins ? "positive" : "negative"}`}>
-              {displayScore}
-            </div>
+        {/* 2. Where the score stands now */}
+        <div className="end-game-score-container">
+          <span className="end-game-score-label">Score</span>
+          <div className="end-game-score-row">
+            <span className="end-game-score">{displayScore}</span>
+            <span className={`end-game-delta ${tone}`}>{delta}</span>
           </div>
+          {outOfPoints && (
+            <p className="end-game-note">Out of points.</p>
+          )}
         </div>
 
         <button onClick={onRestart} className="pushable restart">

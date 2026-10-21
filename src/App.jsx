@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-import { Helmet } from "react-helmet";
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/solid";
 import Controls from "./components/Controls";
 import Score from "./components/Score";
@@ -71,11 +70,6 @@ const App = ({ cards }) => {
 
   return (
     <>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>Retro Blackjack</title>
-        <meta name="theme-color" content="#DBDBDB"></meta>
-      </Helmet>
       {showEndGameScreen ? (
         <EndGameScreen
           playerTotal={playerTotal}

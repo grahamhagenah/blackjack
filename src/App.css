@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
 
-
 html, 
 body {
   height: 100%;
@@ -56,63 +55,56 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4rem;
+  gap: 3.5rem;
+}
+
+/* Tier 1: the result, with the deciding hands as a quiet line beneath */
+.end-game-headline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.end-game-outcome {
+  font-size: 5.5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: 0;
+  text-align: center;
 }
 
 .end-game-totals {
   display: flex;
-  align-items: center;
-  gap: 3rem;
+  align-items: baseline;
+  gap: 1.25rem;
+  opacity: 0.6;
 }
 
 .end-game-total {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
+  align-items: baseline;
+  gap: 0.5rem;
 }
 
 .end-game-label {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  opacity: 0.7;
 }
 
 .end-game-value {
-  font-size: 6rem;
+  font-size: 1.75rem;
   font-weight: 800;
-  line-height: 1;
 }
 
 .end-game-vs {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
-  opacity: 0.5;
-  margin-top: 2.5rem;
 }
 
-.end-game-result {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.end-game-outcome {
-  font-size: 3rem;
-  font-weight: 700;
-  margin: 0;
-}
-
-.end-game-note {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  text-align: center;
-}
-
+/* Tier 2: the score, with the change carrying the color */
 .end-game-score-container {
   display: flex;
   flex-direction: column;
@@ -121,33 +113,53 @@ body {
 }
 
 .end-game-score-label {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  opacity: 0.7;
+  opacity: 0.6;
+}
+
+.end-game-score-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
 }
 
 .end-game-score {
-  font-size: 6rem;
+  font-size: 3rem;
   font-weight: 800;
   line-height: 1;
 }
 
-.end-game-score.positive {
+.end-game-delta {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.end-game-delta.positive {
   color: #2d8a2d;
 }
 
-.end-game-score.negative {
+.end-game-delta.negative {
   color: #c43c3c;
 }
 
-.end-game-score.neutral {
-  color: #3B3B3B;
+.end-game-delta.neutral {
+  opacity: 0.6;
 }
 
-.end-game-outcome.push {
-  color: #3B3B3B;
+.end-game-note {
+  margin: 0.5rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Tier 3: the one action */
+.end-game-screen .restart .front {
+  font-size: 1.75rem;
+  padding: 18px 64px;
 }
 
 #game-area {
@@ -182,11 +194,6 @@ body {
 .hand {
   min-width: 750px;
   position: relative;
-}
-
-.mini-hand {
-  margin: 0 0 1rem 0;
-  transform: scale(.5);
 }
 
 .buttons {
@@ -240,10 +247,6 @@ body {
   font-size: 45px;
   font-weight: 600;
   text-align: center;
-}
-
-#board-bottom-gameover #outcome {
-  font-size: 3rem;
 }
 
 button {
@@ -348,40 +351,6 @@ button {
   height: auto;
   position: static;
   margin: 0;
-}
-
-#outcome-banner {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  pointer-events: none;
-}
-
-#outcome-banner .outcome {
-  background: #3B3B3B;
-  color: #DBDBDB;
-  padding: 1rem 1.5rem;
-  padding-left: 3rem;
-  border-radius: 12px;
-  position: relative;
-  font-size: 2.5rem;
-  font-weight: 700;
-  line-height: 1.1;
-}
-
-#outcome-banner .outcome::before {
-  content: "←";
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 2rem;
-  line-height: 1;
-  color: #DBDBDB;
 }
 
 .help-controls {
@@ -493,11 +462,6 @@ button {
   transform: none;
 }
 
-.modal-list .modal-note {
-  font-size: 1rem;
-  opacity: 0.85;
-}
-
 .modal-list .modal-tip {
   font-size: 1rem;
   opacity: 0.9;
@@ -507,11 +471,6 @@ button {
   margin: 0;
   font-size: 1rem;
   font-style: italic;
-  opacity: 0.85;
-}
-
-.modal-body .modal-note {
-  font-size: 1rem;
   opacity: 0.85;
 }
 
@@ -525,67 +484,13 @@ button {
   justify-content: center;
 }
 
-@media (min-width: 761px) {
-  #outcome-banner .outcome {
-    font-size: 3rem;
-    padding: 1.25rem 2rem;
-    padding-left: 3.5rem;
-    border-radius: 14px;
-  }
-
-  #outcome-banner .outcome::before {
-    left: 1.1rem;
-    font-size: 2.5rem;
-  }
-}
-
-#outcome-banner.hide {
-  opacity: 0;
-  pointer-events: none;
-}
-
-#outcome-banner.show {
-  opacity: 1;
-}
-
-#board-bottom,
-#board-bottom-gameover {
+#board-bottom {
   height: 72px;
   margin-right: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin-top: 0;
-}
-
-#board-bottom-gameover h3 {
-  display: inline-block;
-  font-size: 45px;
-  margin: 0 auto;
-}
-
-#board-bottom-gameover {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.end-actions {
-  opacity: 0;
-  animation-name: end-actions-fade-in;
-  animation-duration: 1200ms;
-  animation-timing-function: ease-out;
-  animation-delay: 1s;
-  animation-fill-mode: forwards;
-}
-
-@keyframes end-actions-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 .pushable:focus:not(:focus-visible) {
@@ -595,25 +500,6 @@ button {
 .total {
   font-size: 65px;
   font-weight: 800;
-}
-
-
-#help {
-  position: absolute;
-  display: flex;
-  top: 0;
-  right: 0;
-  margin: 2rem;
-}
-
-#help h2 {
-  margin: 0 0 0.15rem 0;
-  font-weight: 900;
-  font-size: 45px;
-}
-
-#mute {
-  max-width: 50px;
 }
 
 #score h3 {
@@ -741,7 +627,6 @@ button {
   background: #DBDBDB;
 }
 
-
 .hand-grid .name,
 .hand-grid .total {
   position: relative;
@@ -810,7 +695,6 @@ button {
   grid-row: 1;
 }
 
-
 .hand-grid li:nth-of-type(6) {
   grid-column: 1 / 2;
   grid-row: 2;
@@ -852,18 +736,6 @@ button {
 .blink {
   animation: blink-animation 1.2s ease-in-out infinite;
   -webkit-animation: blink-animation 1.2s ease-in-out infinite;
-}
-
-.blink-delay {
-  animation: blink-animation 1.2s ease-in-out infinite;
-  -webkit-animation: blink-animation 1.2s ease-in-out infinite;
-  animation-delay: .5s;
-}
-
-.blink-delay-2 {
-  animation: blink-animation 2s ease-in-out infinite;
-  -webkit-animation: blink-animation 2s ease-in-out infinite;
-  animation-delay: 2s;
 }
 
 @keyframes blink-animation {
@@ -917,15 +789,6 @@ button {
     justify-content: flex-start;
   }
 
-  #outcome-banner {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
-    min-height: auto;
-    display: flex;
-  }
-
   .help-controls {
     position: absolute;
     right: 1rem;
@@ -955,10 +818,8 @@ button {
     font-size: 1rem;
   }
 
-  .modal-list .modal-note,
   .modal-list .modal-tip,
-  .modal-tip,
-  .modal-body .modal-note {
+  .modal-tip {
     font-size: 0.9rem;
   }
 
@@ -1018,18 +879,6 @@ button {
   font-size: 2.5rem;
 }
 
-.end-actions {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.5rem;
-  margin: 0;
-}
-
-.end-actions .restart {
-  width: 100%;
-}
-
   #swap {
     position: static;
     grid-column: auto;
@@ -1049,25 +898,6 @@ button {
     display: none;
   }
 
-  #board-bottom-gameover #outcome {
-    text-align: center;
-    font-size: 2rem;
-    line-height: 1.2;
-  }
-
-  #outcome-banner .outcome {
-    font-size: 1.75rem;
-    line-height: 1.1;
-    padding: 0.75rem 1.25rem;
-    padding-left: 2.75rem;
-    margin: 0;
-  }
-
-  #outcome-banner .outcome::before {
-    font-size: 1.5rem;
-    left: 0.85rem;
-  }
-
   .board {
     margin: auto 0;
     display: flex;
@@ -1075,8 +905,7 @@ button {
     justify-content: flex-start;
   }
 
-  #board-bottom,
-  #board-bottom-gameover {
+  #board-bottom {
     height: auto;
     min-height: 140px;
     width: 100%;
@@ -1146,7 +975,6 @@ button {
   .hand-grid li:nth-of-type(9) { grid-column: 4; grid-row: 2; }
   .hand-grid li:nth-of-type(10) { grid-column: 5; grid-row: 2; }
 
-
   .name {
     font-size: 1.75rem;
     margin: 0 15px 15px 15px;
@@ -1167,43 +995,39 @@ button {
     font-size: 1.25rem;
   }
 
-  #board-bottom-gameover h3 {
-    font-size: 2rem;
-    margin: auto 1rem;
-  }
-
   /* End Game Screen Mobile */
   .end-game-screen {
     padding: 1.5rem;
   }
 
   .end-game-content {
-    gap: 3rem;
-  }
-
-  .end-game-totals {
-    gap: 2rem;
-  }
-
-  .end-game-label {
-    font-size: 1.1rem;
-  }
-
-  .end-game-value {
-    font-size: 4rem;
-  }
-
-  .end-game-vs {
-    font-size: 1.25rem;
-    margin-top: 1.75rem;
+    gap: 2.5rem;
+    width: 100%;
   }
 
   .end-game-outcome {
-    font-size: 2rem;
+    font-size: 3.25rem;
+  }
+
+  .end-game-totals {
+    gap: 1rem;
+  }
+
+  .end-game-label,
+  .end-game-vs {
+    font-size: 0.85rem;
+  }
+
+  .end-game-value {
+    font-size: 1.4rem;
   }
 
   .end-game-score {
-    font-size: 4.5rem;
+    font-size: 2.5rem;
+  }
+
+  .end-game-delta {
+    font-size: 1.25rem;
   }
 
   .end-game-screen .restart {
@@ -1213,6 +1037,7 @@ button {
   .end-game-screen .restart .front {
     width: 100%;
     box-sizing: border-box;
+    font-size: 1.25rem;
+    padding: 1rem;
   }
-
 }

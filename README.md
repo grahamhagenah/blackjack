@@ -29,8 +29,9 @@ Keyboard: Space or Enter to deal and hit, **S** to stand, **D** to double,
 npm install
 npm start       # dev server at http://localhost:3000
 npm test        # run tests
+npm run lint    # check code with ESLint
 npm run build   # production build in build/
 ```
 
-Every push to `main` builds the app and deploys it to GitHub Pages
+Every push to `main` is linted, tested, built and deployed to GitHub Pages
 (`.github/workflows/deploy.yml`).
