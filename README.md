@@ -6,9 +6,9 @@ handheld LCD games. Play it at
 
 ## How it plays
 
-- **Deal** gives you two cards and the dealer one face-up card. The
-  **View Dealer** button shows that card after its label (View Dealer · Q),
-  and **View Player** shows your total the same way.
+- **Deal** gives you two cards and the dealer one face-up card. On wider
+  screens the **View Dealer** button shows that card after its label
+  (View Dealer · Q), and **View Player** shows your total the same way.
 - **Hit** takes another card. **Stand** ends your turn, and the dealer
   draws until reaching 17 or more.
 - **Double**, on your first two cards, takes exactly one more card and then

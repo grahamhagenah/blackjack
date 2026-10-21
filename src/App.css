@@ -1028,15 +1028,11 @@ button {
   #swap .front {
     width: auto;
     box-sizing: border-box;
-    /* Fit "View Player · 17" on one line, scaling with the phone's width */
-    font-size: min(1.05rem, 4.1vw);
-    padding-left: 4px;
-    padding-right: 4px;
   }
 
-  /* Same height for every control even when the swap text is smaller */
-  .buttons .front {
-    line-height: 22px;
+  /* No room on phones for the "· 10" after View Dealer */
+  .swap-note {
+    display: none;
   }
 
   #board-bottom-gameover #outcome {
