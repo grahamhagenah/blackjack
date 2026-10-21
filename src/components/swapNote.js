@@ -1,4 +1,4 @@
-// The small value after View Dealer / View Player ("· Q", "· 17"): what the
+// The small value after View Dealer / View Player (": Q", ": 17"): what the
 // other side is showing, so you can check it without switching views.
 const swapNote = ({ switchView, playersTurn, dealerHand, playerTotal }) => {
   if (switchView) {

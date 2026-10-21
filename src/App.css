@@ -330,16 +330,17 @@ button {
     margin: 0;
   }
 
-  /* Room for "View Dealer · 10" without crowding the row */
+  /* Room for "View Dealer: 10" without crowding the row */
   .buttons .front {
     padding-left: 30px;
     padding-right: 30px;
   }
 
-  /* Always as wide as "View Dealer · 10" (11 characters plus the 5-character
-     note at 0.75 size), so the label stays centered when there's no value */
+  /* Always as wide as "View Dealer: 10" (12 characters with the colon, plus
+     the 3-character value at 0.75 size), so the label stays centered when
+     there's no value */
   #swap .front {
-    min-width: calc(11ch + 5ch * 0.75);
+    min-width: calc(12ch + 3ch * 0.75);
   }
 }
 
@@ -641,11 +642,12 @@ button {
   white-space: nowrap;
 }
 
-/* "· Q" after View Dealer, a little smaller and lighter than the label.
-   Fixed at " · 00" wide so the button doesn't resize between "Q" and "19". */
+/* The value after "View Dealer:", a little smaller and lighter than the
+   label. Fixed at " 00" wide so the button doesn't resize between "Q" and
+   "19". The colon stays label-sized. */
 .swap-note {
   display: inline-block;
-  width: 5ch;
+  width: 3ch;
   text-align: left;
   white-space: pre;
   font-size: 0.75em;
@@ -1041,7 +1043,8 @@ button {
     box-sizing: border-box;
   }
 
-  /* No room on phones for the "· 10" after View Dealer */
+  /* No room on phones for the ": 10" after View Dealer */
+  .swap-colon,
   .swap-note {
     display: none;
   }

@@ -34,7 +34,7 @@ describe("swapNote", () => {
 describe("Swap", () => {
   it("puts the note after the label on the same line", () => {
     render(<Swap switchView={false} note="Q" onClick={() => {}} />);
-    expect(screen.getByRole("button")).toHaveTextContent("View Dealer · Q");
+    expect(screen.getByRole("button")).toHaveTextContent("View Dealer: Q");
   });
 
   it("is just the label without a note", () => {
