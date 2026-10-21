@@ -635,8 +635,13 @@ button {
   white-space: nowrap;
 }
 
-/* "· Q" after View Dealer, a little smaller and lighter than the label */
+/* "· Q" after View Dealer, a little smaller and lighter than the label.
+   Fixed at " · 00" wide so the button doesn't resize as the value changes. */
 .swap-note {
+  display: inline-block;
+  width: 5ch;
+  text-align: left;
+  white-space: pre;
   font-size: 0.75em;
   font-weight: 600;
   line-height: 1;
