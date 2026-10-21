@@ -530,7 +530,14 @@ button {
   right: 2rem;
   z-index: 11;
   display: flex;
-  gap: 0;
+  gap: 4px;
+}
+
+/* No margins on the corner buttons (or the How to Play × that lines up
+   with them); the 4px gap spaces them */
+.help-controls .help-button,
+.help-button.rules-x {
+  margin: 0;
 }
 
 /* Flat outline buttons: no raised layer or lift */
@@ -552,19 +559,17 @@ button {
   display: grid;
   place-items: center;
   border-width: 2px;
-  /* Borderless and slightly faded so the corner controls stay in the
-     background; the border stays (transparent) to keep the 44px size */
+  /* Borderless icons in the text color; the border stays (transparent) to
+     keep the 44px size */
   border-color: transparent;
   border-radius: 12px;
   background: transparent;
-  opacity: 0.65;
-  transition: background-color 100ms, opacity 100ms;
+  transition: background-color 100ms;
 }
 
 .help-button:hover .front,
 .help-button:focus-visible .front {
   background: var(--hover);
-  opacity: 1;
 }
 
 .help-button:active .front {
@@ -894,7 +899,7 @@ button {
     align-self: auto;
     display: flex;
     flex-direction: row;
-    gap: 0.5rem;
+    gap: 4px;
     height: auto;
     align-items: center;
     justify-content: flex-end;
@@ -1124,15 +1129,13 @@ button {
 }
 
 @media (max-width: 760px) {
-  /* The corner buttons carry a 0.25rem margin on phones, so the strip's row
-     starts 0.25rem lower to stay level with the × */
   .rules-content {
-    padding: calc(1rem + 48px + 0.75rem + 0.75rem + env(safe-area-inset-top))
+    padding: calc(0.75rem + 48px + 0.75rem + 0.75rem + env(safe-area-inset-top))
       1.25rem calc(2rem + env(safe-area-inset-bottom));
   }
 
   .rules-topbar {
-    padding: calc(1rem + env(safe-area-inset-top)) 0 0.75rem;
+    padding: calc(0.75rem + env(safe-area-inset-top)) 0 0.75rem;
   }
 
   .rules-topbar-inner {
