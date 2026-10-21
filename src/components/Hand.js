@@ -87,6 +87,9 @@ const Hand = ({ name, hand, total, playersTurn }) => {
     } else if (twoInRow && lastCard) {
       triggers.push("Pair!", "Again!", "Nice!");
     }
+    if (lastCards.length === hand.length && total <= 21) {
+      triggers.splice(0, triggers.length, "Charlie!");
+    }
 
     if (triggers.length > 0) {
       const word = triggers[Math.floor(Math.random() * triggers.length)];

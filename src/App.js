@@ -28,7 +28,6 @@ const App = ({ cards }) => {
     switchView,
     deal,
     stand,
-    push,
     clearState,
     switchHandView,
     toggleMuted,
@@ -37,23 +36,16 @@ const App = ({ cards }) => {
   const lastEndGameSoundRef = useRef(null);
 
   // Delay showing the end game screen so player can see the final result
-  // Skip delay for push (change === 0)
   useEffect(() => {
     if (gameOver) {
-      if (change === 0) {
-        // Push - show end game immediately
+      const timer = setTimeout(() => {
         setShowEndGameScreen(true);
-      } else {
-        // Win/loss - delay to show result
-        const timer = setTimeout(() => {
-          setShowEndGameScreen(true);
-        }, DEAL_INTERVAL_MS);
-        return () => clearTimeout(timer);
-      }
+      }, DEAL_INTERVAL_MS);
+      return () => clearTimeout(timer);
     } else {
       setShowEndGameScreen(false);
     }
-  }, [gameOver, change]);
+  }, [gameOver]);
 
   useEffect(() => {
     if (!showEndGameScreen || !gameOver || change === 0) return;
@@ -132,7 +124,6 @@ const App = ({ cards }) => {
               gameOver={gameOver}
               onHit={deal}
               onStand={stand}
-              onPush={push}
               onSwap={switchHandView}
             />
           </div>
@@ -164,8 +155,13 @@ const App = ({ cards }) => {
                   Otherwise, the higher total wins.
                 </li>
                 <li>
-                  If your total equals the dealer's, you can Push to end the
-                  game as a tie with no score change.
+                  If your total equals the dealer's, it's a push: no score
+                  change.
+                </li>
+                <li>
+                  Fill all six card slots without busting and you win
+                  automatically (six-card Charlie). The same goes for the
+                  dealer.
                 </li>
               </ol>
               <p className="modal-tip">

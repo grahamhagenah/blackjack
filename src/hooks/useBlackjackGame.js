@@ -46,16 +46,26 @@ const calculateTotal = (hand) => {
   return sum;
 };
 
-const evaluateWinner = ({ total, dealersTurn, playerTotal, dealerTotal }) => {
+const evaluateWinner = ({
+  total,
+  cardCount,
+  dealersTurn,
+  playerTotal,
+  dealerTotal,
+}) => {
   if (total > 21 && !dealersTurn) {
     return { gameOver: true, playerWins: false };
   }
   if (total > 21 && dealersTurn) {
     return { gameOver: true, playerWins: true };
   }
-  // If totals are equal after dealer finishes, don't end game - let player choose to push
+  // Six-card Charlie: filling every slot without busting wins the hand
+  if (cardCount >= HAND_SIZE) {
+    return { gameOver: true, playerWins: !dealersTurn };
+  }
+  // Equal totals after the dealer stands is a push
   if (dealersTurn && dealerTotal > 16 && playerTotal === dealerTotal) {
-    return { gameOver: false, playerWins: false };
+    return { gameOver: true, playerWins: false, push: true };
   }
   if (dealersTurn && dealerTotal > 16 && playerTotal > dealerTotal) {
     return { gameOver: true, playerWins: true };
@@ -223,9 +233,9 @@ const useBlackjackGame = (cards) => {
   }, [cards, ensureAudioUnlocked, playSound]);
 
   const applyOutcome = useCallback(
-    ({ gameOver: isGameOver, playerWins: didWin }) => {
+    ({ gameOver: isGameOver, playerWins: didWin, push: isPush }) => {
       if (!isGameOver) return;
-      const delta = didWin ? SCORE_DELTA : -SCORE_DELTA;
+      const delta = isPush ? 0 : didWin ? SCORE_DELTA : -SCORE_DELTA;
       setChange(delta);
       setScore(score + delta);
       setGameOver(true);
@@ -258,6 +268,7 @@ const useBlackjackGame = (cards) => {
     setPlayerTotal(nextTotal);
     const outcome = evaluateWinner({
         total: nextTotal,
+        cardCount: index + 1,
         dealersTurn: false,
         playerTotal: nextTotal,
         dealerTotal: current.dealerTotal,
@@ -304,6 +315,7 @@ const useBlackjackGame = (cards) => {
     setDealerTotal(nextTotal);
     const outcome = evaluateWinner({
         total: nextTotal,
+        cardCount: index + 1,
         dealersTurn: true,
         playerTotal: current.playerTotal,
         dealerTotal: nextTotal,
@@ -343,11 +355,6 @@ const useBlackjackGame = (cards) => {
         hitDealer();
       } else {
         stopDealer();
-        if (!current.gameOver) {
-          // Dealer finished, game not over (totals must be equal) - let player choose to push
-          setPlayersTurn(true);
-          setSwitchView(false);
-        }
       }
     }, DEAL_INTERVAL_MS);
   }, [hitDealer, stopDealer]);
@@ -359,15 +366,6 @@ const useBlackjackGame = (cards) => {
     setSwitchView(true);
     autoDeal();
   }, [ensureAudioUnlocked, playersTurn, gameOver, autoDeal]);
-
-  const push = useCallback(() => {
-    ensureAudioUnlocked();
-    if (!playersTurn || gameOver) return;
-    // End game as a tie - no score change
-    setChange(0);
-    setGameOver(true);
-    setPlayerWins(false); // Not a win, but not a loss either
-  }, [ensureAudioUnlocked, playersTurn, gameOver]);
 
   const switchHandView = useCallback(() => {
     ensureAudioUnlocked();
@@ -408,7 +406,6 @@ const useBlackjackGame = (cards) => {
     switchView,
     deal,
     stand,
-    push,
     clearState,
     switchHandView,
     toggleMuted,

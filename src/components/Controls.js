@@ -11,10 +11,8 @@ const Controls = ({
   gameOver,
   onHit,
   onStand,
-  onPush,
   onSwap,
 }) => {
-  const canPush = playerTotal === dealerTotal && playerTotal <= 21;
   const [showDealing, setShowDealing] = useState(false);
   const [isFadingToDealing, setIsFadingToDealing] = useState(false);
   const [showPlayerBust, setShowPlayerBust] = useState(false);
@@ -65,8 +63,7 @@ const Controls = ({
       !gameOver &&
       playersTurn &&
       switchView === false &&
-      !beginningState &&
-      !canPush;
+      !beginningState;
     const canSwap = !gameOver && !beginningState;
 
     if (!canHit) {
@@ -93,13 +90,6 @@ const Controls = ({
         if (event.repeat || !canStand) return;
         event.preventDefault();
         onStand();
-        return;
-      }
-
-      if (key === "p") {
-        if (event.repeat || !canPush) return;
-        event.preventDefault();
-        onPush();
         return;
       }
 
@@ -130,7 +120,6 @@ const Controls = ({
     };
   }, [
     beginningState,
-    canPush,
     gameOver,
     onHit,
     onStand,
@@ -244,15 +233,9 @@ const Controls = ({
           >
             <span className="front">Hit</span>
           </button>
-          {canPush ? (
-            <button onClick={onPush} className="pushable">
-              <span className="front">Push</span>
-            </button>
-          ) : (
-            <button onClick={onStand} className="pushable">
-              <span className="front">Stand</span>
-            </button>
-          )}
+          <button onClick={onStand} className="pushable">
+            <span className="front">Stand</span>
+          </button>
           <Swap onClick={onSwap} switchView={switchView} />
         </div>
       </div>
@@ -266,15 +249,9 @@ const Controls = ({
           <button className="not-pushable">
             <span className="front">Hit</span>
           </button>
-          {canPush ? (
-            <button onClick={onPush} className="pushable">
-              <span className="front">Push</span>
-            </button>
-          ) : (
-            <button className="not-pushable">
-              <span className="front">Stand</span>
-            </button>
-          )}
+          <button className="not-pushable">
+            <span className="front">Stand</span>
+          </button>
           <Swap onClick={onSwap} switchView={switchView} />
         </div>
       </div>
