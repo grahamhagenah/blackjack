@@ -4,6 +4,17 @@ import { DEAL_INTERVAL_MS, DEALING_DELAY_MS } from "../constants";
 const HAND_SIZE = 6;
 const STARTING_SCORE = 200;
 const SCORE_DELTA = 20;
+const SCORE_STORAGE_KEY = "retro-blackjack-score";
+
+// Pick up the score from the last visit; storage can be unavailable (private mode)
+const loadScore = () => {
+  try {
+    const saved = Number(window.localStorage.getItem(SCORE_STORAGE_KEY));
+    return Number.isFinite(saved) && saved > 0 ? saved : STARTING_SCORE;
+  } catch {
+    return STARTING_SCORE;
+  }
+};
 
 const createEmptyHand = () => Array(HAND_SIZE).fill("");
 
@@ -87,7 +98,7 @@ const useBlackjackGame = (cards) => {
   const [playersTurn, setPlayersTurn] = useState(true);
   const [gameOver, setGameOver] = useState(false);
   const [playerWins, setPlayerWins] = useState(false);
-  const [score, setScore] = useState(STARTING_SCORE);
+  const [score, setScore] = useState(loadScore);
   const [change, setChange] = useState(0);
   const [switchView, setSwitchView] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -250,6 +261,20 @@ const useBlackjackGame = (cards) => {
     stopDealer();
   }, [cards, ensureAudioUnlocked, stopDealer]);
 
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(SCORE_STORAGE_KEY, String(score));
+    } catch {
+      // Score just won't survive a reload
+    }
+  }, [score]);
+
+  const newGame = useCallback(() => {
+    setScore(STARTING_SCORE);
+    setChange(0);
+    clearState();
+  }, [clearState]);
+
   const applyOutcome = useCallback(
     ({ gameOver: isGameOver, playerWins: didWin, push: isPush }) => {
       if (!isGameOver) return;
@@ -351,8 +376,18 @@ const useBlackjackGame = (cards) => {
 
   const deal = useCallback(() => {
     ensureAudioUnlocked();
-    if (playersTurn) hitPlayer();
-  }, [ensureAudioUnlocked, playersTurn, hitPlayer]);
+    if (!playersTurn) return;
+    if (beginningState) {
+      // Opening deal like the handheld: two cards for the player and one
+      // face-up card for the dealer, who draws the rest after the player stands
+      hitPlayer();
+      hitPlayer();
+      suppressNextDealerSoundRef.current = true;
+      hitDealer();
+      return;
+    }
+    hitPlayer();
+  }, [ensureAudioUnlocked, playersTurn, beginningState, hitPlayer, hitDealer]);
 
   const autoDeal = useCallback(() => {
     stopDealer();
@@ -456,6 +491,8 @@ const useBlackjackGame = (cards) => {
     stand,
     double,
     clearState,
+    newGame,
+    outOfPoints: gameOver && score <= 0,
     switchHandView,
     toggleMuted,
     playEndGameSound,

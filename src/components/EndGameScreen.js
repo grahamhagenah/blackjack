@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 
+const COUNT_DURATION_MS = 1000;
+
 const EndGameScreen = ({
   playerTotal,
   dealerTotal,
   playerWins,
   score,
   change,
+  outOfPoints,
   onRestart,
 }) => {
   // score is already the NEW score (after change applied)
@@ -27,6 +30,7 @@ const EndGameScreen = ({
 
     setDisplayScore(oldScore);
 
+    // Count over about a second, however large the change
     const interval = setInterval(() => {
       currentStep++;
       setDisplayScore(oldScore + (step * currentStep));
@@ -34,7 +38,7 @@ const EndGameScreen = ({
       if (currentStep >= totalSteps) {
         clearInterval(interval);
       }
-    }, 150);
+    }, COUNT_DURATION_MS / totalSteps);
 
     return () => clearInterval(interval);
   }, [score, change, oldScore]);
@@ -79,6 +83,9 @@ const EndGameScreen = ({
               <>Player <span className="blink">{playerWins ? "won" : "lost"}.</span></>
             )}
           </h2>
+          {outOfPoints && (
+            <p className="end-game-note">Out of points. Start over at 200.</p>
+          )}
           <div className="end-game-score-container">
             <span className="end-game-score-label">Score</span>
             <div className={`end-game-score ${change === 0 ? "neutral" : playerWins ? "positive" : "negative"}`}>
@@ -88,7 +95,7 @@ const EndGameScreen = ({
         </div>
 
         <button onClick={onRestart} className="pushable restart">
-          <span className="front">Play Again</span>
+          <span className="front">{outOfPoints ? "New Game" : "Play Again"}</span>
         </button>
       </div>
     </div>

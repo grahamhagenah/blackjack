@@ -230,7 +230,7 @@ const Controls = ({
             onClick={onHit}
             className={`pushable ${isHitPressed ? "is-pressed" : ""}`}
           >
-            <span className="front">Hit</span>
+            <span className="front">Deal</span>
           </button>
           <button className="not-pushable">
             <span className="front">Stand</span>

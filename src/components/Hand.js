@@ -84,6 +84,7 @@ const Hand = ({ name, hand, total, playersTurn }) => {
     const bustHappened = total > 21 && prevTotal <= 21;
     const hitTwentyOne = total === 21 && prevTotal !== 21;
     const lastCards = hand.filter(Boolean);
+    const isNatural = hitTwentyOne && lastCards.length === 2;
     const lastCard = lastCards[lastCards.length - 1];
     const twoInRow =
       lastCards.length >= 2 &&
@@ -97,8 +98,8 @@ const Hand = ({ name, hand, total, playersTurn }) => {
     if (bustHappened) {
       triggers.push("Unlucky!", "Oof!", "Bust!");
     }
-    if (hitTwentyOne) {
-      triggers.push("21!", "Blackjack!", "Perfect!");
+    if (hitTwentyOne && !isNatural) {
+      triggers.push("21!", "Perfect!");
     }
     if (addedCard === "A") {
       triggers.push("Ace!", "Lucky!", "Nice!");
@@ -119,6 +120,10 @@ const Hand = ({ name, hand, total, playersTurn }) => {
     }
     if (lastCards.length === hand.length && total <= 21) {
       triggers.splice(0, triggers.length, "Charlie!");
+    }
+    // Only an Ace and a ten-card as the first two cards is a blackjack
+    if (isNatural) {
+      triggers.splice(0, triggers.length, "Blackjack!");
     }
 
     if (triggers.length > 0) {
