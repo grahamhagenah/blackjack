@@ -6,6 +6,7 @@ import Controls from "./components/Controls";
 import Score from "./components/Score";
 import Board from "./components/Board";
 import EndGameScreen from "./components/EndGameScreen";
+import swapNote from "./components/swapNote";
 import useBlackjackGame from "./hooks/useBlackjackGame";
 import { DEAL_INTERVAL_MS } from "./constants";
 
@@ -138,6 +139,7 @@ const App = ({ cards }) => {
               onDouble={double}
               onSwap={switchHandView}
               onDealingShown={playDealingSound}
+              swapNote={swapNote({ switchView, playersTurn, dealerHand, playerTotal })}
             />
           </div>
         </>

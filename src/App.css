@@ -625,13 +625,19 @@ button {
   aspect-ratio: auto;
 }
 
-.hand-note {
+/* "shows Q" under View Dealer; trimmed padding keeps the button's height */
+.swap-note {
   display: block;
-  font-size: 1.25rem;
+  font-size: 0.6em;
   font-weight: 600;
-  white-space: nowrap;
-  margin-top: 4px;
+  line-height: 1;
+  margin-top: 2px;
   opacity: 0.75;
+}
+
+#swap .front.has-note {
+  padding-top: 6.8px;
+  padding-bottom: 6.8px;
 }
 
 .hand-grid .total {
@@ -1125,9 +1131,9 @@ button {
     min-height: 3rem;
   }
 
-  .hand-note {
-    font-size: 0.75rem;
-    margin-top: 2px;
+  #swap .front.has-note {
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 
   .card-value {

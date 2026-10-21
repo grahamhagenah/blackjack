@@ -1,6 +1,6 @@
 import React from "react";
 
-const Swap = ({ onClick, switchView, disabled = false }) => {
+const Swap = ({ onClick, switchView, disabled = false, note }) => {
   const className = disabled ? "not-pushable" : "pushable";
   const handleClick = disabled ? undefined : onClick;
 
@@ -12,7 +12,10 @@ const Swap = ({ onClick, switchView, disabled = false }) => {
       disabled={disabled}
       aria-disabled={disabled}
     >
-      <span className="front">View {switchView ? "Player" : "Dealer"}</span>
+      <span className={note ? "front has-note" : "front"}>
+        View {switchView ? "Player" : "Dealer"}
+        {note && <span className="swap-note">{note}</span>}
+      </span>
     </button>
   );
 };

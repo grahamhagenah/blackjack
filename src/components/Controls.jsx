@@ -17,6 +17,7 @@ const Controls = ({
   onDouble,
   onSwap,
   onDealingShown,
+  swapNote,
 }) => {
   const [showDealing, setShowDealing] = useState(false);
   const [isFadingToDealing, setIsFadingToDealing] = useState(false);
@@ -216,7 +217,7 @@ const Controls = ({
             <span className="front">Stand</span>
           </button>
           {doubleButton(false)}
-          <Swap onClick={onSwap} switchView={switchView} />
+          <Swap onClick={onSwap} switchView={switchView} note={swapNote} />
         </div>
       </div>
     );
@@ -236,7 +237,7 @@ const Controls = ({
             <span className="front">Stand</span>
           </button>
           {doubleButton(false)}
-          <Swap onClick={onSwap} switchView={switchView} disabled />
+          <Swap onClick={onSwap} switchView={switchView} note={swapNote} disabled />
         </div>
       </div>
     );
@@ -267,7 +268,7 @@ const Controls = ({
             <span className="front">Stand</span>
           </button>
           {doubleButton(false)}
-          <Swap onClick={onSwap} switchView={switchView} disabled />
+          <Swap onClick={onSwap} switchView={switchView} note={swapNote} disabled />
         </div>
       </div>
     );
@@ -287,7 +288,7 @@ const Controls = ({
             <span className="front">Stand</span>
           </button>
           {doubleButton(canDouble)}
-          <Swap onClick={onSwap} switchView={switchView} />
+          <Swap onClick={onSwap} switchView={switchView} note={swapNote} />
         </div>
       </div>
     );
@@ -304,7 +305,7 @@ const Controls = ({
             <span className="front">Stand</span>
           </button>
           {doubleButton(false)}
-          <Swap onClick={onSwap} switchView={switchView} />
+          <Swap onClick={onSwap} switchView={switchView} note={swapNote} />
         </div>
       </div>
     );
