@@ -207,16 +207,33 @@ body {
   z-index: 22;
 }
 
-/* The strip behind the ×: as tall as the button plus its top offset, with
-   the same space again below it */
+/* Sticky strip holding the title. Its 48px row lines up with the ×, which
+   sits at the same top offset, so the two share a center line. */
 .rules-topbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: calc(2rem + 48px + 1rem);
+  padding: 2rem 0 1rem;
   background: var(--bg);
   z-index: 21;
+}
+
+.rules-topbar-inner {
+  max-width: 640px;
+  height: 48px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.rules-topbar h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: 0;
 }
 
 .rules-x svg {
@@ -228,15 +245,8 @@ body {
   max-width: 640px;
   margin: 0 auto;
   /* Start below the top strip */
-  padding: calc(2rem + 48px + 1rem) 2rem 3rem;
+  padding: calc(2rem + 48px + 1rem + 1rem) 2rem 3rem;
   box-sizing: border-box;
-}
-
-.rules-content h1 {
-  font-size: 3.5rem;
-  font-weight: 800;
-  line-height: 1;
-  margin: 0 0 2.5rem;
 }
 
 .rules-content section {
@@ -1110,18 +1120,23 @@ button {
 }
 
 @media (max-width: 760px) {
+  /* The corner buttons carry a 0.25rem margin on phones, so the strip's row
+     starts 0.25rem lower to stay level with the × */
   .rules-content {
-    padding: calc(0.75rem + 48px + 0.75rem + env(safe-area-inset-top)) 1.25rem
-      calc(2rem + env(safe-area-inset-bottom));
-  }
-
-  .rules-content h1 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
+    padding: calc(1rem + 48px + 0.75rem + 0.75rem + env(safe-area-inset-top))
+      1.25rem calc(2rem + env(safe-area-inset-bottom));
   }
 
   .rules-topbar {
-    height: calc(0.75rem + 48px + 0.75rem + env(safe-area-inset-top));
+    padding: calc(1rem + env(safe-area-inset-top)) 0 0.75rem;
+  }
+
+  .rules-topbar-inner {
+    padding: 0 1.25rem;
+  }
+
+  .rules-topbar h1 {
+    font-size: 1.5rem;
   }
 
   .rules-x {

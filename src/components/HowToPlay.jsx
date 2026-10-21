@@ -50,8 +50,12 @@ const HowToPlay = ({ onClose }) => {
       tabIndex={-1}
       ref={pageRef}
     >
-      {/* Solid strip so text scrolls under it instead of under the × */}
-      <div className="rules-topbar" aria-hidden="true" />
+      {/* Sticky strip with the title; text scrolls under it, not under the × */}
+      <header className="rules-topbar">
+        <div className="rules-topbar-inner">
+          <h1 id="rules-title">How to Play</h1>
+        </div>
+      </header>
       <button
         className="pushable help-button rules-x"
         onClick={onClose}
@@ -63,8 +67,6 @@ const HowToPlay = ({ onClose }) => {
       </button>
 
       <div className="rules-content">
-        <h1 id="rules-title">How to Play</h1>
-
         <section>
           <h2>Goal</h2>
           <p>
