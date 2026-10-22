@@ -473,8 +473,10 @@ button {
   opacity: .5;
 }
 
+/* Disabled buttons keep the same lift and 3D edge as active ones (they're
+   only faded), so every button in a row shares its top edge and shape */
 .not-pushable .front {
-  transform: translateY(0px);
+  transform: translateY(-4px);
 }
 
 .pushable {
@@ -499,7 +501,7 @@ button {
 }
 
 .not-pushable:hover .front {
-  transform: translateY(0px);
+  transform: translateY(-4px);
 }
 
 button {
@@ -947,7 +949,8 @@ button {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     margin: 0;
     width: 100%;
-    row-gap: 0.5rem;
+    /* The buttons' 0.25rem margins make 8px gaps in both directions */
+    row-gap: 0;
   }
 
   .buttons > button {
@@ -972,15 +975,21 @@ button {
     order: 4;
   }
 
-  /* Hit (Deal) and Stand are squares with a bigger label */
-  .buttons button:first-of-type .front,
-  .buttons button:nth-of-type(2) .front {
-    aspect-ratio: 1;
+  /* Fixed heights so the controls look the same on every phone: a 56px
+     top row (Double, View Dealer) and a taller 96px row for Stand and Hit,
+     with labels centered */
+  .buttons button .front {
     box-sizing: border-box;
-    padding: 0;
+    height: 56px;
+    padding: 0 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .buttons button:first-of-type .front,
+  .buttons button:nth-of-type(2) .front {
+    height: 96px;
     font-size: 1.4rem;
   }
 
