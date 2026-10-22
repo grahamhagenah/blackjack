@@ -13,7 +13,6 @@ const Controls = ({
   canHit,
   canStand,
   canDouble,
-  locked,
   onHit,
   onStand,
   onDouble,
@@ -136,7 +135,6 @@ const Controls = ({
     canHit,
     canStand,
     canDouble,
-    locked,
     gameOver,
     onHit,
     onStand,
@@ -246,24 +244,6 @@ const Controls = ({
   // Dealer's turn - show "Dealing..."
   if (!playersTurn && showDealing) {
     return withMessage(`Dealing${".".repeat(dealingDots)}`, { fadeIn: true });
-  }
-
-  // Locked while a double or a blackjack plays out
-  if (playersTurn && locked) {
-    return (
-      <div id="board-bottom">
-        <div className="buttons">
-          <button className="not-pushable">
-            <span className="front">Hit</span>
-          </button>
-          <button className="not-pushable">
-            <span className="front">Stand</span>
-          </button>
-          {doubleButton(false)}
-          <Swap onClick={onSwap} switchView={switchView} note={swapNote} disabled />
-        </div>
-      </div>
-    );
   }
 
   if (playersTurn && switchView === false) {

@@ -100,8 +100,8 @@ const HowToPlay = ({ onClose }) => {
             </dd>
             <dt>Double</dt>
             <dd>
-              Only on your first two cards: your win or loss counts twice, you
-              get exactly one more card, and then you stand.
+              Only on your first two cards: your win or loss counts twice and
+              you get exactly one more card. Then press Stand.
             </dd>
             <dt>View Dealer</dt>
             <dd>

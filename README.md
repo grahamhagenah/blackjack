@@ -11,8 +11,8 @@ handheld LCD games. Play it at
   (View Dealer: Q), and **View Player** shows your total the same way.
 - **Hit** takes one more card at a time. **Stand** ends your turn, and the dealer
   draws until reaching 17 or more.
-- **Double**, on your first two cards, takes exactly one more card and then
-  stands. The hand wins or loses double.
+- **Double**, on your first two cards, takes exactly one more card; then you
+  press **Stand**. The hand wins or loses double.
 - A win is +20 points and a loss is −20 (±40 when doubled). Equal totals are
   a push.
 - Filling all six card slots without busting wins the hand (six-card

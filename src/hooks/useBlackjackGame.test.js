@@ -137,7 +137,7 @@ describe("useBlackjackGame", () => {
     expect(game.current.score).toBe(180);
   });
 
-  it("doubles: one card, a locked pause, then the dealer plays for ±40", () => {
+  it("doubles: one card, waits for Stand, then the dealer plays for ±40", () => {
     rigDeck([5, 10, 6, 10, 7]);
     const game = startGame();
     press(game, "deal");
@@ -145,12 +145,33 @@ describe("useBlackjackGame", () => {
     press(game, "double");
 
     expect(cardsIn(game.current.playerHand)).toEqual([5, 6, 10]);
-    expect(game.current.locked).toBe(true);
     expect(game.current.canDouble).toBe(false);
+    expect(game.current.canHit).toBe(false);
+    expect(game.current.canStand).toBe(true);
 
+    // Nothing happens on its own, and hitting is ignored
+    runTimers();
+    expect(game.current.playersTurn).toBe(true);
+    expect(game.current.gameOver).toBe(false);
+    press(game, "deal");
+    expect(cardsIn(game.current.playerHand)).toEqual([5, 6, 10]);
+
+    press(game, "stand");
     runTimers();
     expect(game.current.playerWins).toBe(true);
     expect(game.current.change).toBe(40);
+  });
+
+  it("ends a double right away when the extra card busts", () => {
+    rigDeck([10, 6, 2, "K"]);
+    const game = startGame();
+    press(game, "deal");
+    press(game, "deal");
+    press(game, "double");
+
+    expect(game.current.playerTotal).toBe(22);
+    expect(game.current.gameOver).toBe(true);
+    expect(game.current.change).toBe(-40);
   });
 
   it("doesn't let you stand on a single card", () => {

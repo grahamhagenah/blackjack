@@ -35,7 +35,6 @@ const App = ({ cards }) => {
     change,
     muted,
     switchView,
-    locked,
     blackjack,
     canHit,
     canStand,
@@ -154,7 +153,6 @@ const App = ({ cards }) => {
               canHit={canHit}
               canStand={canStand}
               canDouble={canDouble}
-              locked={locked}
               onHit={deal}
               onStand={stand}
               onDouble={double}
