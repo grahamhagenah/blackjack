@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { cardCallout } from "../game/callouts";
 
 const getLowAceIndexes = (hand) => {
   let sum = 0;
@@ -64,80 +65,19 @@ const BURST_DURATION_MS = 2400;
 const Hand = ({ name, hand, total, playersTurn }) => {
   const lowAces = getLowAceIndexes(hand);
   const [bursts, setBursts] = useState([]);
-  const prevTotalRef = useRef(total);
   const prevHandRef = useRef(hand);
   const burstIdRef = useRef(0);
 
   useEffect(() => {
     if (!playersTurn) {
-      prevTotalRef.current = total;
       prevHandRef.current = hand;
       return;
     }
-    const prevTotal = prevTotalRef.current;
     const prevHand = prevHandRef.current;
-    let addedCard = null;
-    for (let i = 0; i < hand.length; i += 1) {
-      if (!prevHand[i] && hand[i]) {
-        addedCard = hand[i];
-        break;
-      }
-    }
+    // Only a newly dealt card gets a word; a hand coming back into view doesn't
+    const word = cardCallout(prevHand, hand);
 
-    // Effects are for a card being dealt, not for a hand coming back into view
-    if (!addedCard) {
-      prevTotalRef.current = total;
-      prevHandRef.current = hand;
-      return;
-    }
-
-    const bustHappened = total > 21 && prevTotal <= 21;
-    const hitTwentyOne = total === 21 && prevTotal !== 21;
-    const lastCards = hand.filter(Boolean);
-    const isNatural = hitTwentyOne && lastCards.length === 2;
-    const lastCard = lastCards[lastCards.length - 1];
-    const twoInRow =
-      lastCards.length >= 2 &&
-      lastCards[lastCards.length - 1] === lastCards[lastCards.length - 2];
-    const threeInRow =
-      lastCards.length >= 3 &&
-      lastCards[lastCards.length - 1] === lastCards[lastCards.length - 2] &&
-      lastCards[lastCards.length - 2] === lastCards[lastCards.length - 3];
-
-    const triggers = [];
-    if (bustHappened) {
-      triggers.push("Unlucky!", "Oof!", "Bust!");
-    }
-    if (hitTwentyOne && !isNatural) {
-      triggers.push("21!", "Perfect!");
-    }
-    if (addedCard === "A") {
-      triggers.push("Ace!", "Lucky!", "Nice!");
-    }
-    if (addedCard === "J") {
-      triggers.push("Haha", "Jolly!", "Nice!");
-    }
-    if (addedCard === "Q") {
-      triggers.push("Your Majesty", "Queen!", "Royal!");
-    }
-    if (addedCard === "K") {
-      triggers.push("Your Majesty", "King!", "Royal!");
-    }
-    if (threeInRow && lastCard) {
-      triggers.push("Triple!", "Streak!", "Whoa!");
-    } else if (twoInRow && lastCard) {
-      triggers.push("Pair!", "Again!", "Nice!");
-    }
-    if (lastCards.length === hand.length && total <= 21) {
-      triggers.splice(0, triggers.length, "Charlie!");
-    }
-    // Only an Ace and a ten-card as the first two cards is a blackjack
-    if (isNatural) {
-      triggers.splice(0, triggers.length, "Blackjack!");
-    }
-
-    if (triggers.length > 0) {
-      const word = triggers[Math.floor(Math.random() * triggers.length)];
+    if (word) {
       const id = burstIdRef.current++;
       const isMobile =
         typeof window !== "undefined" &&
@@ -159,14 +99,12 @@ const Hand = ({ name, hand, total, playersTurn }) => {
       const timer = setTimeout(() => {
         setBursts((prev) => prev.filter((burst) => burst.id !== id));
       }, BURST_DURATION_MS);
-      prevTotalRef.current = total;
       prevHandRef.current = hand;
       return () => clearTimeout(timer);
     }
 
-    prevTotalRef.current = total;
     prevHandRef.current = hand;
-  }, [hand, playersTurn, total]);
+  }, [hand, playersTurn]);
 
   const renderCardValue = (card, index) => {
     const isLowAce = card === "A" && lowAces.has(index);
